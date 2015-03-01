@@ -1,0 +1,126 @@
+.multi-select
+    font-family Helvetica Neue, Helvetica, Arial, sans-serif
+    -webkit-user-select none    
+    position relative
+
+    .control
+        border 1px solid
+        border-color #d9d9d9 #cccccc #b3b3b3
+        border-radius 4px
+        font-size 1em
+        padding 2px 52px 2px 3px
+        -webkit-transition all 0.2s 0s ease
+        position relative
+        z-index 1
+
+        .placeholder
+            color #aaaaaa
+            padding 8px 0px 8px 10px
+            max-width -webkit-calc(100% - 52px)
+            overflow hidden
+            text-overflow ellipsis
+            white-space nowrap
+            position absolute
+            top 0
+            left 0
+
+
+        .selected-value
+            background #f2f9fc
+            border 1px solid #c9e6f2
+            border-radius 2px
+            color #0088cc
+            display inline-block            
+            margin 2px
+            vertical-align middle
+
+            span
+                display inline-block
+                vertical-align top
+
+                &:first-child
+                    border-right 1px solid #c9e6f2
+                    cursor pointer
+                    padding 2px 5px 4px
+
+                    &:hover
+                        background #ddeff7
+                        color #0077b3
+
+                &:last-child
+                    cursor default
+                    padding 3px 5px
+
+
+        input 
+            background none
+            border none
+            outline none
+            font-size 1em
+            margin 2px
+            padding 4px 0px        
+            vertical-align middle
+            width 10px
+
+        .reset
+            color #999999
+            cursor pointer
+            display inline-block
+            font-size 16px
+            padding 6px 10px
+            position absolute
+            right 17px
+            top 0
+            &:hover
+                color #c0392b
+
+        .arrow
+            border-color #999999 transparent transparent
+            border-style solid
+            border-width 5px
+            content " "
+            display block
+            height 0px
+            margin-top -ceil(2.5px)
+            position absolute
+            right 10px
+            top 14px
+            width 0px
+
+    .options
+        background white
+        border 1px solid #ccc
+        border-top none
+        border-bottom-left-radius 4px
+        border-bottom-right-radius 4px
+        box-sizing border-box
+        margin-top -1px
+        max-height 200px
+        overflow auto
+        position absolute
+        width 100%
+        z-index 10
+
+        > div 
+            color #666
+            cursor pointer
+            padding 8px 10px
+    
+            &.focused
+                background #f2f9fc
+                color #333
+
+
+    &.open 
+
+        .control
+            border-color #b3b3b3 #cccccc #d9d9d9
+            border-top-left-radius 4px
+            border-top-right-radius 4px
+            border-bottom-left-radius 0px
+            border-bottom-right-radius 0px
+            
+            .arrow
+                border-color transparent transparent #999999
+                border-width 0 5px 5px
+
