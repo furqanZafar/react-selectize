@@ -125,7 +125,10 @@ module.exports = React.create-class {
                 return if @.state.search.length > 0
                 [...xs, x] = @.props.values
                 @.props?.on-change xs
-                @.set-state {open: false}
+                if !!@.props?.restore-on-backspace
+                    @.set-state {open: true, search: (@.props.options |> find ({value}) -> x == value).label}
+                else
+                    @.set-state {open: false}
             | 13 => 
                 focused-value = @.filter-options!?[@.state.focused-option]?.value
                 if !!focused-value

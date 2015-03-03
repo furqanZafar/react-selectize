@@ -18,6 +18,7 @@ App = React.create-class {
                 options: @.state.countries
                 on-change: @.handle-countries-change
                 placeholder-text: 'Select countries'
+                restore-on-backspace: true
             }
             div {class-name: \copy-right}, 'Copyright © Furqan Zafar 2014. MIT Licensed.'
 
