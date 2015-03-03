@@ -19,9 +19,9 @@ module.exports = React.create-class {
             handle-remove-click
             handle-reset-click
             handle-search-change
-            props: {options, placeholder-text, values}
+            props: {options, placeholder-text, values, max-items}
             state: {focused-option, open, search}
-        } = self = @ 
+        } = self = @         
 
         children = [            
             div do 
@@ -48,7 +48,7 @@ module.exports = React.create-class {
 
         filtered-options = @.filter-options!
 
-        if open
+        if open and @.is-below-limit!
             children.push div do 
                 {class-name: \options, key: \options}
                 [0 til filtered-options.length]
@@ -160,7 +160,10 @@ module.exports = React.create-class {
         false
 
     handle-search-change: ({current-target:{value}}) ->
-        @.set-state {focused-option: 0, open: (@.state.open or (value.length > 0)), search: value}
+        if @.is-below-limit!
+            @.set-state {focused-option: 0, open: (@.state.open or (value.length > 0)), search: value}
 
+    is-below-limit: ->
+        typeof @.props.max-items == \undefined or @.props.values.length < @.props.max-items
 
 }
