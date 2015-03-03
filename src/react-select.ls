@@ -53,7 +53,7 @@ module.exports = React.create-class {
                 {class-name: \options, key: \options}
                 [0 til filtered-options.length]
                     |> map -> {index: it} <<< filtered-options[it]
-                    |> map ({index, value, label or ''}?) ->
+                    |> map ({index, match-index, match-length, value, label or ''}?) ->
                         div do 
                             {
                                 class-name: (if index == focused-option then \focused else '')
@@ -63,7 +63,9 @@ module.exports = React.create-class {
                                 on-mouse-out: handle-option-mouse-out
                                 ref: "option-#{index}"
                             }
-                            label
+                            span null, label.substr 0, match-index
+                            span {class-name:\highlight}, label.substr match-index, match-length
+                            span null, label.substr match-index + match-length
                 
         div {class-name: "multi-select  #{if open then 'open' else ''}", on-click: handle-click}, children
             
@@ -91,9 +93,11 @@ module.exports = React.create-class {
     filter-options: ->
         {search} = @.state
         {options, values} = @.props
-        options
-            |> filter ({label or ''}?) -> (label.to-lower-case!.index-of search.to-lower-case!) > -1
+        options                    
+            |> filter ({label}?) -> !!label
             |> filter ({value}) -> value not in values
+            |> map ({label, value}) -> {label, value, match-index: (label.to-lower-case!.index-of search.to-lower-case!), match-length: search.length}
+            |> filter ({match-index}) -> match-index > -1            
 
     focus: ->
         @.refs.search.getDOMNode!.focus!
