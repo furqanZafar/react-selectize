@@ -23,13 +23,13 @@ bundle = (bundler, {file, directory}:output) ->
         .pipe gulp-connect.reload!        
 
 gulp.task \build:examples:styles, ->
-    gulp.src './examples/src/App.styl'
+    gulp.src <[./examples/src/App.styl]>
     .pipe stylus!
     .pipe gulp.dest './examples/dist'
     .pipe gulp-connect.reload!
 
 gulp.task \watch:examples:styles, -> 
-    gulp.watch <[./examples/src/*.styl]>, <[build:examples:styles]>    
+    gulp.watch <[./examples/src/*.styl ./src/*.styl]>, <[build:examples:styles]>    
 
 examples-bundler = create-bundler \./examples/src/App.ls
 bundle-examples = -> bundle examples-bundler, {file: "App.js", directory: "./examples/dist/"}

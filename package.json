@@ -16,6 +16,7 @@
     "gulp-connect": "^2.2.0",
     "gulp-stylus": "^2.0.1",
     "gulp-util": "^3.0.4",
+    "jquery-browserify": "^1.8.1",
     "liveify": "^2.0.0",
     "prelude-ls": "^1.1.1",
     "react": "^0.12.2",
