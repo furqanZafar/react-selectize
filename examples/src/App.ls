@@ -18,12 +18,13 @@ App = React.create-class {
                 options: @.state.countries
                 on-change: @.handle-countries-change
                 placeholder-text: 'Select countries'
-                restore-on-backspace: true
+                restore-on-backspace: false
+                max-items: 3
             }
             div {class-name: \copy-right}, 'Copyright © Furqan Zafar 2014. MIT Licensed.'
 
     get-initial-state: ->        
-        {selected-countries: [], countries: []}        
+        {selected-countries: [], countries: []}
 
     component-will-mount: ->
         self = @

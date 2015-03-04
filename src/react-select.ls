@@ -1,4 +1,27 @@
-{filter, find, map, partition, reverse} = require \prelude-ls
+find-all = (text, search, offset = 0, indices = []) ->
+    index = text .substr offset .index-of search
+    return indices if index == -1
+    find-all do
+        text
+        search
+        offset + index + search.length
+        indices ++ [offset + index]
+
+partition-string = (text, search) ->
+    return [[0, text.length]] if search.length == 0
+    [first, ..., x]:indices = find-all text, search
+    return [] if indices.length == 0
+    last = x + search.length
+    high = find-all text, search
+        |> map -> [it, it + search.length, true]
+    low = [0 til high.length - 1]
+        |> map (i) ->
+            [high[i].1, high[i + 1].0, false]
+    (if first == 0 then [] else [[0, first, false]]) ++
+    ((high ++ low) |> sort-by (.0)) ++
+    (if last == text.length then [] else [[last, text.length, false]])
+
+{filter, find, map, partition, reverse, sort-by} = require \prelude-ls
 on-click-outside = require \react-onclickoutside
 React = require \react
 {div, input, span} = React.DOM
@@ -53,7 +76,7 @@ module.exports = React.create-class {
                 {class-name: \options, key: \options}
                 [0 til filtered-options.length]
                     |> map -> {index: it} <<< filtered-options[it]
-                    |> map ({index, match-index, match-length, value, label or ''}?) ->
+                    |> map ({index, value, label or '', partitions}?) ->
                         div do 
                             {
                                 class-name: (if index == focused-option then \focused else '')
@@ -63,9 +86,8 @@ module.exports = React.create-class {
                                 on-mouse-out: handle-option-mouse-out
                                 ref: "option-#{index}"
                             }
-                            span null, label.substr 0, match-index
-                            span {class-name:\highlight}, label.substr match-index, match-length
-                            span null, label.substr match-index + match-length
+                            partitions
+                                |> map ([start, end, highlight]) -> span (if highlight then {class-name: \highlight} else null), (label.substring start, end)
                 
         div {class-name: "multi-select  #{if open then 'open' else ''}", on-click: handle-click}, children
             
@@ -96,8 +118,8 @@ module.exports = React.create-class {
         options                    
             |> filter ({label}?) -> !!label
             |> filter ({value}) -> value not in values
-            |> map ({label, value}) -> {label, value, match-index: (label.to-lower-case!.index-of search.to-lower-case!), match-length: search.length}
-            |> filter ({match-index}) -> match-index > -1            
+            |> map ({label, value}) -> {label, value, partitions: (partition-string label.to-lower-case!, search.to-lower-case!)}
+            |> filter ({partitions}) -> partitions.length > 0
 
     focus: ->
         @.refs.search.getDOMNode!.focus!
@@ -126,7 +148,7 @@ module.exports = React.create-class {
                 [...xs, x] = @.props.values
                 @.props?.on-change xs
                 if !!@.props?.restore-on-backspace
-                    @.set-state {open: true, search: (@.props.options |> find ({value}) -> x == value).label}
+                    @.set-state {open: true, search: (@.props.options |> find ({value}) -> x == value).label, focused-option: 0}
                 else
                     @.set-state {open: false}
             | 13 => 
