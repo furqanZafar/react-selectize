@@ -12,7 +12,7 @@ partition-string = (text, search) ->
     [first, ..., x]:indices = find-all text, search
     return [] if indices.length == 0
     last = x + search.length
-    high = find-all text, search
+    high = indices
         |> map -> [it, it + search.length, true]
     low = [0 til high.length - 1]
         |> map (i) ->
@@ -34,17 +34,14 @@ module.exports = React.create-class {
 
     render: ->
         {
-            handle-click
-            handle-input-key-down
-            handle-option-click
-            handle-option-mouse-over
-            handle-option-mouse-out
-            handle-remove-click
-            handle-reset-click
-            handle-search-change
+            handle-click, handle-input-key-down, handle-option-click
+            handle-option-mouse-over, handle-option-mouse-out, handle-remove-click
+            handle-reset-click, handle-search-change
             props: {options, placeholder-text, values, max-items}
-            state: {focused-option, open, search}
-        } = self = @         
+            state: {filtered-options, focused-option, open, search}
+        } = self = @
+
+        is-below-limit = typeof @.props.max-items == \undefined or @.props.values.length < @.props.max-items
 
         children = [            
             div do 
@@ -59,19 +56,17 @@ module.exports = React.create-class {
                 input {
                     ref: \search
                     type: \text
-                    value: search
-                    on-change: handle-search-change
+                    value: search                    
                     on-key-down: handle-input-key-down
                     style:
                         width: Math.max 16, (search.length * 16)
-                }
+                } <<< (if is-below-limit then {on-change: handle-search-change} else {})
                 div {class-name: \reset, on-click: handle-reset-click}, \×
                 div {class-name: \arrow}, null
         ]
 
-        filtered-options = @.filter-options!
-
-        if open and @.is-below-limit!
+        if open and is-below-limit
+            filtered-options = @.filter-options search
             children.push div do 
                 {class-name: \options, key: \options}
                 [0 til filtered-options.length]
@@ -80,7 +75,7 @@ module.exports = React.create-class {
                         div do 
                             {
                                 class-name: (if index == focused-option then \focused else '')
-                                key: value
+                                key: "#{value}"
                                 on-click: (handle-option-click.bind self, value)
                                 on-mouse-over: (handle-option-mouse-over.bind self, index)
                                 on-mouse-out: handle-option-mouse-out
@@ -111,28 +106,41 @@ module.exports = React.create-class {
         else if (option-element.offset-top - parent-element.scroll-top + option-height) < 0
             parent-element.scroll-top = option-element.offset-top   
 
-
-    filter-options: ->
-        {search} = @.state
-        {options, values} = @.props
-        options                    
+    filter-options: (search) ->
+        {options, values} = @.props        
+        filtered-options = options                    
             |> filter ({label}?) -> !!label
             |> filter ({value}) -> value not in values
             |> map ({label, value}) -> {label, value, partitions: (partition-string label.to-lower-case!, search.to-lower-case!)}
-            |> filter ({partitions}) -> partitions.length > 0
+            |> filter ({partitions}) -> partitions.length > 0        
+        new-option = 
+            | search.length > 0 and typeof (options |> find (.value == search)) == \undefined =>
+                label = "Add #{search}..."
+                [{value: search, label, partitions: [[0, label.length]], new-option: true}]
+            | _ => []
+        new-option ++ filtered-options
 
     focus: ->
         @.refs.search.getDOMNode!.focus!
 
     focus-adjacent-option: (direction) ->
-        {values} = @.props
+        {values} = @.props        
         @.set-state {
-            focused-option: @.clamp (@.state.focused-option + direction), 0, (@.filter-options!.length - 1)
+            focused-option: @.clamp do 
+                @.state.focused-option + direction
+                0
+                (@.filter-options @.state.search).length - 1
             open: true
         }
 
     get-initial-state: ->
-        {focused-option: 0, open: false, search: ''}        
+        search = ''
+        {
+            filtered-options: @.filter-options @.props.options, search
+            focused-option: 0
+            open: false
+            search
+        }
 
     handle-click: ->
         @.set-state {open: true}
@@ -152,10 +160,11 @@ module.exports = React.create-class {
                 else
                     @.set-state {open: false}
             | 13 => 
-                focused-value = @.filter-options!?[@.state.focused-option]?.value
-                if !!focused-value
-                    @.props?.on-change (@.props.values ++ focused-value)
-                    @.set-state {focused-option: -1, open: false, search: ''}                
+                filtered-options = @.filter-options @.state.search
+                {new-option, label, value}:option? = filtered-options?[@.state.focused-option]
+                @.props?.on-change (@.props.values ++ value)
+                @.props?.on-options-change ([{label: value, value}] ++ @.props.options) if !!new-option
+                @.set-state {focused-option: -1, open: false, search: ''}
             | 27 =>
                 if @.state.open 
                     @.set-state {open: false}
@@ -189,10 +198,12 @@ module.exports = React.create-class {
         false
 
     handle-search-change: ({current-target:{value}}) ->
-        if @.is-below-limit!
-            @.set-state {focused-option: 0, open: (@.state.open or (value.length > 0)), search: value}
-
-    is-below-limit: ->
-        typeof @.props.max-items == \undefined or @.props.values.length < @.props.max-items
+        filtered-options = @.filter-options value
+        @.set-state {
+            focused-option: if filtered-options.length == 1 or typeof filtered-options?.0?.new-option == \undefined then 0 else 1
+            open: (@.state.open or (value.length > 0))
+            search: value
+        }
+        
 
 }

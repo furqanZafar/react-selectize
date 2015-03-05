@@ -17,6 +17,7 @@ App = React.create-class {
                 values: @.state.selected-countries
                 options: @.state.countries
                 on-change: @.handle-countries-change
+                on-options-change: @.handle-options-change
                 placeholder-text: 'Select countries'
                 restore-on-backspace: false
                 max-items: 3
@@ -35,6 +36,9 @@ App = React.create-class {
 
     handle-countries-change: (selected-countries) ->
         @.set-state {selected-countries}
+
+    handle-options-change: (options) ->
+        @.set-state {countries: options}
 
 }
 
