@@ -2,7 +2,7 @@ ReactSelect = require \../../src/react-select.ls
 React = require \react
 {a, div, h1, h2} = React.DOM
 $ = require \jquery-browserify
-{map} = require \prelude-ls
+{concat-map, filter, map} = require \prelude-ls
 
 App = React.create-class {
 
@@ -20,14 +20,24 @@ App = React.create-class {
                 on-options-change: @.handle-options-change
                 placeholder-text: 'Select countries'
                 restore-on-backspace: false
-                create: (input) ->
-                    {label: input, value: "_#{input}"}
-                max-items: 3
+                create: (input) -> {label: input, value: "_#{input}"}
+                max-items: 2
+                style: {z-index: 1}
+            }
+            React.create-element ReactSelect, {
+                disabled: @.state.selected-countries.length == 0
+                values: @.state.selected-cities
+                options: @.state.cities
+                on-change: @.handle-cities-change
+                placeholder-text: 'Select cities'
+                restore-on-backspace: false
+                max-items: 2
+                style: {margin-top: 20, z-index: 0}
             }
             div {class-name: \copy-right}, 'Copyright © Furqan Zafar 2014. MIT Licensed.'
 
     get-initial-state: ->        
-        {selected-countries: [], countries: []}
+        {selected-countries: [], countries: [], selected-cities: [], cities: []}
 
     component-will-mount: ->
         self = @
@@ -38,6 +48,18 @@ App = React.create-class {
 
     handle-countries-change: (selected-countries) ->
         @.set-state {selected-countries}
+
+        cities = selected-countries |> concat-map (country) -> 
+            [1 to 3] |> map (index) -> 
+                {label: "#{country}_#{index}", value: "#{country}_#{index}"}
+
+        selected-cities = @.state.selected-cities
+            |> filter (city) -> city in (cities |> map (.value))
+
+        @.set-state {cities, selected-cities}
+
+    handle-cities-change: (selected-cities) ->
+        @.set-state {selected-cities}
 
     handle-options-change: (options) ->
         @.set-state {countries: options}

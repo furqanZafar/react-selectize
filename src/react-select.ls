@@ -11,15 +11,13 @@ module.exports = React.create-class {
     mixins: [on-click-outside]
 
     render: ->
-        {
+        {            
             handle-click, handle-input-key-down, handle-option-click
             handle-option-mouse-over, handle-option-mouse-out, handle-remove-click
-            handle-reset-click, handle-search-change
-            props: {options, placeholder-text, values, max-items}
+            handle-reset-click, handle-search-change, is-below-limit
+            props: {options, placeholder-text, values, max-items, disabled, style}
             state: {focused-option, open, search}
-        } = self = @
-
-        is-below-limit = typeof @.props.max-items == \undefined or @.props.values.length < @.props.max-items
+        } = self = @        
 
         children = [            
             div do 
@@ -31,19 +29,20 @@ module.exports = React.create-class {
                         div {class-name: \selected-value, key: value}, 
                             span {on-click: (handle-remove-click.bind self, value)}, \×
                             span null, label
-                input {
+                input {                    
+                    disabled
                     ref: \search
                     type: \text
                     value: search                    
                     on-key-down: handle-input-key-down
                     style:
                         width: Math.max 16, (search.length * 16)
-                } <<< (if is-below-limit then {on-change: handle-search-change} else {})
+                } <<< (if @.is-below-limit! then {on-change: handle-search-change} else {})
                 div {class-name: \reset, on-click: handle-reset-click}, \×
                 div {class-name: \arrow}, null
         ]
 
-        if open and is-below-limit
+        if open
             filtered-options = @.filter-options search
             children.push div do 
                 {class-name: \options, key: \options}
@@ -65,7 +64,7 @@ module.exports = React.create-class {
                                 partitions
                                     |> map ([start, end, highlight]) -> span (if highlight then {class-name: \highlight} else null), (label.substring start, end)
                 
-        div {class-name: "multi-select  #{if open then 'open' else ''}", on-click: handle-click}, children
+        div {class-name: "multi-select #{if disabled then 'disabled' else ''}  #{if open then 'open' else ''}", on-click: handle-click, style}, children
             
     select-option: (index) !->
         filtered-options = @.filter-options @.state.search
@@ -100,6 +99,9 @@ module.exports = React.create-class {
         else if (option-element.offset-top - parent-element.scroll-top + option-height) < 0
             parent-element.scroll-top = option-element.offset-top   
 
+    component-will-receive-props: (new-props) ->
+        @.set-state @.show-options @.state.open, new-props
+
     filter-options: (search) ->
         {options, values} = @.props        
         filtered-options = options                    
@@ -122,20 +124,19 @@ module.exports = React.create-class {
         @.refs.search.getDOMNode!.focus!
 
     focus-adjacent-option: (direction) ->
-        {values} = @.props        
+        {values} = @.props
         @.set-state {
             focused-option: clamp do 
                 @.state.focused-option + direction
                 0
-                (@.filter-options @.state.search).length - 1
-            open: true
-        }
+                (@.filter-options @.state.search).length - 1            
+        } <<< (@.show-options true)
 
     get-initial-state: ->
         {focused-option: 0, open: false, search: ''}
 
     handle-click: ->
-        @.set-state {open: true}
+        @.set-state @.show-options true
         @.focus!
 
     handle-click-outside: ->
@@ -147,7 +148,7 @@ module.exports = React.create-class {
                 return if @.state.search.length > 0                
                 {label} = @.remove-value last @.props.values
                 if !!@.props?.restore-on-backspace
-                    @.set-state {open: true, search: label, focused-option: 0}
+                    @.set-state {search: label, focused-option: 0} <<< (@.show-options true)
                 else
                     @.set-state {open: false}
             | 13 => 
@@ -192,5 +193,13 @@ module.exports = React.create-class {
             open: (@.state.open or (value.length > 0))
             search: value
         }
+
+    is-below-limit: (props) -> 
+        {max-items, values}? = props or @.props
+        typeof max-items == \undefined or values.length < max-items
+
+    show-options: (show, props) ->
+        {disabled} = props or @.props
+        {open: show and (@.is-below-limit props) and !disabled}
 
 }
