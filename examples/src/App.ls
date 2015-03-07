@@ -20,6 +20,8 @@ App = React.create-class {
                 on-options-change: @.handle-options-change
                 placeholder-text: 'Select countries'
                 restore-on-backspace: false
+                create: (input) ->
+                    {label: input, value: "_#{input}"}
                 max-items: 3
             }
             div {class-name: \copy-right}, 'Copyright © Furqan Zafar 2014. MIT Licensed.'
@@ -31,7 +33,7 @@ App = React.create-class {
         self = @
         $.getJSON 'http://restcountries.eu/rest/v1/all'
             ..done (countries) -> self.set-state do 
-                countries: countries |> map ({name, alpha2Code}) -> {value: alpha2Code, label: name}
+                countries: (self.state.countries or []) ++ (countries |> map ({name, alpha2Code}) -> {value: alpha2Code, label: name})
             ..fail -> console.log 'unable to fetch countries'
 
     handle-countries-change: (selected-countries) ->

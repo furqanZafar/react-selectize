@@ -1,27 +1,5 @@
-find-all = (text, search, offset = 0, indices = []) ->
-    index = text .substr offset .index-of search
-    return indices if index == -1
-    find-all do
-        text
-        search
-        offset + index + search.length
-        indices ++ [offset + index]
-
-partition-string = (text, search) ->
-    return [[0, text.length]] if search.length == 0
-    [first, ..., x]:indices = find-all text, search
-    return [] if indices.length == 0
-    last = x + search.length
-    high = indices
-        |> map -> [it, it + search.length, true]
-    low = [0 til high.length - 1]
-        |> map (i) ->
-            [high[i].1, high[i + 1].0, false]
-    (if first == 0 then [] else [[0, first, false]]) ++
-    ((high ++ low) |> sort-by (.0)) ++
-    (if last == text.length then [] else [[last, text.length, false]])
-
-{filter, find, map, partition, reverse, sort-by} = require \prelude-ls
+{filter, find, last, map, partition, reverse, sort-by} = require \prelude-ls
+{clamp, find-all, partition-string, remove} = require \./prelude-extension.ls
 on-click-outside = require \react-onclickoutside
 React = require \react
 {div, input, span} = React.DOM
@@ -38,7 +16,7 @@ module.exports = React.create-class {
             handle-option-mouse-over, handle-option-mouse-out, handle-remove-click
             handle-reset-click, handle-search-change
             props: {options, placeholder-text, values, max-items}
-            state: {filtered-options, focused-option, open, search}
+            state: {focused-option, open, search}
         } = self = @
 
         is-below-limit = typeof @.props.max-items == \undefined or @.props.values.length < @.props.max-items
@@ -47,7 +25,7 @@ module.exports = React.create-class {
             div do 
                 {class-name: \control, key: \control}
                 if (values.length == 0 and search.length == 0) then (div {class-name: \placeholder}, placeholder-text) else null
-                values 
+                values
                     |> map (value) -> 
                         {label or ''}? = options |> find (.value == value)
                         div {class-name: \selected-value, key: value}, 
@@ -71,22 +49,38 @@ module.exports = React.create-class {
                 {class-name: \options, key: \options}
                 [0 til filtered-options.length]
                     |> map -> {index: it} <<< filtered-options[it]
-                    |> map ({index, value, label or '', partitions}?) ->
+                    |> map ({index, value, label or '', partitions, new-option}?) ->
                         div do 
                             {
                                 class-name: (if index == focused-option then \focused else '')
                                 key: "#{value}"
-                                on-click: (handle-option-click.bind self, value)
+                                on-click: (handle-option-click.bind self, index)
                                 on-mouse-over: (handle-option-mouse-over.bind self, index)
                                 on-mouse-out: handle-option-mouse-out
                                 ref: "option-#{index}"
                             }
-                            partitions
-                                |> map ([start, end, highlight]) -> span (if highlight then {class-name: \highlight} else null), (label.substring start, end)
+                            if index == 0 and !!new-option
+                                span null, "Add #{label}..."
+                            else
+                                partitions
+                                    |> map ([start, end, highlight]) -> span (if highlight then {class-name: \highlight} else null), (label.substring start, end)
                 
         div {class-name: "multi-select  #{if open then 'open' else ''}", on-click: handle-click}, children
             
-    clamp: (n, min, max) -> Math.max min, (Math.min max, n)
+    select-option: (index) !->
+        filtered-options = @.filter-options @.state.search
+        {new-option, value}:option? = filtered-options?[index]
+        @.props?.on-options-change ([option] ++ @.props.options) if !!new-option    
+        @.props?.on-change (@.props.values ++ value) if !!value
+
+    remove-value: (value) ->
+        {new-option}:option? = @.props.options |> find -> it.value == value 
+        @.props?.on-options-change (@.props.options |> remove -> it.value == value) if !!new-option
+        @.props?.on-change (@.props.values |> remove (== value))
+        option
+
+    reset: ->
+        @.props?.on-change []
 
     clear-and-foucs: ->
         @.set-state {search: ''}
@@ -112,13 +106,17 @@ module.exports = React.create-class {
             |> filter ({label}?) -> !!label
             |> filter ({value}) -> value not in values
             |> map ({label, value}) -> {label, value, partitions: (partition-string label.to-lower-case!, search.to-lower-case!)}
-            |> filter ({partitions}) -> partitions.length > 0        
-        new-option = 
-            | search.length > 0 and typeof (options |> find (.value == search)) == \undefined =>
-                label = "Add #{search}..."
-                [{value: search, label, partitions: [[0, label.length]], new-option: true}]
-            | _ => []
-        new-option ++ filtered-options
+            |> filter ({partitions}) -> partitions.length > 0
+
+        if !!@.props.create
+            {label, value} = @.props.create search
+            new-option = 
+                | search.length > 0 and typeof (options |> find (.value == value)) == \undefined => [{label, value, partitions: [[0, label.length]], new-option: true}]
+                | _ => []
+            new-option ++ filtered-options
+
+        else
+            filtered-options
 
     focus: ->
         @.refs.search.getDOMNode!.focus!
@@ -126,7 +124,7 @@ module.exports = React.create-class {
     focus-adjacent-option: (direction) ->
         {values} = @.props        
         @.set-state {
-            focused-option: @.clamp do 
+            focused-option: clamp do 
                 @.state.focused-option + direction
                 0
                 (@.filter-options @.state.search).length - 1
@@ -134,13 +132,7 @@ module.exports = React.create-class {
         }
 
     get-initial-state: ->
-        search = ''
-        {
-            filtered-options: @.filter-options @.props.options, search
-            focused-option: 0
-            open: false
-            search
-        }
+        {focused-option: 0, open: false, search: ''}
 
     handle-click: ->
         @.set-state {open: true}
@@ -152,32 +144,28 @@ module.exports = React.create-class {
     handle-input-key-down: ({which, prevent-default}) ->
         match which
             | 8 => 
-                return if @.state.search.length > 0
-                [...xs, x] = @.props.values
-                @.props?.on-change xs
+                return if @.state.search.length > 0                
+                {label} = @.remove-value last @.props.values
                 if !!@.props?.restore-on-backspace
-                    @.set-state {open: true, search: (@.props.options |> find ({value}) -> x == value).label, focused-option: 0}
+                    @.set-state {open: true, search: label, focused-option: 0}
                 else
                     @.set-state {open: false}
             | 13 => 
-                filtered-options = @.filter-options @.state.search
-                {new-option, label, value}:option? = filtered-options?[@.state.focused-option]
-                @.props?.on-change (@.props.values ++ value)
-                @.props?.on-options-change ([{label: value, value}] ++ @.props.options) if !!new-option
+                @.select-option @.state.focused-option
                 @.set-state {focused-option: -1, open: false, search: ''}
             | 27 =>
-                if @.state.open 
+                if @.state.open
                     @.set-state {open: false}
                 else
-                    @.props?.on-change []
+                    @.reset!
                 @.clear-and-foucs!
             | 38 => @.focus-adjacent-option -1
             | 40 => @.focus-adjacent-option 1
             | _ => return
         false
 
-    handle-option-click: (value) ->
-        @.props?.on-change (@.props.values ++ value)        
+    handle-option-click: (index) ->
+        @.select-option index
         @.clear-and-foucs!
         false
 
@@ -188,12 +176,12 @@ module.exports = React.create-class {
         @.set-state {focused-option: -1}
 
     handle-remove-click: (value) ->
-        @.props?.on-change (@.props.values |> partition (== value) |> (.1))
+        @.remove-value value
         @.clear-and-foucs!
         false
 
     handle-reset-click: ->  
-        @.props?.on-change []
+        @.reset!
         @.clear-and-foucs!
         false
 
@@ -204,6 +192,5 @@ module.exports = React.create-class {
             open: (@.state.open or (value.length > 0))
             search: value
         }
-        
 
 }
