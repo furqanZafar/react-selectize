@@ -3,6 +3,8 @@ React = require \react
 {a, div, h1, h2} = React.DOM
 $ = require \jquery-browserify
 {concat-map, filter, map} = require \prelude-ls
+EmailOption = require \./EmailOption.ls
+EmailValue = require \./EmailValue.ls
 
 App = React.create-class {
 
@@ -12,32 +14,49 @@ App = React.create-class {
             div {class-name: \description}, 'A flexible and beautiful Select input control for ReactJS with multiselect & autocomplete'
             a {class-name: \github-link, href: 'http://github.com/furqanZafar/react-select/tree/develop', target: \_blank}, 'View project on GitHub'
             h1 null, 'Examples:'
-            h2 null, 'MULTISELECT:'
+            h2 null, 'MULTISELECT:'            
+            # React.create-element ReactSelect, {
+            #     values: @.state.selected-countries
+            #     options: @.state.countries
+            #     on-change: @.handle-countries-change
+            #     on-options-change: @.handle-options-change
+            #     placeholder-text: 'Select countries'
+            #     max-items: 2
+            #     style: {z-index: 1}
+            # }
+            # React.create-element ReactSelect, {
+            #     disabled: @.state.selected-countries.length == 0
+            #     values: @.state.selected-cities
+            #     options: @.state.cities
+            #     on-change: @.handle-cities-change
+            #     placeholder-text: 'Select cities'
+            #     max-items: 2
+            #     style: {margin-top: 20, z-index: 0}
+            # }
             React.create-element ReactSelect, {
-                values: @.state.selected-countries
-                options: @.state.countries
-                on-change: @.handle-countries-change
-                on-options-change: @.handle-options-change
-                placeholder-text: 'Select countries'
-                restore-on-backspace: false
-                create: (input) -> {label: input, value: "_#{input}"}
-                max-items: 2
-                style: {z-index: 1}
-            }
-            React.create-element ReactSelect, {
-                disabled: @.state.selected-countries.length == 0
-                values: @.state.selected-cities
-                options: @.state.cities
-                on-change: @.handle-cities-change
-                placeholder-text: 'Select cities'
-                restore-on-backspace: false
-                max-items: 2
-                style: {margin-top: 20, z-index: 0}
-            }
+                values: @.state.selected-users
+                options: @.state.users
+                on-change: @.handle-users-change                
+                placeholder-text: 'Select users'
+                option-class: EmailOption
+                value-class: EmailValue
+            }   
             div {class-name: \copy-right}, 'Copyright © Furqan Zafar 2014. MIT Licensed.'
 
     get-initial-state: ->        
-        {selected-countries: [], countries: [], selected-cities: [], cities: []}
+        users = [
+            {
+                first-name: \john
+                last-name: \d
+                value: \john.d@a.com
+            }
+            {
+                first-name: \jack
+                last-name: \s
+                value: \jack.s@b.com
+            }
+        ]
+        {selected-countries: [], countries: [], selected-cities: [], cities: [], selected-users: [], users}
 
     component-will-mount: ->
         self = @
@@ -60,6 +79,9 @@ App = React.create-class {
 
     handle-cities-change: (selected-cities) ->
         @.set-state {selected-cities}
+
+    handle-users-change: (selected-users) ->
+        @.set-state {selected-users}
 
     handle-options-change: (options) ->
         @.set-state {countries: options}

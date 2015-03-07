@@ -3,6 +3,8 @@
 on-click-outside = require \react-onclickoutside
 React = require \react
 {div, input, span} = React.DOM
+SimpleOption = require \./simple-option.ls
+SimpleValue = require \./simple-value.ls
 
 module.exports = React.create-class {
 
@@ -15,7 +17,7 @@ module.exports = React.create-class {
             handle-click, handle-input-key-down, handle-option-click
             handle-option-mouse-over, handle-option-mouse-out, handle-remove-click
             handle-reset-click, handle-search-change, is-below-limit
-            props: {options, placeholder-text, values, max-items, disabled, style}
+            props: {options, placeholder-text, values, max-items, disabled, style, option-class, value-class}
             state: {focused-option, open, search}
         } = self = @        
 
@@ -23,12 +25,10 @@ module.exports = React.create-class {
             div do 
                 {class-name: \control, key: \control}
                 if (values.length == 0 and search.length == 0) then (div {class-name: \placeholder}, placeholder-text) else null
-                values
-                    |> map (value) -> 
-                        {label or ''}? = options |> find (.value == value)
-                        div {class-name: \selected-value, key: value}, 
-                            span {on-click: (handle-remove-click.bind self, value)}, \×
-                            span null, label
+                values |> map (value) ->
+                    React.create-element do 
+                        (value-class or SimpleValue)
+                        {key: value, on-remove-click: (handle-remove-click.bind self, value)} <<< (options |> find (.value == value)) or {}
                 input {                    
                     disabled
                     ref: \search
@@ -42,27 +42,19 @@ module.exports = React.create-class {
                 div {class-name: \arrow}, null
         ]
 
-        if open
-            filtered-options = @.filter-options search
+        if open            
             children.push div do 
                 {class-name: \options, key: \options}
-                [0 til filtered-options.length]
-                    |> map -> {index: it} <<< filtered-options[it]
-                    |> map ({index, value, label or '', partitions, new-option}?) ->
-                        div do 
-                            {
-                                class-name: (if index == focused-option then \focused else '')
-                                key: "#{value}"
-                                on-click: (handle-option-click.bind self, index)
-                                on-mouse-over: (handle-option-mouse-over.bind self, index)
-                                on-mouse-out: handle-option-mouse-out
-                                ref: "option-#{index}"
-                            }
-                            if index == 0 and !!new-option
-                                span null, "Add #{label}..."
-                            else
-                                partitions
-                                    |> map ([start, end, highlight]) -> span (if highlight then {class-name: \highlight} else null), (label.substring start, end)
+                (@.filter-options search)
+                    |> map ({index, value}:option-object) ->
+                        React.create-element (option-class or SimpleOption), {} <<< option-object <<< {
+                            key: "#{value}"                
+                            ref: "option-#{index}"
+                            focused: index == focused-option
+                            on-click: (handle-option-click.bind self, index)
+                            on-mouse-over: (handle-option-mouse-over.bind self, index)
+                            on-mouse-out: handle-option-mouse-out
+                        }
                 
         div {class-name: "multi-select #{if disabled then 'disabled' else ''}  #{if open then 'open' else ''}", on-click: handle-click, style}, children
             
@@ -103,22 +95,8 @@ module.exports = React.create-class {
         @.set-state @.show-options @.state.open, new-props
 
     filter-options: (search) ->
-        {options, values} = @.props        
-        filtered-options = options                    
-            |> filter ({label}?) -> !!label
-            |> filter ({value}) -> value not in values
-            |> map ({label, value}) -> {label, value, partitions: (partition-string label.to-lower-case!, search.to-lower-case!)}
-            |> filter ({partitions}) -> partitions.length > 0
-
-        if !!@.props.create
-            {label, value} = @.props.create search
-            new-option = 
-                | search.length > 0 and typeof (options |> find (.value == value)) == \undefined => [{label, value, partitions: [[0, label.length]], new-option: true}]
-                | _ => []
-            new-option ++ filtered-options
-
-        else
-            filtered-options
+        {option-class, options, values} = @.props
+        (option-class or SimpleOption).filter (options |> filter ({value}) -> value not in values), search
 
     focus: ->
         @.refs.search.getDOMNode!.focus!
