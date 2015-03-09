@@ -96,7 +96,9 @@ module.exports = React.create-class {
 
     filter-options: (search) ->
         {option-class, options, values} = @.props
-        (option-class or SimpleOption).filter (options |> filter ({value}) -> value not in values), search
+        result = (option-class or SimpleOption).filter (options |> filter ({value}) -> value not in values), search
+        [0 til result.length]
+            |> map (index) -> result[index] <<< {index}
 
     focus: ->
         @.refs.search.getDOMNode!.focus!
@@ -177,7 +179,7 @@ module.exports = React.create-class {
         typeof max-items == \undefined or values.length < max-items
 
     show-options: (show, props) ->
-        {disabled} = props or @.props
-        {open: show and (@.is-below-limit props) and !disabled}
+        {disabled, options, values} = props or @.props
+        {open: show and (@.is-below-limit props) and !disabled and values.length < options.length}
 
 }

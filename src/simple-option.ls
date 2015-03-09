@@ -19,8 +19,7 @@ module.exports = React.create-class {
                 | search.length > 0 and typeof (list |> find (.value == search)) == \undefined => [{label: search, value: search, new-option: true}]
                 | _ => []
 
-            result = new-option ++ filtered-list
-            [0 til result.length] |> map (index) -> {index} <<< result[index]
+            new-option ++ filtered-list
 
     }
 

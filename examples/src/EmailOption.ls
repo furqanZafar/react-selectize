@@ -12,13 +12,11 @@ module.exports = React.create-class {
         filter: (list, search) ->            
             filtered-list = list
                 |> filter ({first-name, last-name}?) -> ("#{first-name} #{last-name}".to-lower-case!.index-of search.to-lower-case!) > -1
-            
-            [0 til filtered-list.length] |> map (index) -> {index} <<< filtered-list[index]
 
     }
 
     render: ->
-        {on-click, on-mouse-over, on-mouse-out, focused, index, first-name, last-name, value, new-option, partitions} = @.props
+        {on-click, on-mouse-over, on-mouse-out, focused, index, first-name, last-name, value} = @.props
         div do 
             {
                 class-name: "email-option #{if focused then \focused else ''}"

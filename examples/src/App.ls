@@ -40,7 +40,7 @@ App = React.create-class {
                 placeholder-text: 'Select users'
                 option-class: EmailOption
                 value-class: EmailValue
-            }   
+            }
             div {class-name: \copy-right}, 'Copyright © Furqan Zafar 2014. MIT Licensed.'
 
     get-initial-state: ->        
