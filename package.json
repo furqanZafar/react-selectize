@@ -1,8 +1,8 @@
 {
-  "name": "react-select",
+  "name": "react-selectize",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "react implementation of selectize",
+  "main": "dist/react-selectize.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

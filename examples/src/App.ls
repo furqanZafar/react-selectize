@@ -1,4 +1,4 @@
-ReactSelect = require \../../src/react-select.ls
+ReactSelectize = require \../../src/react-selectize.ls
 React = require \react
 {a, div, h1, h2} = React.DOM
 $ = require \jquery-browserify
@@ -15,7 +15,7 @@ App = React.create-class {
             a {class-name: \github-link, href: 'http://github.com/furqanZafar/react-select/tree/develop', target: \_blank}, 'View project on GitHub'
             h1 null, 'Examples:'
             h2 null, 'MULTISELECT:'            
-            # React.create-element ReactSelect, {
+            # React.create-element ReactSelectize, {
             #     values: @.state.selected-countries
             #     options: @.state.countries
             #     on-change: @.handle-countries-change
@@ -24,7 +24,7 @@ App = React.create-class {
             #     max-items: 2
             #     style: {z-index: 1}
             # }
-            # React.create-element ReactSelect, {
+            # React.create-element ReactSelectize, {
             #     disabled: @.state.selected-countries.length == 0
             #     values: @.state.selected-cities
             #     options: @.state.cities
@@ -33,13 +33,14 @@ App = React.create-class {
             #     max-items: 2
             #     style: {margin-top: 20, z-index: 0}
             # }
-            React.create-element ReactSelect, {
+            React.create-element ReactSelectize, {
                 values: @.state.selected-users
                 options: @.state.users
                 on-change: @.handle-users-change                
                 placeholder-text: 'Select users'
                 option-class: EmailOption
                 value-class: EmailValue
+                multi: true
             }
             div {class-name: \copy-right}, 'Copyright © Furqan Zafar 2014. MIT Licensed.'
 

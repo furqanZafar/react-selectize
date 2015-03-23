@@ -8,7 +8,7 @@ SimpleValue = require \./simple-value.ls
 
 module.exports = React.create-class {
 
-    display-name: \ReactSelect
+    display-name: \ReactSelectize
 
     mixins: [on-click-outside]
 
@@ -60,9 +60,10 @@ module.exports = React.create-class {
             
     select-option: (index) !->
         filtered-options = @.filter-options @.state.search
-        {new-option, value}:option? = filtered-options?[index]
-        @.props?.on-options-change ([option] ++ @.props.options) if !!new-option    
-        @.props?.on-change (@.props.values ++ value) if !!value
+        {new-option, value}:option? = filtered-options?[index]        
+        @.props?.on-options-change ([option] ++ @.props.options) if !!new-option
+        if !!value
+            @.props?.on-change if @.props.multi then (@.props.values ++ value) else [value]
 
     remove-value: (value) ->
         {new-option}:option? = @.props.options |> find -> it.value == value 
@@ -92,6 +93,7 @@ module.exports = React.create-class {
             parent-element.scroll-top = option-element.offset-top   
 
     component-will-receive-props: (new-props) ->
+        console.log "received props"
         @.set-state @.show-options @.state.open, new-props
 
     filter-options: (search) ->
@@ -146,8 +148,10 @@ module.exports = React.create-class {
         false
 
     handle-option-click: (index) ->
-        @.select-option index
-        @.clear-and-foucs!
+        self = @
+        @.set-state {open: if !@.props.multi then false else @.state.open}, ->
+            self.select-option index
+            self.clear-and-foucs!
         false
 
     handle-option-mouse-over: (index) ->
@@ -179,7 +183,7 @@ module.exports = React.create-class {
         typeof max-items == \undefined or values.length < max-items
 
     show-options: (show, props) ->
-        {disabled, options, values} = props or @.props
-        {open: show and (@.is-below-limit props) and !disabled and values.length < options.length}
+        {disabled, multi, options, values} = props or @.props
+        {open: (show and !multi) or (show and (@.is-below-limit props) and !disabled and values.length < options.length)}
 
 }
