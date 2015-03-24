@@ -1,7 +1,8 @@
-npm-debug.log
-node_modules/
-*.DS_Store
+src/*.js
+src/*.css
 *.sublime-workspace
-examples/dist/
-dist/
+*.DS_Store
 rough
+npm-debug.log
+examples/dist/
+node_modules/

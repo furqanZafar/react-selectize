@@ -1,10 +1,10 @@
 {filter, find, last, map, partition, reverse, sort-by} = require \prelude-ls
-{clamp, find-all, partition-string, remove} = require \./prelude-extension.ls
+{clamp, find-all, partition-string, remove} = require \./prelude-extension
 on-click-outside = require \react-onclickoutside
 React = require \react
 {div, input, span} = React.DOM
-SimpleOption = require \./simple-option.ls
-SimpleValue = require \./simple-value.ls
+SimpleOption = require \./simple-option
+SimpleValue = require \./simple-value
 
 module.exports = React.create-class {
 

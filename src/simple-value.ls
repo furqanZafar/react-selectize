@@ -1,5 +1,5 @@
 {filter, find, map} = require \prelude-ls
-{partition-string} = require \./prelude-extension.ls
+{partition-string} = require \./prelude-extension
 React = require \react
 {div, input, span} = React.DOM
 

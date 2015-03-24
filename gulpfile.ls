@@ -3,6 +3,7 @@ fs = require \fs
 gulp = require \gulp
 gulp-browserify = require \gulp-browserify 
 gulp-connect = require \gulp-connect
+gulp-livescript = require \gulp-livescript
 gulp-util = require \gulp-util
 stylus = require \gulp-stylus
 {basename, dirname, extname} = require \path
@@ -23,7 +24,7 @@ bundle = (bundler, {file, directory}:output) ->
         .pipe gulp-connect.reload!        
 
 ##
-#
+# Examples
 ##
 gulp.task \build:examples:styles, ->
     gulp.src <[./examples/src/App.styl]>
@@ -45,26 +46,23 @@ gulp.task \watch:examples:scripts, ->
     examples-bundler.on \time, (time) -> gulp-util.log "App.js built in #{time} seconds"
 
 ##
-#
+# Source
 ##
 gulp.task \build:src:styles, ->
     gulp.src <[./src/react-selectize.styl]>
     .pipe stylus!
-    .pipe gulp.dest './dist'
-    .pipe gulp-connect.reload!
+    .pipe gulp.dest './src'    
 
 gulp.task \watch:src:styles, -> 
     gulp.watch <[./src/*.styl]>, <[build:src:styles]>    
 
-src-bundler = create-bundler \./src/react-selectize.ls
-bundle-src = -> bundle examples-bundler, {file: "react-selectize.js", directory: "./dist/"}
-
 gulp.task \build:src:scripts, ->        
-    bundle-src!
+    gulp.src <[./src/*.ls]>
+    .pipe gulp-livescript!
+    .pipe gulp.dest './src'
 
 gulp.task \watch:src:scripts, ->    
-    src-bundler.on \update, -> bundle-src!
-    src-bundler.on \time, (time) -> gulp-util.log "react-selectize.js built in #{time} seconds"
+    gulp.watch <[./src/*.ls]>, <[build:src:scripts]>
 
 gulp.task \dev:server, ->
     gulp-connect.server {
@@ -77,7 +75,7 @@ gulp.task \build:src, <[build:src:styles build:src:scripts]>
 gulp.task \watch:src, <[watch:src:styles watch:src:scripts]>
 gulp.task \build:examples, <[build:examples:styles build:examples:scripts]>
 gulp.task \watch:examples, <[watch:examples:styles watch:examples:scripts]>
-gulp.task \default, <[dev:server build:examples watch:examples]>
+gulp.task \default, <[dev:server build:src watch:src build:examples watch:examples]>
 
 
 
