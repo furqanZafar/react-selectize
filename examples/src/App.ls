@@ -15,33 +15,33 @@ App = React.create-class {
             a {class-name: \github-link, href: 'http://github.com/furqanZafar/react-select/tree/develop', target: \_blank}, 'View project on GitHub'
             h1 null, 'Examples:'
             h2 null, 'MULTISELECT:'            
-            # React.create-element ReactSelectize, {
-            #     values: @.state.selected-countries
-            #     options: @.state.countries
-            #     on-change: @.handle-countries-change
-            #     on-options-change: @.handle-options-change
-            #     placeholder-text: 'Select countries'
-            #     max-items: 2
-            #     style: {z-index: 1}
-            # }
-            # React.create-element ReactSelectize, {
-            #     disabled: @.state.selected-countries.length == 0
-            #     values: @.state.selected-cities
-            #     options: @.state.cities
-            #     on-change: @.handle-cities-change
-            #     placeholder-text: 'Select cities'
-            #     max-items: 2
-            #     style: {margin-top: 20, z-index: 0}
-            # }
             React.create-element ReactSelectize, {
-                values: @.state.selected-users
-                options: @.state.users
-                on-change: @.handle-users-change                
-                placeholder-text: 'Select users'
-                option-class: EmailOption
-                value-class: EmailValue
-                multi: true
+                values: @.state.selected-countries
+                options: @.state.countries
+                on-change: @.handle-countries-change
+                on-options-change: @.handle-options-change
+                placeholder-text: 'Select countries'
+                max-items: 2
+                style: {z-index: 1}
             }
+            React.create-element ReactSelectize, {
+                disabled: @.state.selected-countries.length == 0
+                values: @.state.selected-cities
+                options: @.state.cities
+                on-change: @.handle-cities-change
+                placeholder-text: 'Select cities'
+                max-items: 2
+                style: {margin-top: 20, z-index: 0}
+            }
+            # React.create-element ReactSelectize, {
+            #     values: @.state.selected-users
+            #     options: @.state.users
+            #     on-change: @.handle-users-change                
+            #     placeholder-text: 'Select users'
+            #     option-class: EmailOption
+            #     value-class: EmailValue
+            #     multi: true
+            # }
             div {class-name: \copy-right}, 'Copyright © Furqan Zafar 2014. MIT Licensed.'
 
     get-initial-state: ->        

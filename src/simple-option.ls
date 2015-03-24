@@ -9,12 +9,14 @@ module.exports = React.create-class {
 
     statics: {
 
-        filter: (list, search) ->            
+        filter: (list, search, {add-options}) ->
             filtered-list = list
                 |> filter ({label}?) -> !!label                
                 |> map ({label, value}) -> {label, value, partitions: (partition-string label.to-lower-case!, search.to-lower-case!)}
                 |> filter ({partitions}) -> partitions.length > 0
             
+            return filtered-list if !add-options
+
             new-option = 
                 | search.length > 0 and typeof (list |> find (.value == search)) == \undefined => [{label: search, value: search, new-option: true}]
                 | _ => []
@@ -24,7 +26,7 @@ module.exports = React.create-class {
     }
 
     render: ->
-        {on-click, on-mouse-over, on-mouse-out, focused, index, label, value, new-option, partitions} = @.props
+        {on-click, on-mouse-over, on-mouse-out, focused, index, label, value, add-options, new-option, partitions} = @.props
         div do 
             {
                 class-name: "simple-option #{if focused then \focused else ''}"
@@ -32,7 +34,7 @@ module.exports = React.create-class {
                 on-mouse-over
                 on-mouse-out
             }
-            if index == 0 and !!new-option
+            if add-options and (index == 0 and !!new-option)
                 span null, "Add #{label}..."
             else
                 partitions

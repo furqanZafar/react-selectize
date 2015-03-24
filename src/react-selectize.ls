@@ -17,7 +17,7 @@ module.exports = React.create-class {
             handle-click, handle-input-key-down, handle-option-click
             handle-option-mouse-over, handle-option-mouse-out, handle-remove-click
             handle-reset-click, handle-search-change, is-below-limit
-            props: {options, placeholder-text, values, max-items, disabled, style, option-class, value-class}
+            props: {add-options or false, options, placeholder-text, values, max-items, disabled, style, option-class, value-class}
             state: {focused-option, open, search}
         } = self = @        
 
@@ -48,7 +48,8 @@ module.exports = React.create-class {
                 (@.filter-options search)
                     |> map ({index, value}:option-object) ->
                         React.create-element (option-class or SimpleOption), {} <<< option-object <<< {
-                            key: "#{value}"                
+                            add-options
+                            key: "#{value}"
                             ref: "option-#{index}"
                             focused: index == focused-option
                             on-click: (handle-option-click.bind self, index)
@@ -93,12 +94,11 @@ module.exports = React.create-class {
             parent-element.scroll-top = option-element.offset-top   
 
     component-will-receive-props: (new-props) ->
-        console.log "received props"
         @.set-state @.show-options @.state.open, new-props
 
     filter-options: (search) ->
-        {option-class, options, values} = @.props
-        result = (option-class or SimpleOption).filter (options |> filter ({value}) -> value not in values), search
+        {add-options, option-class, options, values} = @.props
+        result = (option-class or SimpleOption).filter (options |> filter ({value}) -> value not in values), search, {add-options}
         [0 til result.length]
             |> map (index) -> result[index] <<< {index}
 
