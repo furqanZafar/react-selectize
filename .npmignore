@@ -1,6 +1,9 @@
-src/*.ls
-src/*.styl
-!src/*.js
-!src/*.css
+.DS_Store
+.gitignore
+gulpfile.ls
+npm-debug.log
+*.ls
+*.styl
 *.sublime-project
+*.sublime-workspace
 examples/

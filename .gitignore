@@ -1,8 +1,7 @@
-src/*.js
-src/*.css
-*.sublime-workspace
-*.DS_Store
-rough
+.DS_Store
 npm-debug.log
+*.sublime-workspace
+*.js
+*.css
 examples/dist/
 node_modules/

@@ -1,9 +1,6 @@
-{filter, find, map} = require \prelude-ls
-# {partition-string} = require \./prelude-extension.ls
-React = require \react
-{div, input, span} = React.DOM
+{DOM:{div, span}}:React = require \react
 
-module.exports = React.create-class {
+module.exports = React.create-class do
 
     display-name: 'EmailValue'
 
@@ -14,4 +11,3 @@ module.exports = React.create-class {
             span {class-name: \name}, "#{first-name} #{last-name}"
             span {class-name: \email}, "<#{value}>"
 
-}

@@ -1,0 +1,77 @@
+######################################################################################################
+[
+    {
+        make: ""
+        model: ""
+        color: ""
+        doors: ""
+    }
+    {
+        make: ""
+        model: ""
+        color: ""
+        doors: ""
+    }
+]
+
+Option.group = ({make, value}) -> {id: label, label}
+
+
+
+######################################################################################################
+[
+    {
+        label: ""
+        value: [
+            {
+
+            }
+        ]
+    }
+    {
+        label: ""
+        value: [
+            {
+                label: ""
+                value: ""
+            }
+            {
+                label: ""
+                value: ""
+            }
+        ]
+    }
+    {
+        label: ""
+        value: ""
+    }
+]
+
+=>
+
+options 
+    |> partition -> typeof! it.value == \Array
+    |> map ([grouped, ungrouped]) -> [{value: ungrouped}] ++ grouped
+    |> 
+
+Option.get-group-key = (.label)
+Option.get-group-title = (.label)
+
+[
+    {
+        group-name: ""
+        label: ""
+        value: ""
+    }
+    .....
+    {
+        group-name: ""
+        label: ""
+        value: ""
+    }
+]
+
+
+render-group = (group) ->
+
+

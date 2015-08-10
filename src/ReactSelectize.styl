@@ -1,5 +1,5 @@
-@import 'simple-option'
-@import 'simple-value'
+@import 'SimpleOption'
+@import 'SimpleValue'
 
 .multi-select
     font-family Helvetica Neue, Helvetica, Arial, sans-serif
@@ -17,7 +17,7 @@
         padding 2px 52px 2px 3px
         -webkit-transition all 0.2s 0s ease
         position relative
-        z-index 10
+        z-index 9
 
         .placeholder
             color #aaaaaa
@@ -28,7 +28,7 @@
             white-space nowrap
             position absolute
             top 0
-            left 0    
+            left 0
 
         input 
             background none
@@ -36,9 +36,9 @@
             outline none 
             font-size 1em
             margin 2px
-            padding 4px 0px        
+            padding 4px 0px
             vertical-align middle
-            width 10px
+            // width 10px
 
         .reset
             color #999999
@@ -71,12 +71,11 @@
         border-bottom-left-radius 4px
         border-bottom-right-radius 4px
         box-sizing border-box
-        margin-top -1px
         max-height 200px
         overflow auto
         position absolute
         width 100%
-        z-index 9        
+        z-index 10
 
     &.open 
 
