@@ -1,6 +1,6 @@
 {
   "name": "react-selectize",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "react implementation of selectize",
   "main": "src/ReactSelectize.js",
   "scripts": {
@@ -12,8 +12,7 @@
     "jquery-browserify": "^1.8.1",
     "prelude-extension": "0.0.4",
     "prelude-ls": "^1.1.1",
-    "react": "^0.13.1",
-    "react-onclickoutside": "^0.2.2"
+    "react": "^0.13.1"
   },
   "devDependencies": {
     "browserify": "^9.0.3",

@@ -1,6 +1,5 @@
 {filter, find, last, map, partition, reject, reverse, sort-by} = require \prelude-ls
 {clamp, find-all, partition-string} = require \prelude-extension
-on-click-outside = require \react-onclickoutside
 {DOM:{div, input, span}}:React = require \react
 require! \./SimpleOption
 require! \./SimpleValue
@@ -8,8 +7,6 @@ require! \./SimpleValue
 module.exports = React.create-class do
 
     display-name: \ReactSelectize
-
-    mixins: [on-click-outside]
 
     # get-default-props :: a -> Props
     get-default-props: ->
@@ -207,10 +204,6 @@ module.exports = React.create-class do
         @set-state do
             focused-option: clamp (@state.focused-option + direction), 0, (@filter-options @state.search).length - 1
             open: true
-
-    # close the list of options when the user clicks outside (required by the on-click-outside mixin)
-    # handle-click-outside :: a -> Void
-    handle-click-outside: !-> @set-state open: false
 
     # is-below-limit :: Props -> Boolean
     is-below-limit: (props) -> 
