@@ -12,7 +12,7 @@ module.exports = React.create-class do
     get-default-props: ->
         add-options: false
         disabled: false
-        max-items: 1
+        # max-items: 1
         on-blur: ((values) ->)
         on-change: ((values) ->)
         on-options-change: ((options) ->)
@@ -208,7 +208,7 @@ module.exports = React.create-class do
     # is-below-limit :: Props -> Boolean
     is-below-limit: (props) -> 
         {max-items, values}? = props or @props
-        typeof max-items == \undefined or values.length < max-items
+        (typeof max-items == \undefined) or values.length < max-items
 
     # returns the removed option corresponding to the given value
     # remove-value :: String -> Option

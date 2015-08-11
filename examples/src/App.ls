@@ -17,6 +17,7 @@ App = React.create-class do
             # COUNTRIES
             ReactSelectize do 
                 add-options: true
+                max-items: 2
                 values: @state.selected-countries
                 options: @state.countries
                 on-change: (selected-countries) ~>
@@ -26,10 +27,8 @@ App = React.create-class do
                             {label: "#{country}_#{index}", value: "#{country}_#{index}"}
                     selected-cities = @state.selected-cities |> filter (city) ~> city in (cities |> map (.value))
                     @set-state {cities, selected-cities}
-                on-options-change: (options) ~>
-                    @set-state {countries: options}
+                on-options-change: (options) ~> @set-state {countries: options}
                 placeholder: 'Select countries'
-                max-items: 2
                 style: z-index: 1
 
             # CITIES
@@ -37,8 +36,7 @@ App = React.create-class do
                 disabled: @state.selected-countries.length == 0
                 values: @state.selected-cities
                 options: @state.cities
-                on-change: (selected-cities) ~>
-                    @set-state {selected-cities}
+                on-change: (selected-cities) ~> @set-state {selected-cities}
                 placeholder: 'Select cities'
                 max-items: 2
                 style: margin-top: 20, z-index: 0
