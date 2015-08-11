@@ -38,7 +38,7 @@ App = React.create-class do
                 options: @state.cities
                 on-change: (selected-cities) ~> @set-state {selected-cities}
                 placeholder: 'Select cities'
-                max-items: 2
+                # max-items: 2
                 style: margin-top: 20, z-index: 0
                 
             div {class-name: \copy-right}, 'Copyright © Furqan Zafar 2014. MIT Licensed.'

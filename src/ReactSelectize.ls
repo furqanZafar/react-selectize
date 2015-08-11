@@ -26,10 +26,12 @@ module.exports = React.create-class do
     # render :: a -> ReactElement
     render: ->
         
+        out-of-options = !@props.add-options and (@props.values.length == @props.options.length)
+
         show-options = switch
             | @props.disabled => false
             | !@is-below-limit! => false
-            | @props.values.length > 0 and @props.values.length == @props.options.length => false
+            | !!out-of-options => false
             | _ => @state.open
 
         # MULTISELECT
@@ -65,71 +67,87 @@ module.exports = React.create-class do
                         } <<< (@props.options |> find (.value == value)) or {}
 
                 # SEARCH INPUT BOX
-                input {
+                input do
                     disabled: @props.disabled
                     ref: \search
                     type: \text
                     value: @state.search
+                    on-change: switch
+                        | @is-below-limit! and !out-of-options => ({current-target:{value}}) ~>
+                            filtered-options = @filter-options value
+                            @set-state do
+                                focused-option: 0
+                                open: filtered-options.length > 0
+                                search: value
+
+                        # disable the text entry if the user has selected all the availabe options
+                        | _ => (->)
+
                     on-key-down: (e) ~>
-                        if e.which == 9
+                        
+                        # always handle the tab and the backspace key
+                        switch e.which
+
+                        # TAB
+                        | 9 =>
                             <~ @set-state open: false
                             @props.on-blur @props.values
+
+                        # BACKSPACE
+                        | 8 => 
+                            return if @state.search.length > 0
+
+                            {label}? = @remove-value last @props.values
+                            if !!label and !!@props.restore-on-backspace
+                                @set-state do 
+                                    focused-option: 0
+                                    open: true
+                                    search: label
+                            else
+                                @set-state open: false
+
+                            e.prevent-default!
+                            e.stop-propagation!
+
+                        # no need to process or block any keys if we ran out of options
+                        if out-of-options
+                            return
+
                         else
-                            match e.which
 
-                                # BACKSPACE
-                                | 8 => 
-                                    return if @state.search.length > 0
+                            switch e.which
 
-                                    {label}? = @remove-value last @props.values
-                                    if !!label and !!@props.restore-on-backspace
-                                        @set-state do 
-                                            focused-option: 0
-                                            open: true
-                                            search: label
-                                    else
-                                        @set-state open: false
+                            # ENTER
+                            | 13 => 
+                                @select-option @state.focused-option
+                                @set-state do 
+                                    focused-option: -1
+                                    open: false
+                                    search: ''
 
-                                # ENTER
-                                | 13 => 
-                                    @select-option @state.focused-option
-                                    @set-state do 
-                                        focused-option: -1
-                                        open: false
-                                        search: ''
+                            # ESC
+                            | 27 =>
+                                if @state.open
+                                    @set-state open: false
+                                else
+                                    @reset!
+                                @clear-and-foucs!
 
-                                # ESC
-                                | 27 =>
-                                    if @state.open
-                                        @set-state open: false
-                                    else
-                                        @reset!
-                                    @clear-and-foucs!
+                            # UP ARROW
+                            | 38 => @focus-adjacent-option -1
 
-                                # UP ARROW
-                                | 38 => @focus-adjacent-option -1
+                            # DOWN ARROW
+                            | 40 => @focus-adjacent-option 1
 
-                                # DOWN ARROW
-                                | 40 => @focus-adjacent-option 1
+                            # REST (we don't need to process or block rest of the keys)
+                            | _ => return
 
-                                | _ => return
                             e.prevent-default!
                             e.stop-propagation!
 
                     style: width: Math.max 16, (@state.search.length * 16)
 
-                } <<< (
-                    if @is-below-limit!
-                        on-change: ({current-target:{value}}) ~>
-                            filtered-options = @filter-options value
-                            @set-state do
-                                focused-option: if filtered-options.length == 1 or typeof filtered-options?.0?.new-option == \undefined then 0 else 1
-                                open: @state.open or filtered-options.length > 0
-                                search: value
-                    else
-                        {}
-                )
-
+    
                 # RESET BUTTON
                 div do 
                     class-name: \reset
@@ -148,6 +166,8 @@ module.exports = React.create-class do
                 div do 
                     class-name: \options
                     (@filter-options @state.search) |> map ({index, value}:option-object) ~>
+
+                        # OPTION WRAPPER 
                         div do
                             ref: "option-#{index}"
                             key: "#{value}"
@@ -159,6 +179,8 @@ module.exports = React.create-class do
                                 e.stop-propagation!
                             on-mouse-over: ~> @set-state focused-option: index
                             on-mouse-out: ~> @set-state focused-option: -1
+
+                            # OPTION
                             React.create-element do 
                                 @props.option-class
                                 {} <<< option-object <<<
@@ -168,6 +190,7 @@ module.exports = React.create-class do
     # get-initial-state :: a -> UIState
     get-initial-state: -> focused-option: 0, open: false, search: ''
 
+    # scrolls to the currently focused item
     # component-did-update :: a -> Void
     component-did-update: !->
         return if @state.focused-option == -1
@@ -218,6 +241,7 @@ module.exports = React.create-class do
         @props.on-change (@props.values |> reject (== value))
         option
 
+    # removes all the selected values
     # reset : a -> Void
     reset: !-> @props.on-change []
         
