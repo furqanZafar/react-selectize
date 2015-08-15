@@ -26,5 +26,9 @@
     "livescript": "^1.4.0",
     "vinyl-source-stream": "^1.0.0",
     "watchify": "^2.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/furqanZafar/react-selectize.git"
   }
 }

@@ -1,77 +1,17 @@
-######################################################################################################
-[
-    {
-        make: ""
-        model: ""
-        color: ""
-        doors: ""
-    }
-    {
-        make: ""
-        model: ""
-        color: ""
-        doors: ""
-    }
-]
-
-Option.group = ({make, value}) -> {id: label, label}
+min/max values, tags, search highlighting, disabled select, option groups
 
 
+1. tagging (adjectives cool, awesome, rad, ...)
 
-######################################################################################################
-[
-    {
-        label: ""
-        value: [
-            {
+2. list of emojis (custom options & values)
 
-            }
-        ]
-    }
-    {
-        label: ""
-        value: [
-            {
-                label: ""
-                value: ""
-            }
-            {
-                label: ""
-                value: ""
-            }
-        ]
-    }
-    {
-        label: ""
-        value: ""
-    }
-]
+3. option groups ()
 
-=>
+4. min/max values (select 2 additional toppings for your ice cream)
 
-options 
-    |> partition -> typeof! it.value == \Array
-    |> map ([grouped, ungrouped]) -> [{value: ungrouped}] ++ grouped
-    |> 
+5. list of github repos (async, search highlight)
 
-Option.get-group-key = (.label)
-Option.get-group-title = (.label)
+6.0. list of countries & cities (communication between multiple selects)
 
-[
-    {
-        group-name: ""
-        label: ""
-        value: ""
-    }
-    .....
-    {
-        group-name: ""
-        label: ""
-        value: ""
-    }
-]
-
-
-render-group = (group) ->
-
+6.1. list of makes & models (communication between multiple selects, validation)
 
