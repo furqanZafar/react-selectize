@@ -14,12 +14,13 @@ module.exports = React.create-class do
 
     # get-default-props :: a -> Props
     get-default-props: ->
-        close-on-select: true
         disabled: false
         render-no-results-found: -> # a -> ReactElement
         on-blur: ((values) !->) # [Item] -> Void
+        on-open-change: ((open, callback) !->) # Boolean -> (a -> Void) -> Void
         on-search-change: ((search, callback) !-> ) # String -> (a -> Void) -> Void
         on-values-change: ((values, callback) !->) # [Item] -> (a -> Void) -> Void
+        open: false
         options: [] # [Item]        
         render-option: ((index, focused, option) ->) # Int -> Boolean -> Item -> ReactElement
         render-value: ((index, value) ->) # Int -> Item -> ReactElement
