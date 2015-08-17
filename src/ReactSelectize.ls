@@ -6,13 +6,21 @@ module.exports = React.create-class do
 
     display-name: \ReactSelectize
 
+    focused-option: -1
+
+    # locks allow to temprorily block default event processing
+    focus-lock: false
+    scroll-lock: false
+
     # get-default-props :: a -> Props
     get-default-props: ->
+        close-on-select: true
         disabled: false
         # max-values: 1
+        render-no-results-found: -> # a -> ReactElement
         on-blur: ((values) !->) # [Item] -> Void
-        on-search-change: ((search) !-> ) # String -> Void
-        on-values-change: ((values) !->) # [Item] -> Void
+        on-search-change: ((search, callback) !-> ) # String -> (a -> Void) -> Void
+        on-values-change: ((values, callback) !->) # [Item] -> (a -> Void) -> Void
         options: [] # [Item]        
         render-option: ((index, focused, option) ->) # Int -> Boolean -> Item -> ReactElement
         render-value: ((index, value) ->) # Int -> Item -> ReactElement
@@ -34,8 +42,9 @@ module.exports = React.create-class do
             class-name: "multi-select #{if @props.disabled then 'disabled' else ''} #{if show-options then 'open' else ''}"
             style: @props.style
             on-click: ~>
-                @set-state open: if @state.open then false else true
                 @focus!
+                <~ @set-state open: (!@props.disabled and @is-below-limit!)
+                @highlight-selectable-option 0, 1 if @state.open
 
             # CONTROL
             div do 
@@ -59,11 +68,18 @@ module.exports = React.create-class do
                     value: @props.search
                     on-change: switch
                         | @is-below-limit! => ({current-target:{value}}) ~>
-                            @props.on-search-change value
-                            @set-state focused-option: 0, open: true
+                            <~ @props.on-search-change value
+                            @highlight-selectable-option 0, 1
 
                         # disable the text entry if the user has selected all the availabe options
                         | _ => (->)
+
+                    on-focus: !~> 
+                        if !!@focus-lock 
+                            @focus-lock = false
+                        else
+                            <~ @set-state open: (!@props.disabled and @is-below-limit!)
+                            @highlight-selectable-option 0, 1 if @state.open
 
                     on-key-down: (e) ~>
                         
@@ -78,63 +94,70 @@ module.exports = React.create-class do
                         # BACKSPACE
                         | 8 => 
                             return if @props.search.length > 0
-                            
-                            if !!@props.restore-on-backspace
-                                @set-state do 
-                                    focused-option: 0
-                                    open: true
-                                @props.on-search-change @props.restore-on-backspace last @props.values
-                            else
-                                @set-state open: false
 
-                            @props.on-values-change initial @props.values
+                            # restore on backspace functionality
+                            do ~>
+                                value-to-remove = last @props.values
+                                <~ @props.on-values-change (initial @props.values) ? []
+                                if !!@props.restore-on-backspace and !!value-to-remove
+                                    <~ @props.on-search-change @props.restore-on-backspace value-to-remove
+                                    @highlight-selectable-option 0, 1
 
                             e.prevent-default!
                             e.stop-propagation!
 
+                        # ESCAPE
+                        | 27 =>
+                            <~ do ~>
+                                if @state.open
+                                    @refs?["option-#{@focused-option}"]?.getDOMNode!?.class-name = \option-wrapper
+                                    @focused-option = -1
+                                    @set-state open: false
+                                    ~> it!
+                                else
+                                    ~> @props.on-values-change [], it
+                            <~ @props.on-search-change ""
+                            @focus!
+
                         # no need to process or block any keys if we ran out of options
-                        if @props.options.length == 0
-                            return
+                        return if !@is-below-limit! or @props.options.length == 0
+                            
+                        # ENTER
+                        if e.which == 13 and @state.open
+                            <~ @props.on-values-change @props.values ++ [@props.options?[@focused-option]]
+                            <~ @props.on-search-change ""
+                            open = @state.open and !@props.close-on-select
+                            <~ do ~> if open == @state.open then (~> it!) else (~> @set-state {open}, it)
+                            if @state.open
+                                @highlight-selectable-option 0, 1
+                            else
+                                @focused-option = -1
 
                         else
 
                             switch e.which
 
-                            # ENTER
-                            | 13 => 
-                                @select-option @state.focused-option
-                                @set-state do 
-                                    focused-option: -1
-                                    open: false
-                                    search: ''
-
-                            # ESC
-                            | 27 =>
-                                if @state.open
-                                    @set-state open: false
-                                else
-                                    @reset!
-                                @clear-and-foucs!
-
                             # UP ARROW
-                            | 38 => @focus-adjacent-option -1
+                            | 38 => @highlight-selectable-option (clamp @focused-option - 1, 0, @props.options.length - 1), -1
 
                             # DOWN ARROW
-                            | 40 => @focus-adjacent-option 1
+                            | 40 => @highlight-selectable-option (clamp @focused-option + 1, 0, @props.options.length - 1), 1
 
                             # REST (we don't need to process or block rest of the keys)
                             | _ => return
 
-                            e.prevent-default!
-                            e.stop-propagation!
+                        e.prevent-default!
+                        e.stop-propagation!
 
     
                 # RESET BUTTON
                 div do 
                     class-name: \reset
                     on-click: (e) ~>
-                        @reset!
-                        @clear-and-foucs!
+                        do ~>
+                            <~ @props.on-values-change []
+                            <~ @props.on-search-change ""
+                            @focus!
                         e.prevent-default!
                         e.stop-propagation!
                     \×
@@ -142,91 +165,131 @@ module.exports = React.create-class do
                 # ARROW ICON
                 div {class-name: \arrow}, null
 
-            # LIST OF OPTIONS
-            if show-options
-
-                if @props.options.length == 0
-                    div do 
-                        null
-                        div do 
-                            null
-                            'Out of options ¯\_(ツ)_/¯'
-
-                else
-                    div do 
-                        class-name: \options
+            if @state.open
+                
+                div do 
+                    class-name: \options
+                    
+                    # NO RESULT FOUND   
+                    if @props.options.length == 0
+                        @props.render-no-results-found!
+                    
+                    # OPTIONS
+                    else
                         [0 til @props.options.length] |> map (index) ~>
-                            
+
+                            option = @props.options[index]
+
                             # OPTION WRAPPER 
                             div do
-                                ref: "option-#{index}"
-                                key: "#{index}"
-                                on-click: (e) ~>
-                                    @set-state {open: false}, ~>
-                                        @select-option index
-                                        @clear-and-foucs!
-                                    e.prevent-default!
-                                    e.stop-propagation!
-                                on-mouse-over: ~> @set-state focused-option: index
-                                on-mouse-out: ~> @set-state focused-option: -1
+                                {
+                                    class-name: \option-wrapper
+                                    ref: "option-#{index}"
+                                    key: "#{index}"
+                                    on-mouse-move: !~> @scroll-lock = false
+                                    on-mouse-over: ~>
+                                        return if @scroll-lock
+                                        @refs?["option-#{@focused-option}"]?.getDOMNode!?.class-name = \option-wrapper
+                                        @focused-option = -1
+                                } <<< 
+                                    switch 
+                                    | (typeof option?.selectable == \boolean) and !option.selectable => 
+                                        on-click: (e) ~>
+                                            e.prevent-default!
+                                            e.stop-propagation!
+                                    | _ => 
+                                        on-click: (e) ~>
+                                            do ~>
+                                                <~ @props.on-values-change @props.values ++ [@props.options?[index]]
+                                                <~ @props.on-search-change ""
+                                                @focus!
+                                                do ~>
+                                                    open = @state.open and !@props.close-on-select
+
+                                                    # an optimization (avoid unwanted calls to render function)
+                                                    if open == @state.open then (~> it!) else (~> @set-state {open}, it)
+
+                                            e.prevent-default!
+                                            e.stop-propagation!
+                                        on-mouse-over: ({current-target}) ~>
+                                            return if @scroll-lock
+                                            @refs?["option-#{@focused-option}"]?.getDOMNode!?.class-name = \option-wrapper
+                                            current-target.class-name = "option-wrapper focused"
+                                            @focused-option = index
 
                                 # OPTION
-                                @props.render-option index, index == @state.focused-option, @props.options[index]
+                                @props.render-option index, option
 
 
     # get-initial-state :: a -> UIState
-    get-initial-state: -> focused-option: 0, open: false
+    get-initial-state: -> open: false
 
+    # autosize search input width
     # component-did-update :: a -> Void
     component-did-update: !->
+        $search = @refs.search.get-DOM-node!
+            ..style.width = 0
+            ..style.width = $search.scroll-width
 
-        # scroll to the currently focused item
-        do ~>
-            return if @state.focused-option == -1
-
-            {parent-element}:option-element? = @?.refs?["option-#{@state.focused-option}"]?.getDOMNode!
-            return if !option-element
-
-            option-height = option-element.offset-height - 1
-
-            if (option-element.offset-top - parent-element.scroll-top) > parent-element.offset-height
-                parent-element.scroll-top = option-element.offset-top - parent-element.offset-height + option-height
-
-            else if (option-element.offset-top - parent-element.scroll-top + option-height) < 0
-                parent-element.scroll-top = option-element.offset-top   
-
-        # autosize search input width
-        do ~>
-            $search = @refs.search.get-DOM-node!
-                ..style.width = 0
-                ..style.width = $search.scroll-width
-
-    # clear-and-focus :: a -> Void    
-    clear-and-foucs: !->
-        @set-state search: ''
-        @focus!    
+    component-will-receive-props: (props) !->  @set-state open: false if @state.open and (props.disabled or !@is-below-limit props)
 
     # focuses on the cursor search input
     # focus :: a -> Void
-    focus: !-> @refs.search.getDOMNode!.focus!
+    focus: !-> 
+        @focus-lock = true
+        @refs.search.getDOMNode!.focus!
 
-    # highlights the option before or after the current highlight option
-    # focus-adjacent-option :: Number -> Void
-    focus-adjacent-option: (direction) !->
-        @set-state do
-            focused-option: clamp (@state.focused-option + direction), 0, @props.options.length - 1
-            open: true    
+    # foucs-option :: Int -> Void
+    highlight-option: (index) !->
 
-    # is-below-limit :: Props -> Boolean
+        # block mouse events from firing while adjusting scroll position 
+        @scroll-lock = true        
+
+        # lowlight the previous option
+        @refs?["option-#{@focused-option}"]?.getDOMNode!?.class-name = \option-wrapper
+
+        # find the next option to highlight
+        @focused-option = index
+
+        # get a refrence to DOM node of the element to highlight
+        {parent-element}:option-element? = @refs?["option-#{@focused-option}"]?.getDOMNode!
+        return if !option-element
+
+        # highlight the option
+        option-element.class-name = 'option-wrapper focused'
+
+        # scroll to the option
+        option-height = option-element.offset-height - 1
+
+        if (option-element.offset-top - parent-element.scroll-top) >= parent-element.offset-height
+            parent-element.scroll-top = option-element.offset-top - parent-element.offset-height + option-height
+
+        else if (option-element.offset-top - parent-element.scroll-top + option-height) <= 0
+            parent-element.scroll-top = option-element.offset-top
+
+    # highlight-selectable-option :: Int -> Int -> Void
+    highlight-selectable-option: (index, direction) !->        
+
+        # open the list of items
+        <~ do ~>
+            if !@state.open 
+                ~> @set-state open: true, it
+            else
+                -> it!
+
+        # end recursion if the index violates the bounds
+        return if index < 0 or index >= @props.options.length
+
+        # recurse until a selectable option is found while moving in the given direction
+        option = @props?.options?[index]
+        if typeof option?.selectable == \boolean and !option.selectable
+            @highlight-selectable-option index + direction, direction
+
+        # highlight the option found & end the recursion
+        else
+            @highlight-option index
+
+    # is-below-limit :: Props -> boolean
     is-below-limit: (props) -> 
         {max-values, values}? = props or @props
         (typeof max-values == \undefined) or values.length < max-values
-
-    # removes all the selected values
-    # reset : a -> Void
-    reset: !-> @props.on-values-change []
-
-    # select-option :: Number -> Void
-    select-option: (index) !-> 
-        @props.on-values-change @props.values ++ [@props.options?[index]]
-        @props.on-search-change ""

@@ -1,6 +1,3 @@
-@import 'SimpleOption'
-@import 'SimpleValue'
-
 .multi-select
     font-family Helvetica Neue, Helvetica, Arial, sans-serif
     -webkit-user-select none    
@@ -77,6 +74,10 @@
         width 100%
         z-index 10
 
+        .option-wrapper.focused
+            background #f2f9fc
+            color #333
+
     &.open 
 
         .control
@@ -89,4 +90,3 @@
             .arrow
                 border-color transparent transparent #999999
                 border-width 0 5px 5px
-

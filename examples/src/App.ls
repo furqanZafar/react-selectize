@@ -1,6 +1,6 @@
 $ = require \jquery-browserify
-{concat-map, filter, find, map, reject, unique-by} = require \prelude-ls
-{create-factory, DOM:{a, div, h1, h2, span}}:React = require \react
+{any, concat-map, filter, find, map, reject, unique-by} = require \prelude-ls
+{create-factory, DOM:{a, div, h1, h2, img, span}}:React = require \react
 ReactSelectize = create-factory require \../../src/ReactSelectize.ls
 
 App = React.create-class do
@@ -12,61 +12,108 @@ App = React.create-class do
             a {class-name: \github-link, href: 'http://github.com/furqanZafar/react-select/tree/develop', target: \_blank}, 'View project on GitHub'
             h1 null, 'Examples:'
 
-            # COUNTRIES
+            #TAGGING
             ReactSelectize do 
-                options: @state.countries 
-                    |> reject ~> it.label.to-lower-case!.trim! in (map (.label.to-lower-case!.trim!), @state.selected-countries)
-                    |> filter ~> (it.label.to-lower-case!.trim!.index-of @state.countries-search.to-lower-case!.trim!) > -1                    
+                options: @state.tags 
+                    |> reject ~> it.label.to-lower-case!.trim! in (map (.label.to-lower-case!.trim!), @state.selected-tags)
+                    |> filter ~> (it.label.to-lower-case!.trim!.index-of @state.tags-search.to-lower-case!.trim!) > -1                    
                     |> (options) ~> 
-                        {countries-search, selected-countries} = @state
+                        {tags-search, selected-tags} = @state
                         return options if options.length > 0
-                        return [] if countries-search.length == 0
-                        return [] if !!(find (.label.to-lower-case!.trim! == countries-search.to-lower-case!.trim!), selected-countries)
-                        [{label: countries-search, value: countries-search, new-option: true}]
-                render-option: (index, focused, {label, new-option}?) ~>
+                        return [] if tags-search.length == 0
+                        return [] if !!(find (.label.to-lower-case!.trim! == tags-search.to-lower-case!.trim!), selected-tags)
+                        [{label: tags-search, value: tags-search, new-option: true}]
+                render-option: (index, {label, new-option}?) ~>
                     div do 
-                        class-name: "simple-option #{if focused then 'focused' else ''}"
+                        class-name: "simple-option"
                         key: index
                         if !!new-option then "Add #label ..." else label
-                search: @state.countries-search
-                on-search-change: (search) ~> @set-state countries-search:search
-                values: @state.selected-countries
-                max-values: 2
-                on-values-change: (selected-countries) ~>
-                    cities = selected-countries |> concat-map (country) ~> 
-                        [1 to 3] |> map (index) ~> 
-                            label: "#{country}_#{index}", value: "#{country}_#{index}"
-                    selected-cities = @state.selected-cities |> filter (city) ~> city in (cities |> map (.value))
-                    @set-state {selected-countries, cities, selected-cities}
+                render-no-results-found: ~>
+                    div do 
+                        class-name: \no-results-found
+                        if @state.tags-search.length == 0 then "type to create a new tag" else "tag already exits"
+                search: @state.tags-search
+                on-search-change: (search, callback) ~> @set-state {tags-search:search}, callback
+                values: @state.selected-tags
+                on-values-change: (selected-tags, callback) ~> @set-state {selected-tags}, callback
                 render-value: (index, {label}) ~>
                     div do 
                         class-name: \simple-value
                         key: index
-                        span null, \x
                         span null, label
-                placeholder: 'Select countries'
-                restore-on-backspace: (.label)
-                style: z-index: 1
+                placeholder: 'Select tags'
+                style: z-index: 2
 
-            # CITIES
-            # ReactSelectize do
-            #     disabled: @state.selected-countries.length == 0
-            #     values: @state.selected-cities
-            #     options: @state.cities
-            #     on-change: (selected-cities) ~> @set-state {selected-cities}
-            #     placeholder: 'Select cities'
-            #     # max-items: 2
-            #     style: margin-top: 20, z-index: 0
+            # EMOJIS
+            ReactSelectize do 
+                close-on-select: false
+                max-values: 3
+                options: @state.emojis
+                    |> reject ~> it.description.to-lower-case!.trim! in (map (.description.to-lower-case!.trim!), @state.selected-emojis)
+                    |> filter ~> 
+                        ((it.description.to-lower-case!.trim!.index-of @state.emojis-search.to-lower-case!.trim!) > -1) or 
+                        (it.tags |> any (tag) ~> (tag.to-lower-case!.trim!.index-of @state.emojis-search.to-lower-case!.trim!) > -1)
+                render-option: (index, {emoji, description, selectable}?) ~>
+                    is-selectable = (typeof selectable == \undefined) or selectable
+                    div do 
+                        class-name: "emoji-option"
+                        key: index
+                        style: cursor: if is-selectable then \pointer else \default
+                        if is-selectable
+                            img src: "http://localhost:4020/images/emojis/#{emoji}.png"
+                        span null, description
+                search: @state.emojis-search
+                on-search-change: (search, callback) ~> @set-state {emojis-search:search}, callback
+                values: @state.selected-emojis
+                on-values-change: (selected-emojis, callback) ~> @set-state {selected-emojis}, callback
+                render-value: (index, {emoji, description}) ~>
+                    div do 
+                        class-name: \emoji-value
+                        key: index
+                        span do
+                            on-click: (e) ~> 
+                                @set-state do 
+                                    selected-emojis: [0 til @state.selected-emojis.length]
+                                        |> reject (== index)
+                                        |> map ~> @state.selected-emojis[it]
+                                e.prevent-default!
+                                e.stop-propagation!
+                            \x
+                        img src: "http://localhost:4020/images/emojis/#{emoji}.png"
+                restore-on-backspace: (.description)
+                placeholder: 'Select three emojis'
+                style: 
+                    margin-top: 60
+                    z-index: 1
                 
             div {class-name: \copy-right}, 'Copyright © Furqan Zafar 2015. MIT Licensed.'
 
     get-initial-state: ->
-        countries-search: "", countries: [], selected-countries: [], cities: [], selected-cities: []
+
+        # TAGS
+        tags-search: ""
+        tags: []
+        selected-tags: []
+
+        # EMOJIS
+        emojis-search: ""
+        emojis: []
+        selected-emojis: []
+
+        # COUNTRIES
+        countries-search: ""
+        countries: []
+        selected-countries: []
+
+        # CITIES
+        cities-search: ""
+        cities: []
+        selected-cities: []
 
     component-will-mount: ->
-        $.getJSON 'http://restcountries.eu/rest/v1/all'
-            ..done (countries) ~> @set-state countries: unique-by (.value), (@state.countries ? []) ++ (countries |> map -> value: it.alpha2Code, label: it.name)
-            ..fail ~> console.log 'unable to fetch countries'
+        $.getJSON \http://localhost:4020/emojis?sortKey=description&sortOrder=1&limit=200
+            ..done (emojis) ~> @set-state {emojis}
+
 
 React.render do
     React.create-element do 
