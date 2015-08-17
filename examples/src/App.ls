@@ -14,6 +14,8 @@ App = React.create-class do
 
             #TAGGING
             ReactSelectize do 
+                open: @state.show-tags
+                on-open-change: (open, callback) ~> @set-state {show-tags: open}, callback
                 options: @state.tags 
                     |> reject ~> it.label.to-lower-case!.trim! in (map (.label.to-lower-case!.trim!), @state.selected-tags)
                     |> filter ~> (it.label.to-lower-case!.trim!.index-of @state.tags-search.to-lower-case!.trim!) > -1                    
@@ -46,9 +48,10 @@ App = React.create-class do
 
             # EMOJIS
             ReactSelectize do 
-                close-on-select: false
-                max-values: 3
+                open: @state.selected-emojis.length < 3 and @state.show-emojis
+                on-open-change: (open, callback) ~> @set-state {show-emojis: open}, callback
                 options: @state.emojis
+                    |> reject ~> @state.selected-emojis.length >= 3 
                     |> reject ~> it.description.to-lower-case!.trim! in (map (.description.to-lower-case!.trim!), @state.selected-emojis)
                     |> filter ~> 
                         ((it.description.to-lower-case!.trim!.index-of @state.emojis-search.to-lower-case!.trim!) > -1) or 
@@ -62,8 +65,15 @@ App = React.create-class do
                         if is-selectable
                             img src: "http://localhost:4020/images/emojis/#{emoji}.png"
                         span null, description
+                render-no-results-found: ~>
+                    div do 
+                        class-name: \no-results-found
+                        switch 
+                        | @state.selected-emojis.length >= 3 => "emojis selected"
+                        | @state.emojis-search.length > 0 => "no emojis found"
+                        | _ => "" 
                 search: @state.emojis-search
-                on-search-change: (search, callback) ~> @set-state {emojis-search:search}, callback
+                on-search-change: (search, callback) ~> if @state.selected-emojis.length >= 3 then callback! else @set-state {emojis-search:search}, callback
                 values: @state.selected-emojis
                 on-values-change: (selected-emojis, callback) ~> @set-state {selected-emojis}, callback
                 render-value: (index, {emoji, description}) ~>
@@ -94,11 +104,13 @@ App = React.create-class do
         tags-search: ""
         tags: []
         selected-tags: []
+        show-tags: false
 
         # EMOJIS
         emojis-search: ""
         emojis: []
         selected-emojis: []
+        show-emojis: false
 
         # COUNTRIES
         countries-search: ""
