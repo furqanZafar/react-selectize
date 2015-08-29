@@ -1,4 +1,6 @@
 @import "../../src/ReactSelectize" 
+@import "MultiSelect"
+@import "SimpleSelect"
 
 body
     font-family 'Helvetica Neue'
@@ -34,9 +36,6 @@ body
         font-weight 1000
         color #aaa
 
-    .auto-complete
-        width 750px
-
     .copy-right 
         color #999
         border-top 1px solid #ccc
@@ -45,52 +44,3 @@ body
         margin-top 60px
         padding-top 10px
 
-    .no-results-found
-        color #aaa !important
-        font-style oblique
-        padding 8px 10px
-
-    .emoji-option, .simple-option
-        color #666
-        cursor pointer
-        padding 8px 10px
-        
-        span.highlight
-            background rgba(212, 219, 222, 0.7)
-
-    .emoji-value, .simple-value
-        background #f2f9fc
-        border 1px solid #c9e6f2
-        border-radius 2px
-        color #0088cc
-        display inline-block
-        margin 2px
-        vertical-align middle
-
-        span
-            display inline-block
-            vertical-align top
-
-            &:first-child
-                border-right 1px solid #c9e6f2
-                cursor pointer
-                padding 2px 5px 4px
-
-                &:hover
-                    background #ddeff7
-                    color #0077b3
-
-            &:last-child
-                cursor default
-                padding 3px 5px
-
-    .emoji-option
-        display flex
-        align-items center
-
-        img 
-            margin-right 4px
-            width 24px
-
-    .emoji-value img
-        width 24px

@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "jquery-browserify": "^1.8.1",
-    "prelude-extension": "0.0.4",
+    "prelude-extension": "0.0.5",
     "prelude-ls": "^1.1.1",
     "react": "^0.13.1"
   },

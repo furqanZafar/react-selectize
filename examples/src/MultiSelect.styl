@@ -1,0 +1,49 @@
+.react-selectize.multi-select
+    
+    .no-results-found
+        color #aaa !important
+        font-style oblique
+        padding 8px 10px
+        &.red
+            color red !important
+
+    .simple-option
+        color #666
+        cursor pointer
+        padding 8px 10px
+        
+        &.not-selectable
+            background-color #f8f8f8
+            color #999
+            cursor default
+            font-style oblique
+            text-shadow 0px 1px 0px white
+
+        span.highlight
+            background-color rgba(212, 219, 222, 0.7)
+
+    .simple-value
+        background #f2f9fc
+        border 1px solid #c9e6f2
+        border-radius 2px
+        color #0088cc
+        display inline-block
+        margin 2px
+        vertical-align middle
+
+        span
+            display inline-block
+            vertical-align top
+
+            &:first-child
+                border-right 1px solid #c9e6f2
+                cursor pointer
+                padding 2px 5px 4px
+
+                &:hover
+                    background #ddeff7
+                    color #0077b3
+
+            &:last-child
+                cursor default
+                padding 3px 5px

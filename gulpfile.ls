@@ -11,7 +11,7 @@ source = require \vinyl-source-stream
 require! \watchify
 
 create-bundler = (entries) ->
-    bundler = browserify {} <<< watchify.args <<< {debug: true}
+    bundler = browserify {} <<< watchify.args <<< {debug: true, paths: <[./src ./examples/src]>}
     bundler.add entries
     bundler.transform \liveify
     watchify bundler
