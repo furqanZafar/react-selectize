@@ -9,10 +9,12 @@
   "author": "Furqan Zafar",
   "license": "ISC",
   "dependencies": {
+    "brace": "git+https://github.com/furqanZafar/brace.git",
     "jquery-browserify": "^1.8.1",
     "prelude-extension": "0.0.5",
     "prelude-ls": "^1.1.1",
-    "react": "^0.13.1"
+    "react": "^0.13.1",
+    "react-tools": "^0.13.3"
   },
   "devDependencies": {
     "browserify": "^9.0.3",

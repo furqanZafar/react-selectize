@@ -54,7 +54,7 @@ module.exports = React.create-class do
 
         ReactSelectize {
             
-            class-name: "simple-select #{@props.class-name}"
+            class-name: "simple-select #{@props?.class-name ? ''}"
             disabled: @props.disabled
             ref: \select
 
@@ -107,7 +107,9 @@ module.exports = React.create-class do
             render-value: @props.render-value
 
             # STYLE
-            on-blur: (, reason) !~> @props.on-blur value, reason
+            on-blur: (, reason) !~> 
+                <~ do ~> (callback) ~> if typeof value == \undefined and search.length > 0 then on-search-change "", callback else callback!
+                @props.on-blur value, reason
             on-focus: (, reason) !~> @props.on-focus value, reason
             placeholder: @props.placeholder
             style: @props.style

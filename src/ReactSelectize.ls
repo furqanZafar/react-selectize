@@ -17,7 +17,7 @@ module.exports = React.create-class do
     # used to figure out if the focus event was triggered by external action or by @focus!
     focus-lock: false
 
-    # used to block the browser option.mouseover when scrolling is triggered by arrow keys
+    # used to block default behaviour of option.mouseover when triggered by scrolling using arrow keys
     scroll-lock: false
 
     # get-default-props :: a -> Props
@@ -248,7 +248,7 @@ module.exports = React.create-class do
                                     | _ => 
                                         on-click: (e) !~>
                                             @select-highlighted-option anchor-index, (->)
-                                            cancel-event e
+                                            # cancel-event e
                                         on-mouse-over: ({current-target}) !~> @highlight-option index if !@scroll-lock
 
                                 # OPTION
@@ -256,17 +256,18 @@ module.exports = React.create-class do
 
     # component-did-mount :: a -> Void
     component-did-mount: !->
-        document.add-event-listener do 
-            \click
-            ({target}) ~>
-                dom-node-contains = (element) ~>
-                    return false if (typeof element == \undefined) or element == null
-                    return true if element == @get-DOM-node!
-                    dom-node-contains element.parent-element
-                if !(dom-node-contains target)
-                    @props.on-open-change false
-                    @props.on-blur @props.values, \click
-            true
+        @external-click-listener = ({target}) ~>
+            dom-node-contains = (element) ~>
+                return false if (typeof element == \undefined) or element == null
+                return true if element == @get-DOM-node!
+                dom-node-contains element.parent-element
+            if !(dom-node-contains target)
+                @props.on-open-change false
+                @props.on-blur @props.values, \click
+        document.add-event-listener \click, @external-click-listener, true
+
+    component-will-unmount: !->
+        document.remove-event-listener \click, @external-click-listener, true
 
     # autosize search input width
     # component-did-update :: Props -> UIState -> Void
@@ -307,7 +308,7 @@ module.exports = React.create-class do
         @lowlight-option!
         @highlighted-option = index
         option-element = @refs?["option-#{index}"]?.getDOMNode!
-            ..class-name = "option-wrapper focused"
+            ..?class-name = "option-wrapper focused"
         option-element
     
     # lowlight-option :: a -> Void
