@@ -6,4 +6,4 @@ npm-debug.log
 *.styl
 *.sublime-project
 *.sublime-workspace
-examples/
+public/

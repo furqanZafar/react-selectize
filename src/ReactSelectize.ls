@@ -264,12 +264,11 @@ module.exports = React.create-class do
             if !(dom-node-contains target)
                 @props.on-open-change false
                 @props.on-blur @props.values, \click
-        document.add-event-listener \click, @external-click-listener, true
+        document.add-event-listener \click, @external-click-listener, true        
 
     component-will-unmount: !->
         document.remove-event-listener \click, @external-click-listener, true
 
-    # autosize search input width
     # component-did-update :: Props -> UIState -> Void
     component-did-update: (prev-props, prev-state) ->
 

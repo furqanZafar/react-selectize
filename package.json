@@ -9,12 +9,18 @@
   "author": "Furqan Zafar",
   "license": "ISC",
   "dependencies": {
+    "async-ls": "0.0.3",
+    "body-parser": "^1.13.3",
     "brace": "git+https://github.com/furqanZafar/brace.git",
+    "brfs": "^1.4.1",
+    "ejs": "^2.3.4",
     "jquery-browserify": "^1.8.1",
     "prelude-extension": "0.0.5",
     "prelude-ls": "^1.1.1",
     "react": "^0.13.1",
-    "react-tools": "^0.13.3"
+    "react-tools": "^0.13.3",
+    "stringify": "^3.1.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "browserify": "^9.0.3",

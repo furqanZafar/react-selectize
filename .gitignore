@@ -3,6 +3,5 @@ npm-debug.log
 *.sublime-workspace
 *.js
 *.css
-examples/dist/
 node_modules/
 rough

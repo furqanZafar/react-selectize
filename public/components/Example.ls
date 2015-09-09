@@ -2,6 +2,7 @@
 {create-factory, DOM:{div, span}}:React = require \react
 AceEditor = create-factory require \AceEditor.ls
 SimpleSelect = require \SimpleSelect.ls
+{debounce} = require \underscore
 
 module.exports = React.create-class do
 
@@ -33,7 +34,7 @@ module.exports = React.create-class do
                                 key: id
                                 class-name: if id == @state.language then \selected else ''
                                 on-click: ~> 
-                                    <~ @set-state {language: id}
+                                    <~ @set-state language: id
                                     @execute!
                                 name
 
@@ -45,7 +46,9 @@ module.exports = React.create-class do
                         height: @props.height
                         mode: "ace/mode/#{@state.language}"
                         value: @state[@state.language]
-                        on-change: (value) ~> @set-state {"#{@state.language}" : value}
+                        on-change: (value) ~> 
+                            <~ @set-state {"#{@state.language}" : value}
+                            @debounced-execute!
                         commands: 
                             * name: \execute
                               exec: ~> @.execute!
@@ -89,3 +92,4 @@ module.exports = React.create-class do
     # component-did-mount :: a -> Void
     component-did-mount: !-> 
         @execute!
+        @debounced-execute = debounce @.execute, 500

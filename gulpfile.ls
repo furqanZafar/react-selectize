@@ -11,9 +11,10 @@ source = require \vinyl-source-stream
 require! \watchify
 
 create-bundler = (entries) ->
-    bundler = browserify {} <<< watchify.args <<< {debug: true, paths: <[./src ./examples/src]>}
-    bundler.add entries
-    bundler.transform \liveify
+    bundler = browserify {} <<< watchify.args <<< {debug: true, paths: <[./src ./public/components]>}
+        ..add entries
+        ..transform \liveify
+        ..transform \brfs
     watchify bundler
 
 bundle = (bundler, {file, directory}:output) ->
@@ -27,16 +28,16 @@ bundle = (bundler, {file, directory}:output) ->
 # Examples
 ##
 gulp.task \build:examples:styles, ->
-    gulp.src <[./examples/src/App.styl]>
+    gulp.src <[./public/components/App.styl]>
     .pipe gulp-stylus!
-    .pipe gulp.dest './examples/dist'
+    .pipe gulp.dest './public/components'
     .pipe gulp-connect.reload!
 
 gulp.task \watch:examples:styles, -> 
-    gulp.watch <[./examples/src/*.styl ./src/*.styl]>, <[build:examples:styles]>
+    gulp.watch <[./public/components/*.styl ./src/*.styl]>, <[build:examples:styles]>
 
-examples-bundler = create-bundler \./examples/src/App.ls
-bundle-examples = -> bundle examples-bundler, {file: "App.js", directory: "./examples/dist/"}
+examples-bundler = create-bundler \./public/components/App.ls
+bundle-examples = -> bundle examples-bundler, {file: "App.js", directory: "./public/components/"}
 
 gulp.task \build:examples:scripts, ->
     bundle-examples!
@@ -68,7 +69,7 @@ gulp.task \dev:server, ->
     gulp-connect.server do
         livereload: true
         port: 8000
-        root: \./examples/
+        root: \./public/
 
 gulp.task \build:src, <[build:src:styles build:src:scripts]>
 gulp.task \watch:src, <[watch:src:styles watch:src:scripts]>
