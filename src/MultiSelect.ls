@@ -1,7 +1,7 @@
 {all, any, camelize, difference, drop, filter, find, find-index, last, map, reject} = require \prelude-ls
 {is-equal-to-object} = require \prelude-extension
 {create-factory, DOM:{div, img, span}}:React = require \react
-ReactSelectize = create-factory require \ReactSelectize.ls
+ReactSelectize = create-factory require \./ReactSelectize
 
 module.exports = React.create-class do
 
@@ -22,8 +22,8 @@ module.exports = React.create-class do
                 |> -> it ? []
         # max-values :: Int
         # on-anchor-change :: Item -> (a -> Void) -> Void
-        on-blur: ((value, reason) !->) # :: Item -> String -> Void
-        on-focus: ((value, reason) !->) # :: Item -> String -> Void
+        on-blur: ((values, reason) !->) # :: [Item] -> String -> Void
+        on-focus: ((values, reason) !->) # :: [Item] -> String -> Void
         # on-search-change :: String -> (a -> Void) -> Void
         # on-value-change :: Item -> (a -> Void) -> Void 
         options: []

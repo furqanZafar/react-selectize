@@ -5,14 +5,14 @@ Form = React.create-class do
         React.create-element MultiSelect,
             placeholder: "Select youtube channels"
 
-            # set anchor to undefined, to lock the cursor to the start
+            # set anchor to undefined, to lock the cursor at the start
             # anchor :: Item
             anchor: @state.anchor 
-            
+
             options: @state.channels
             values: @state.selected-channels
             on-values-change: (selected-channels, callback) !~> 
-                # lock the cursor to the end
+                # lock the cursor at the end
                 @set-state {anchor: (last selected-channels), selected-channels}, callback
 
     # get-initial-state :: a -> UIState

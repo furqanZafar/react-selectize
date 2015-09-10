@@ -1,7 +1,8 @@
+rough
 .DS_Store
+config.ls
 npm-debug.log
 *.sublime-workspace
 *.js
 *.css
 node_modules/
-rough

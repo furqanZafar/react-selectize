@@ -49,7 +49,7 @@ Form = React.create-class do
     
     # component-will-mount :: a -> Void
     component-will-mount: !->
-        $.getJSON \http://api.github.com/emojis
+        $.getJSON \https://api.github.com/emojis
             ..done (result) ~>
                 @set-state do 
                     emojis: result

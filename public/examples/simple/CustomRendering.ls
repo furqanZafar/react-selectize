@@ -15,20 +15,20 @@ Form = React.create-class do
             # render-option :: Int -> Item -> ReactElement
             render-option: (index, {label, new-option}?) ~>
                 div do 
-                    class-name: \\simple-option
-                    style: display: \\flex, align-items: \\center
-                    div style: background-color: label, width: 24, height: 24, border-radius: \\50%
-                    div style: margin-left: 10, if !!new-option then "Add \#\{label\}..." else label
+                    class-name: \simple-option
+                    style: display: \flex, align-items: \center
+                    div style: background-color: label, width: 24, height: 24, border-radius: \50%
+                    div style: margin-left: 10, if !!new-option then "Add #{label}..." else label
             
             # render-value :: Int -> Item -> ReactElement
             render-value: (index, {label}) ~>
                 div do 
-                    class-name: \\simple-value
-                    style: display: \\inline-block
+                    class-name: \simple-value
+                    style: display: \inline-block
                     span style: 
-                        background-color: label, border-radius: \\50%, 
-                        vertical-align: \\middle, width: 24, height: 24
-                    span style: margin-left: 10, vertical-align: \\middle, label
+                        background-color: label, border-radius: \50%, 
+                        vertical-align: \middle, width: 24, height: 24
+                    span style: margin-left: 10, vertical-align: \middle, label
                 
     get-initial-state: ->
         
@@ -37,8 +37,8 @@ Form = React.create-class do
             [0 to 2] 
             |> map -> Math.floor Math.random! * 255
             |> -> it ++ (Math.round Math.random! * 10) / 10
-            |> Str.join \\,
-            |> -> "rgba(\#\{it\})"
+            |> Str.join \,
+            |> -> "rgba(#{it})"
             
         options: [0 til 10] |> map -> 
             color = random-color!

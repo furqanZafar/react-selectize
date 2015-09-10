@@ -1,7 +1,8 @@
 .DS_Store
 .gitignore
-gulpfile.ls
 npm-debug.log
+rough
+*.gif
 *.ls
 *.styl
 *.sublime-project

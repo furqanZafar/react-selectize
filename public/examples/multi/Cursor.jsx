@@ -6,14 +6,14 @@ Form = React.createClass({
         return <MultiSelect
             placeholder = "Select youtube channels"
 
-            // set anchor to undefined, to lock the cursor to the start
+            // set anchor to undefined, to lock the cursor at the start
             // anchor :: Item
             anchor = {this.state.anchor} 
-            
+
             options = {this.state.channels}
             values = {this.state.selectedChannels}
             onValuesChange = {function(selectedChannels, callback){
-                // lock the cursor to the end
+                // lock the cursor at the end
                 self.setState({
                     anchor: _.last(selectedChannels), 
                     selectedChannels: selectedChannels

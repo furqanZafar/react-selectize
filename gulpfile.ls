@@ -1,17 +1,22 @@
 require! \browserify
+require! \./config
 require! \fs
 require! \gulp
 require! \gulp-browserify 
 require! \gulp-connect
+require! \gulp-if
 require! \gulp-livescript
-require! \gulp-util
+require! \gulp-streamify
 require! \gulp-stylus
+require! \gulp-uglify
+require! \gulp-util
+require! \nib
 {basename, dirname, extname} = require \path
 source = require \vinyl-source-stream
 require! \watchify
 
 create-bundler = (entries) ->
-    bundler = browserify {} <<< watchify.args <<< {debug: true, paths: <[./src ./public/components]>}
+    bundler = browserify {} <<< watchify.args <<< {debug: config.minify, paths: <[./src ./public/components]>}
         ..add entries
         ..transform \liveify
         ..transform \brfs
@@ -21,6 +26,7 @@ bundle = (bundler, {file, directory}:output) ->
     bundler.bundle!
         .on \error, -> console.log arguments
         .pipe source file
+        .pipe gulp-if config.minify, (gulp-streamify gulp-uglify!)
         .pipe gulp.dest directory
         .pipe gulp-connect.reload!
 
@@ -29,7 +35,7 @@ bundle = (bundler, {file, directory}:output) ->
 ##
 gulp.task \build:examples:styles, ->
     gulp.src <[./public/components/App.styl]>
-    .pipe gulp-stylus!
+    .pipe gulp-stylus use: nib!, import: <[nib]>, compress: config.minify
     .pipe gulp.dest './public/components'
     .pipe gulp-connect.reload!
 
@@ -50,8 +56,8 @@ gulp.task \watch:examples:scripts, ->
 # Source
 ##
 gulp.task \build:src:styles, ->
-    gulp.src <[./src/ReactSelectize.styl]>
-    .pipe gulp-stylus!
+    gulp.src <[./src/*.styl]>
+    .pipe gulp-stylus use: nib!, import: <[nib]>, compress: config.minify
     .pipe gulp.dest './src'
 
 gulp.task \watch:src:styles, -> 
