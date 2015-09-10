@@ -1,6 +1,6 @@
 # React Selectize
 A flexible & stateless select component for ReactJS built with livescript and love. 
-ReactSelectize comes in 3 favours SimpleSelect (or single select), MultiSelect & ReactSelectize. Both the SimpleSelect & the MultiSelect components are built on top of the stateless ReactSelectize component.
+ReactSelectize comes in 3 flavours SimpleSelect (or single select), MultiSelect & ReactSelectize. Both the SimpleSelect & the MultiSelect components are built on top of the stateless ReactSelectize component.
 
 LIVE DEMO: [furqanZafar.github.io/react-selectize](http://furqanZafar.github.io/react-selectize/)
 
