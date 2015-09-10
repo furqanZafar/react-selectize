@@ -1,0 +1,10 @@
+.DS_Store
+.gitignore
+npm-debug.log
+rough
+*.gif
+*.ls
+*.styl
+*.sublime-project
+*.sublime-workspace
+public/

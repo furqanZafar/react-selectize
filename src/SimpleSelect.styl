@@ -1,0 +1,38 @@
+@import "ReactSelectize"
+
+.react-selectize.simple-select
+
+    &:not(.open)
+        background-color #f9f9f9
+        background-image linear-gradient(to bottom, #fefefe, #f2f2f2)
+
+    .control
+        padding 2px 52px 2px 8px
+
+    .no-results-found
+        color #aaa !important
+        font-style oblique
+        padding 8px 10px
+        &.red
+            color red !important
+
+    .reset 
+        display none
+
+    .simple-option
+        color #666
+        cursor pointer
+        padding 8px 10px
+        
+        span.highlight
+            background rgba(212, 219, 222, 0.7)
+
+    .simple-value
+        display inline-block
+        margin 2px
+        vertical-align middle
+
+        span
+            cursor default
+            display inline-block
+            vertical-align top

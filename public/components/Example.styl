@@ -1,0 +1,47 @@
+.example
+    
+    .title
+        color #2d2d2d
+        font-size 24px
+        font-weight normal
+        margin-bottom 5px
+
+    .description
+        color #555
+        font-size 16px
+        font-weight normal
+        margin-bottom 25px
+        white-space pre
+
+    > div:last-child
+        display flex
+
+        .tab-container
+            display inline-block
+
+            .languages
+                display flex
+
+                > div
+                    border 1px solid #ccc
+                    border-bottom none
+                    border-top-left-radius 4px
+                    border-top-right-radius 4px
+                    box-sizing border-box
+                    color #ccc
+                    cursor pointer
+                    font-size 14px
+                    padding 5px 8px 5px 8px
+                    
+                    &.selected
+                        color #000
+
+            .editor
+                border 1px solid #ccc
+
+        .error
+            color #c5695c
+
+        .error, .output
+            margin 27px 0px 0px 20px
+            width 300px

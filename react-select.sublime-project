@@ -1,0 +1,11 @@
+{
+    "folders":
+    [
+        {
+            "folder_exclude_patterns": ["node_modules", "dist"],
+            "file_exclude_patterns": ["*.js", "*.css", "npm-debug.log", "*.sublime-workspace"],
+            "follow_symlinks": true,
+            "path": "."
+        }
+    ]
+}

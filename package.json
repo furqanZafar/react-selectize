@@ -1,0 +1,43 @@
+{
+  "name": "react-selectize",
+  "version": "0.1.0",
+  "description": "react implementation of selectize",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Furqan Zafar",
+  "license": "ISC",
+  "dependencies": {
+    "prelude-extension": "0.0.5",
+    "prelude-ls": "^1.1.1",
+    "react": "^0.13.1"
+  },
+  "devDependencies": {
+    "async-ls": "0.0.3",
+    "brace": "git+https://github.com/furqanZafar/brace.git",
+    "brfs": "^1.4.1",
+    "browserify": "^9.0.3",
+    "gulp": "^3.8.11",
+    "gulp-browserify": "^0.5.1",
+    "gulp-connect": "^2.2.0",
+    "gulp-if": "^1.2.5",
+    "gulp-livescript": "^2.4.0",
+    "gulp-streamify": "^1.0.2",
+    "gulp-stylus": "^2.0.1",
+    "gulp-uglify": "^1.4.1",
+    "gulp-util": "^3.0.4",
+    "jquery-browserify": "^1.8.1",
+    "liveify": "^2.0.0",
+    "livescript": "^1.4.0",
+    "nib": "^1.1.0",
+    "react-tools": "^0.13.3",
+    "underscore": "^1.8.3",
+    "vinyl-source-stream": "^1.0.0",
+    "watchify": "^2.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/furqanZafar/react-selectize.git"
+  }
+}
