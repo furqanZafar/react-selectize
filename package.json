@@ -1,13 +1,12 @@
 {
   "name": "react-selectize",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "react implementation of selectize",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Furqan Zafar",
-  "license": "ISC",
   "dependencies": {
     "prelude-extension": "0.0.5",
     "prelude-ls": "^1.1.1",
@@ -35,9 +34,20 @@
     "underscore": "^1.8.3",
     "vinyl-source-stream": "^1.0.0",
     "watchify": "^2.4.0"
-  },
+  },  
   "repository": {
     "type": "git",
     "url": "https://github.com/furqanZafar/react-selectize.git"
-  }
+  },
+  "keywords": [
+    "react-component",
+    "select",
+    "selectize",
+    "multiselect",
+    "singleselect",
+    "simpleselect",
+    "tags",
+    "dropdown",
+    "combobox"
+  ]
 }
