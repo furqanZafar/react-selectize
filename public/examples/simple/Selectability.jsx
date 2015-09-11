@@ -3,7 +3,7 @@ Form = React.createClass({
     // render :: a -> ReactElement
     render: function(){
         return <SimpleSelect
-            placeholder = "Select iPhone model"
+            placeholder = "Select an iPhone model"
             options = {this.state.models}
             
             // renderOption :: Int -> Item -> ReactElement

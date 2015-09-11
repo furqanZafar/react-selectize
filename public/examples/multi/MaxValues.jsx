@@ -6,7 +6,7 @@ Form = React.createClass({
             options = ["apple", "mango", "grapes", "melon", "strawberry"].map(function(fruit){
                 return {label: fruit, value: fruit}
             });
-        return <MultiSelect placeholder="Select fruits" options={options} maxValues={3}/>
+        return <MultiSelect placeholder="Select 2 fruits" options={options} maxValues={2}/>
     }
     
 });
