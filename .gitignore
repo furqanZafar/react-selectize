@@ -1,0 +1,7 @@
+rough
+.DS_Store
+config.ls
+npm-debug.log
+*.sublime-workspace
+node_modules/
+src/
