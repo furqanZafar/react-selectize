@@ -39,24 +39,7 @@ module.exports = React.create-class do
     # render :: a -> ReactElement
     render: -> 
         
-        # decide whether to use state or props
-        anchor = if @props.has-own-property \anchor then @props.anchor else @state.anchor
-        search = if @props.has-own-property \search then @props.search else @state.search
-        values = @values!
-        [on-anchor-change, on-search-change, on-values-change] = <[anchor search values]> |> map (p) ~>
-            | @props.has-own-property p and @props.has-own-property camelize "on-#{p}-change" => @props[camelize "on-#{p}-change"]
-            | @props.has-own-property p and !(@props.has-own-property camelize "on-#{p}-change") => (, callback) ~> callback!
-            | !(@props.has-own-property p) and @props.has-own-property camelize "on-#{p}-change" => 
-                (o, callback) ~> 
-                    <~ @set-state {"#{p}" : o}
-                    @props[camelize "on-#{p}-change"] o, callback
-            | !(@props.has-own-property p) and !(@props.has-own-property camelize "on-#{p}-change") => 
-                (o, callback) ~> @set-state {"#{p}" : o}, callback
-
-        # filter options and create new one from search text
-        filtered-options = @props.filter-options @props.options, values, search
-        new-option = if typeof @props.create-from-search == \function then (@props.create-from-search filtered-options, values, search) else null
-        options = (if !!new-option then [{} <<< new-option <<< new-option: true] else []) ++ filtered-options
+        {anchor, search, values, on-anchor-change, on-search-change, on-values-change, filtered-options, options} = @get-computed-state!
 
         ReactSelectize {
             
@@ -73,23 +56,15 @@ module.exports = React.create-class do
             on-open-change: (open, callback) ~> if open then @show-options callback else @set-state {open}, callback
 
             # OPTIONS            
-            first-option-index-to-highlight: (options) ~> 
-                switch
-                    | options.length == 1 => 0
-                    | typeof options?.0?.new-option == \undefined => 0
-                    | _ =>    
-                        if (options
-                            |> drop 1
-                            |> all -> (typeof it.selectable == \boolean) and !it.selectable)
-                            0
-                        else
-                            1
+            first-option-index-to-highlight: ~> @first-option-index-to-highlight options
+                
             options: options
             render-option: @props.render-option
 
             # SEARCH
             search: search
-            on-search-change: (search, callback) ~> on-search-change (if !!@props.max-values and values.length >= @props.max-values then "" else search), callback
+            on-search-change: (search, callback) ~> 
+                on-search-change (if !!@props.max-values and values.length >= @props.max-values then "" else search), callback
                 
             # VALUES
             values: values
@@ -119,6 +94,30 @@ module.exports = React.create-class do
         | _ => {}
 
 
+    # get-computed-state :: a -> UIState
+    get-computed-state: ->
+
+        # decide whether to use state or props
+        anchor = if @props.has-own-property \anchor then @props.anchor else @state.anchor
+        search = if @props.has-own-property \search then @props.search else @state.search
+        values = @values!
+        [on-anchor-change, on-search-change, on-values-change] = <[anchor search values]> |> map (p) ~>
+            | @props.has-own-property p and @props.has-own-property camelize "on-#{p}-change" => @props[camelize "on-#{p}-change"]
+            | @props.has-own-property p and !(@props.has-own-property camelize "on-#{p}-change") => (, callback) ~> callback!
+            | !(@props.has-own-property p) and @props.has-own-property camelize "on-#{p}-change" => 
+                (o, callback) ~> 
+                    <~ @set-state {"#{p}" : o}
+                    @props[camelize "on-#{p}-change"] o, callback
+            | !(@props.has-own-property p) and !(@props.has-own-property camelize "on-#{p}-change") => 
+                (o, callback) ~> @set-state {"#{p}" : o}, callback
+
+        # filter options and create new one from search text
+        filtered-options = @props.filter-options @props.options, values, search
+        new-option = if typeof @props.create-from-search == \function then (@props.create-from-search filtered-options, values, search) else null
+        options = (if !!new-option then [{} <<< new-option <<< new-option: true] else []) ++ filtered-options
+
+        {anchor, search, values, on-anchor-change, on-search-change, on-values-change, filtered-options, options}
+        
     # get-initial-state :: a -> UIState
     get-initial-state: ->
         anchor: if !!@props.values then last @props.values else undefined
@@ -126,10 +125,29 @@ module.exports = React.create-class do
         search: ""
         values: []
 
+    # first-option-index-to-highlight :: [Item] -> Int
+    first-option-index-to-highlight: (options) ->
+        switch
+            | options.length == 1 => 0
+            | typeof options?.0?.new-option == \undefined => 0
+            | _ =>    
+                if (options
+                    |> drop 1
+                    |> all -> (typeof it.selectable == \boolean) and !it.selectable)
+                    0
+                else
+                    1
+
     # focus :: a -> Void
     focus: !-> 
         @refs.select.focus!
         @show-options
+
+    # highlight-the-first-selectable-option :: a -> Void
+    highlight-first-selectable-option: !->
+        return if !@state.open
+        {options} = @get-computed-state!
+        @refs.select.highlight-and-scroll-to-selectable-option (@first-option-index-to-highlight options), 1
 
     # show-options :: (a -> Void)? -> Void
     show-options: (callback = (->)) !->

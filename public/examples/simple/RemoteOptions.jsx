@@ -5,6 +5,7 @@ Form = React.createClass({
         var self = this;
         return <SimpleSelect 
             placeholder = "Select a library"
+            ref = "select"
             options = {this.state.libraries}
             search = {this.state.search}
             
@@ -17,18 +18,21 @@ Form = React.createClass({
                     self.req.abort();
                 url = "http://api.cdnjs.com/libraries?fields=version,homepage&search=" + search;
                 self.req = $.getJSON(url).done(function(result){
-                    self.setState({libraries: take(50, result.results)})
+                    self.setState({libraries: take(50, result.results)}, function(){
+                        self.refs.select.highlightFirstSelectableOption();
+                    })
                     delete self.req;
                 });
             }}
             
-            // filterOptions :: [Item] -> Item -> String -> [Item]
-            filterOptions = {function(options, value, search){
+            // disable client side filtering
+            // filterOptions :: [Item] -> String -> [Item]
+            filterOptions = {function(options, search){
                 return options;
             }}
             
             renderOption = {function(index, item){
-                return <div className="simple-option" style={{fontSize: 12}}>
+                return <div key={index} className="simple-option" style={{fontSize: 12}}>
                     <div> 
                         <span style={{fontWeight: "bold"}}>{item.name}</span>
                         <span>{"@" + item.version}</span>
@@ -40,7 +44,7 @@ Form = React.createClass({
             }}
             
             renderValue = {function(index, item){
-                return <div className="simple-value">
+                return <div key={index} className="simple-value">
                     <span style={{fontWeight: "bold"}}>{item.name}</span>
                     <span>{"@" + item.version}</span>
                 </div>

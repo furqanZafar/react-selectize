@@ -122,6 +122,7 @@ App = React.create-class do
             div class-name: \categories,
                 <[multi simple]> |> map (category) ~> 
                     div do 
+                        key: category
                         class-name: if category == @state.category then \selected else ''
                         on-click: ~> @set-state {category}
                         category
