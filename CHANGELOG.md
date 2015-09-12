@@ -6,3 +6,8 @@
 
 ## v0.1.2 / 11th September 2015
 * updated package.json added keywords & removed license property
+
+## v0.1.3 / 12th September 2015
+* fixed a bug where invoking the callback onValueChange synchronously would not close the options menu
+* fixed a bug where the SimpleSelect onValueChange callback was invoked even when the user selected the same item
+* minor tweaks & improvements to the default stylesheet
