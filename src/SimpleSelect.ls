@@ -72,7 +72,10 @@ module.exports = React.create-class do
                     @refs.select.focus!
                     callback!
                 else
-                    [value] = new-values `difference` values
+                    value = 
+                        | new-values.length == 1 => new-values.0
+                        | new-values.0 `is-equal-to-object` new-values.1 => undefined
+                        | _ => new-values.1
                     <~ do ~> (callback) ~> if !!value then on-value-change value, callback else callback!
                     <~ @set-state open: false
                     @refs.select.blur!
