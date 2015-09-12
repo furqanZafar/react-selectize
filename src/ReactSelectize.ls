@@ -64,16 +64,16 @@ module.exports = React.create-class do
         div do 
             class-name: "react-selectize #{@props.class-name} #{if @props.disabled then 'disabled' else ''} #{if @props.open then 'open' else ''}"
             style: @props.style
-            on-click: ~>
-                <~ @props.on-anchor-change last @props.values
-                <~ @props.on-open-change true
-                @focus!
 
             # CONTROL
             div do 
                 class-name: \control
                 key: \control
-
+                on-click: ~>
+                    <~ @props.on-anchor-change last @props.values
+                    <~ @props.on-open-change true
+                    @focus!
+                
                 # PLACEHOLDER TEXT
                 if @props.search.length == 0 and @props.values.length == 0
                     div do 
