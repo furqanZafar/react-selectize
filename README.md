@@ -4,7 +4,7 @@ ReactSelectize comes in 3 flavours SimpleSelect (or single select), MultiSelect 
 
 LIVE DEMO: [furqanZafar.github.io/react-selectize](http://furqanZafar.github.io/react-selectize/)
 
-[![](http://i.imgur.com/nk2BSGp.gif)](http://furqanZafar.github.io/react-selectize/)
+[![](http://i.imgur.com/rRmufxm.gif)](http://furqanZafar.github.io/react-selectize/)
 
 ## Install
 
