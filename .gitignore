@@ -2,6 +2,8 @@ rough
 .DS_Store
 config.ls
 npm-debug.log
+*.ls
+*.styl
 *.sublime-workspace
 node_modules/
 src/
