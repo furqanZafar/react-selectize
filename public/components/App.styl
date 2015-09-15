@@ -2,7 +2,25 @@
 @import "../../src/MultiSelect"
 @import "../../src/SimpleSelect"
 
+
 body
+    
+    // iPhone 5
+    @media only screen and (min-device-width : 320px) and (max-device-width : 568px)
+        cursor pointer
+    
+    // iPhone 6
+    @media only screen and (min-device-width : 375px) and (max-device-width : 667px)
+        cursor pointer
+    
+    // iPhone 6 plus
+    @media only screen and (min-device-width : 414px) and (max-device-width : 736px)
+        cursor pointer
+    
+    // iPad
+    @media only screen and (min-device-width : 768px) and (max-device-width : 1024px)
+        cursor pointer
+    
     display flex
     align-items center
     flex-direction column
