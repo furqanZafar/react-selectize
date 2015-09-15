@@ -2,7 +2,6 @@ require! \browserify
 require! \./config
 require! \fs
 require! \gulp
-require! \gulp-browserify 
 require! \gulp-connect
 require! \gulp-if
 require! \gulp-livescript
