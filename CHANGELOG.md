@@ -11,3 +11,6 @@
 * fixed a bug where invoking the callback onValueChange synchronously would not close the options menu
 * fixed a bug where the SimpleSelect onValueChange callback was invoked even when the user selected the same item
 * minor tweaks & improvements to the default stylesheet
+
+## v0.1.4 / 15th September 2015
+* fixed option menu toggle on tap/click in mobile safari
