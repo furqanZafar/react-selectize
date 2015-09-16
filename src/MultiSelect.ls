@@ -45,6 +45,7 @@ module.exports = React.create-class do
             
             class-name: "multi-select #{@props.class-name}"
             disabled: @props.disabled
+            dropdown-direction: @props.dropdown-direction
             ref: \select
 
             # ANCHOR
@@ -70,11 +71,10 @@ module.exports = React.create-class do
             values: values
             on-values-change: (new-values, callback) ~>
                 <~ on-values-change new-values
-                @refs.select.focus!
                 if @props.close-on-select or (!!@props.max-values and new-values.length >= @props.max-values) 
                     @set-state {open: false}, callback 
                 else 
-                    callback!
+                    @focus callback
             render-value: @props.render-value
 
             # STYLE
@@ -111,8 +111,18 @@ module.exports = React.create-class do
             | !(@props.has-own-property p) and !(@props.has-own-property camelize "on-#{p}-change") => 
                 (o, callback) ~> @set-state {"#{p}" : o}, callback
 
+        # get options from props.children
+        options-from-children = switch
+            | !!@props?.children =>
+                if typeof! @props.children == \Array then @props.children else [@props.children] 
+                    |> map ({props:{value, children}}) -> label: children, value: value
+            | _ => []
+
+        # props.options is preferred over props.children
+        unfiltered-options = if @props.has-own-property \options then (@props.options ? []) else options-from-children
+
         # filter options and create new one from search text
-        filtered-options = @props.filter-options @props.options, values, search
+        filtered-options = @props.filter-options unfiltered-options, values, search
         new-option = if typeof @props.create-from-search == \function then (@props.create-from-search filtered-options, values, search) else null
         options = (if !!new-option then [{} <<< new-option <<< new-option: true] else []) ++ filtered-options
 
@@ -138,10 +148,10 @@ module.exports = React.create-class do
                 else
                     1
 
-    # focus :: a -> Void
-    focus: !-> 
+    # focus :: a -> (a -> Void) -> Void
+    focus: (callback) -> 
         @refs.select.focus!
-        @show-options
+        @show-options callback
 
     # highlight-the-first-selectable-option :: a -> Void
     highlight-first-selectable-option: !->

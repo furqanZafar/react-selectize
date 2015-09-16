@@ -25,6 +25,7 @@ module.exports = React.create-class do
         anchor: null
         class-name: ''
         disabled: false
+        dropdown-direction: 1
         first-option-index-to-highlight: (options) -> 0
         on-anchor-change: ((anchor) ->) # Item -> Void
         on-blur: ((values, reason) !->) # [Item] -> String -> Void
@@ -59,16 +60,21 @@ module.exports = React.create-class do
         anchor-index = 
             | (typeof @props.anchor == \undefined) or @props.anchor == null => -1
             | _ => (find-index (~> it `is-equal-to-object` @props.anchor), @props.values) ? @props.values.length - 1
-
-        # MULTISELECT
+        
+        # REACT SELECTIZE
         div do 
-            class-name: "react-selectize #{@props.class-name} #{if @props.disabled then 'disabled' else ''} #{if @props.open then 'open' else ''}"
+            class-name: """react-selectize 
+                #{@props.class-name} 
+                #{if @props.disabled then 'disabled' else ''} 
+                #{if @props.open then 'open' else ''} 
+                #{if @props.dropdown-direction == -1 then 'flipped' else ''}
+            """.replace /\s+/g, ' '
             style: @props.style
-
+            
             # CONTROL
             div do 
                 class-name: \control
-                key: \control
+                ref: \control
                 on-click: ~>
                     <~ @props.on-anchor-change last @props.values
                     <~ @props.on-open-change true
@@ -204,7 +210,7 @@ module.exports = React.create-class do
                 
                 # LIST OF SELECTED VALUES (AFTER THE ANCHOR)
                 [anchor-index + 1 til @props.values.length] |> map (index) ~> @props.render-value index, @props.values[index]
-    
+
                 # RESET BUTTON
                 div do 
                     class-name: \reset
@@ -219,11 +225,13 @@ module.exports = React.create-class do
                 # ARROW ICON
                 div {class-name: \arrow}, null
 
+            # DROPDOWN
             if @props.open
                 
-                div do 
+                dropdown = div do 
                     class-name: \options
-                    
+                    ref: \options
+
                     # NO RESULT FOUND   
                     if @props.options.length == 0
                         @props.render-no-results-found!
@@ -253,7 +261,7 @@ module.exports = React.create-class do
 
                                 # OPTION
                                 @props.render-option index, option
-
+            
     # component-did-mount :: a -> Void
     component-did-mount: !->
         @external-click-listener = ({target}) ~>
@@ -266,11 +274,12 @@ module.exports = React.create-class do
                 @props.on-blur @props.values, \click
         document.add-event-listener \click, @external-click-listener, true        
 
+    # component-will-unmount :: a -> Void
     component-will-unmount: !->
         document.remove-event-listener \click, @external-click-listener, true
 
     # component-did-update :: Props -> UIState -> Void
-    component-did-update: (prev-props, prev-state) ->
+    component-did-update: (prev-props, prev-state) !->
 
         # if the list of options opened then highlight the first option & focus on the serach input
         if @props.open and !prev-props.open and @highlighted-option = -1
@@ -284,6 +293,9 @@ module.exports = React.create-class do
         $search = @refs.search.get-DOM-node!
             ..style.width = 0
             ..style.width = $search.scroll-width
+
+        if @props.dropdown-direction == -1 and !!@refs.options
+            @refs.options.getDOMNode!.style.bottom = @refs.control.getDOMNode!.offset-height
 
     # component-will-receive-props :: Props -> Void
     component-will-receive-props: (props) !->

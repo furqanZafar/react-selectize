@@ -4,7 +4,7 @@ require \livescript
 {compile} = require \livescript
 {concat-map, drop, filter, find, fold, group-by, id, keys, last, map, Obj, obj-to-pairs, pairs-to-obj, 
 reject, reverse, Str, sort-by, take, unique,  unique-by, values, zip-with} = require \prelude-ls
-{create-factory, DOM:{a, button, div, form, h1, h2, img, input, li, ol, span, ul}}:React = require \react
+{create-factory, DOM:{a, button, div, form, h1, h2, img, input, li, ol, option, span, ul}}:React = require \react
 require! \react-tools
 Example = create-factory require \./Example.ls
 require! \MultiSelect.ls
@@ -18,6 +18,12 @@ examples =
           languages:
             jsx: fs.read-file-sync \public/examples/multi/MultiSelect.jsx, \utf8 
             ls: fs.read-file-sync \public/examples/multi/MultiSelect.ls, \utf8 
+
+        * title: "Dropdown direction"
+          description: ""
+          languages:
+            jsx: fs.read-file-sync \public/examples/multi/DropdownDirection.jsx, \utf8 
+            ls: fs.read-file-sync \public/examples/multi/DropdownDirection.ls, \utf8 
 
         * title: "Max values"
           description: """
@@ -52,7 +58,7 @@ To position the cursor at the start, set anchor to undefined
 This demonstrates two main things: 
  (1) custom item and option rendering, and 
  (2) custom item filtering, for example, try typing :) or <3
-"""          
+"""
           languages:
             jsx: fs.read-file-sync \public/examples/multi/CustomRendering.jsx, \utf8 
             ls: fs.read-file-sync \public/examples/multi/CustomRendering.ls, \utf8 
@@ -64,7 +70,7 @@ This demonstrates two main things:
           languages:
             jsx: fs.read-file-sync \public/examples/simple/SimpleSelect.jsx, \utf8 
             ls: fs.read-file-sync \public/examples/simple/SimpleSelect.ls, \utf8 
-        
+
         * title: "Restore on backspace"
           description: """
 Press the [backspace] key and go back to editing the item without it being fully removed.
@@ -81,6 +87,12 @@ Create item from search text
             jsx: fs.read-file-sync \public/examples/simple/CreateFromSearch.jsx, \utf8 
             ls: fs.read-file-sync \public/examples/simple/CreateFromSearch.ls, \utf8 
         
+        * title: "Drop in replacement for React.DOM.Select"
+          description: ""
+          languages:
+            jsx: fs.read-file-sync \public/examples/simple/Children.jsx, \utf8 
+            ls: fs.read-file-sync \public/examples/simple/Children.ls, \utf8 
+
         * title: "Event listeners"
           description: """
 A demonstration showing how to use the API to cascade controls for a classic make / model selector

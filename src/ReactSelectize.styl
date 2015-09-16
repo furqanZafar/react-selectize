@@ -3,7 +3,7 @@
     background-color white
     border-radius 4px
     font-family Helvetica Neue, Helvetica, Arial, sans-serif
-    -webkit-user-select none    
+    -webkit-user-select none
     position relative
 
     &.disabled
@@ -29,7 +29,7 @@
             white-space nowrap
             position absolute
             top 0
-            left 0
+            left 0px
 
         input 
             background none
@@ -54,9 +54,7 @@
                 color #c0392b
 
         .arrow
-            border-color #999999 transparent transparent
             border-style solid
-            border-width 5px
             content " "
             display block
             height 0px
@@ -68,9 +66,6 @@
     .options
         background white
         border 1px solid #ccc
-        border-top none
-        border-bottom-left-radius 4px
-        border-bottom-right-radius 4px
         box-sizing border-box
         max-height 200px
         overflow auto
@@ -82,15 +77,51 @@
             background #f2f9fc
             color #333
 
-    &.open 
+    &.flipped
 
-        .control
-            border-color #b3b3b3 #cccccc #d9d9d9
-            border-top-left-radius 4px
-            border-top-right-radius 4px
-            border-bottom-left-radius 0px
-            border-bottom-right-radius 0px
+        .arrow
+            border-color transparent transparent #999999
+            border-width 0 5px 5px
+
+        &.open
+
+            .control
+                border-bottom-left-radius 4px
+                border-bottom-right-radius 4px
+                border-top-left-radius 0px
+                border-top-right-radius 0px
+
+                .arrow
+                    border-color #999999 transparent transparent
+                    border-width 5px
+
+            .options
+                border-bottom none
+                border-top-left-radius 4px
+                border-top-right-radius 4px
+
+    &:not(.flipped)
+        
+        .arrow
+            border-color #999999 transparent transparent
+            border-width 5px
+        
+        &.open   
             
-            .arrow
-                border-color transparent transparent #999999
-                border-width 0 5px 5px
+            .control
+                border-bottom-left-radius 0px
+                border-bottom-right-radius 0px
+                border-top-left-radius 4px
+                border-top-right-radius 4px
+                
+                .arrow
+                    border-color transparent transparent #999999
+                    border-width 0 5px 5px
+
+            .options
+                border-color #b3b3b3 #cccccc #d9d9d9
+                border-top none
+                border-bottom-left-radius 4px
+                border-bottom-right-radius 4px
+
+

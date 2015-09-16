@@ -21,7 +21,7 @@ module.exports = React.create-class do
         on-focus: ((value, reason) !->) # :: Item -> String -> Void
         # on-search-change :: String -> (a -> Void) -> Void
         # on-value-change :: Item -> (a -> Void) -> Void 
-        options: []
+        # options :: [Item]
         placeholder: ""
         # render-no-results-found :: Item -> String -> ReactElement
         # render-option :: Int -> Item -> ReactElement
@@ -40,6 +40,7 @@ module.exports = React.create-class do
             
             class-name: "simple-select #{@props?.class-name ? ''}"
             disabled: @props.disabled
+            dropdown-direction: @props.dropdown-direction
             ref: \select
 
             # ANCHOR
@@ -68,9 +69,7 @@ module.exports = React.create-class do
             on-values-change: (new-values, callback) ~>
                 if new-values.length == 0
                     <~ on-value-change undefined
-                    <~ @show-options
-                    @refs.select.focus!
-                    callback!
+                    @focus callback
                 else
                     value = 
                         | new-values.length == 1 => new-values.0
@@ -111,13 +110,22 @@ module.exports = React.create-class do
             | !(@props.has-own-property p) and @props.has-own-property camelize "on-#{p}-change" => 
                 (o, callback) ~> 
                     <~ @set-state {"#{p}" : o}
-                    @props[camelize "on-#{p}-change"] o, (->)
-                    callback!
+                    @props[camelize "on-#{p}-change"] o, callback
             | !(@props.has-own-property p) and !(@props.has-own-property camelize "on-#{p}-change") => 
                 (o, callback) ~> @set-state {"#{p}" : o}, callback
 
+        # get options from props.children
+        options-from-children = switch
+            | !!@props?.children =>
+                if typeof! @props.children == \Array then @props.children else [@props.children] 
+                    |> map ({props:{value, children}}) -> label: children, value: value
+            | _ => []
+
+        # props.options is preferred over props.children
+        unfiltered-options = if @props.has-own-property \options then (@props.options ? []) else options-from-children
+
         # filter options and create new one from search text
-        filtered-options = @props.filter-options @props.options, search
+        filtered-options = @props.filter-options unfiltered-options, search
         new-option = if typeof @props.create-from-search == \function then (@props.create-from-search filtered-options, search) else null
         options = (if !!new-option then [{} <<< new-option <<< new-option: true] else []) ++ filtered-options
 
@@ -144,10 +152,10 @@ module.exports = React.create-class do
                 else
                     1
 
-    # focus :: a -> Void
-    focus: !-> 
+    # focus :: a -> (a -> Void) -> Void
+    focus: (callback) -> 
         @refs.select.focus!
-        <~ @show-options
+        @show-options callback
 
     # highlight-the-first-selectable-option :: a -> Void
     highlight-first-selectable-option: !->

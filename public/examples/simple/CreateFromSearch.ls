@@ -20,6 +20,8 @@ Form = React.create-class do
                 # helps us ensure that the item doesn't already exist in the options array
                 if !!new-option
                     @set-state options: [{label, value}] ++ @state.options, callback 
+                else
+                    callback!
                 
     get-initial-state: ->
         options: <[apple mango grapes melon strawberry]> |> map ~> label: it, value: it

@@ -11,7 +11,9 @@ Form = React.create-class do
             on-value-change: ({label, value, new-option}?, callback) !~>
                 if !!new-option
                     @set-state options: [{label, value}] ++ @state.options, callback 
-            
+                else
+                    callback!
+
             # render-option :: Int -> Item -> ReactElement
             render-option: (index, {label, new-option}?) ~>
                 div do 

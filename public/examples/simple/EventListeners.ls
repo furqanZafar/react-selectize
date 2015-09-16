@@ -13,8 +13,7 @@ Form = React.create-class do
                 # on-value-change :: Item -> (a -> Void) -> Void
                 on-value-change: (make, callback) !~> 
                     <~ @set-state {make, model: undefined}
-                    @refs.models.focus!
-                    callback!
+                    @refs.models.focus callback
                 
                 # on-focus :: Item -> String -> Void
                 on-focus: (item, reason) ~>
