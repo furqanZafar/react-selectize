@@ -1,4 +1,4 @@
-{filter, find, find-index, initial, last, map, partition, reject, reverse, sort-by} = require \prelude-ls
+{filter, find, find-index, initial, last, map, partition, reject, reverse, sort-by, sum} = require \prelude-ls
 {clamp, is-equal-to-object} = require \prelude-extension
 {DOM:{div, input, span}}:React = require \react
 
@@ -27,6 +27,9 @@ module.exports = React.create-class do
         disabled: false
         dropdown-direction: 1
         first-option-index-to-highlight: (options) -> 0
+        group-id: (.group-id) # Item -> a
+        # groups :: [Group]
+        groups-as-columns: false
         on-anchor-change: ((anchor) ->) # Item -> Void
         on-blur: ((values, reason) !->) # [Item] -> String -> Void
         on-focus: ((values, reason) !->) # [Item] -> String -> Void
@@ -37,6 +40,12 @@ module.exports = React.create-class do
         options: [] # [Item]
         # render-no-results-found :: a -> ReactElement
         render-no-results-found: -> div class-name: \no-results-found, "No results found"
+        # render-group-title :: Int -> Group -> ReactElement
+        render-group-title: (index, {group-id, title}?) ->
+            div do 
+                class-name: \simple-group-title
+                key: group-id
+                title
         # render-option :: Int -> Item -> ReactElement
         render-option: (index, {label, new-option, selectable}?) ->
             is-selectable = (typeof selectable == \undefined) or selectable
@@ -228,40 +237,61 @@ module.exports = React.create-class do
             # DROPDOWN
             if @props.open
                 
-                dropdown = div do 
-                    class-name: \options
-                    ref: \options
+                # render-options :: [Item] -> Int -> [ReactEleent]
+                render-options = (options, index-offset) ~>
+                    [0 til options.length] |> map (index) ~>
+                        option = options[index]
+
+                        # OPTION WRAPPER 
+                        div do
+                            {
+                                class-name: \option-wrapper
+                                ref: "option-#{index-offset + index}"
+                                key: "#{index-offset + index}"
+                                on-mouse-move: ({current-target}) !~> @scroll-lock = false if @scroll-lock
+                                on-mouse-out: !~> @lowlight-option! if !@scroll-lock
+                            } <<< 
+                                switch 
+                                | (typeof option?.selectable == \boolean) and !option.selectable => on-click: cancel-event
+                                | _ => 
+                                    on-click: (e) !~> @select-highlighted-option anchor-index, (->)
+                                    on-mouse-over: ({current-target}) !~> @highlight-option (index-offset + index) if !@scroll-lock
+
+                            # OPTION
+                            @props.render-option (index-offset + index), option
+
+                div do 
+                    class-name: \dropdown
+                    ref: \dropdown
 
                     # NO RESULT FOUND   
                     if @props.options.length == 0
                         @props.render-no-results-found!
                     
-                    # OPTIONS
+                    else if @props?.groups?.length > 0
+
+                        # convert [Group] to [{index: Int, group: Group, options: [Item]}]
+                        groups = [0 til @props.groups.length] |> map (index) ~>  
+                            {group-id}:group = @props.groups[index]
+                            options = @props.options |> filter ~> (@props.group-id it) == group-id
+                            {index, group, options}
+
+                        # GROUPS
+                        div class-name: "groups #{if !!@props.groups-as-columns then 'as-columns' else ''}",
+                            groups 
+                                |> filter (.options.length > 0)
+                                |> map ({index, group, options}) ~>
+                                    offset = [0 til index]
+                                        |> map -> groups[it].options.length
+                                        |> sum
+                                    div null,
+                                        @props.render-group-title index, group, options
+                                        div class-name: \options,
+                                            render-options options, offset
+
                     else
-                        [0 til @props.options.length] |> map (index) ~>
+                        render-options @props.options, 0
 
-                            option = @props.options[index]
-
-                            # OPTION WRAPPER 
-                            div do
-                                {
-                                    class-name: \option-wrapper
-                                    ref: "option-#{index}"
-                                    key: "#{index}"
-                                    on-mouse-move: ({current-target}) !~> @scroll-lock = false if @scroll-lock
-                                    on-mouse-out: !~> @lowlight-option! if !@scroll-lock
-                                } <<< 
-                                    switch 
-                                    | (typeof option?.selectable == \boolean) and !option.selectable => on-click: cancel-event
-                                    | _ => 
-                                        on-click: (e) !~>
-                                            @select-highlighted-option anchor-index, (->)
-                                            # cancel-event e
-                                        on-mouse-over: ({current-target}) !~> @highlight-option index if !@scroll-lock
-
-                                # OPTION
-                                @props.render-option index, option
-            
     # component-did-mount :: a -> Void
     component-did-mount: !->
         @external-click-listener = ({target}) ~>
@@ -294,8 +324,8 @@ module.exports = React.create-class do
             ..style.width = 0
             ..style.width = $search.scroll-width
 
-        if @props.dropdown-direction == -1 and !!@refs.options
-            @refs.options.getDOMNode!.style.bottom = @refs.control.getDOMNode!.offset-height
+        if !!@refs.dropdown
+            @refs.dropdown.getDOMNode!.style.bottom = if @props.dropdown-direction == -1 then @refs.control.getDOMNode!.offset-height else ""
 
     # component-will-receive-props :: Props -> Void
     component-will-receive-props: (props) !->
@@ -330,7 +360,8 @@ module.exports = React.create-class do
     # highlight-and-scroll-to-option :: Int -> Void
     highlight-and-scroll-to-option: (index) !->
 
-        {parent-element}:option-element? = @highlight-option index
+        option-element? = @highlight-option index
+        parent-element = @refs.dropdown.getDOMNode!
         
         if !!option-element
 

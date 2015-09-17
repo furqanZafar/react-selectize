@@ -19,12 +19,6 @@ examples =
             jsx: fs.read-file-sync \public/examples/multi/MultiSelect.jsx, \utf8 
             ls: fs.read-file-sync \public/examples/multi/MultiSelect.ls, \utf8 
 
-        * title: "Dropdown direction"
-          description: ""
-          languages:
-            jsx: fs.read-file-sync \public/examples/multi/DropdownDirection.jsx, \utf8 
-            ls: fs.read-file-sync \public/examples/multi/DropdownDirection.ls, \utf8 
-
         * title: "Max values"
           description: """
 This example only allows 2 items. 
@@ -43,6 +37,23 @@ Use your left/right arrow keys to move the cursor between items.
             jsx: fs.read-file-sync \public/examples/multi/Tags.jsx, \utf8 
             ls: fs.read-file-sync \public/examples/multi/Tags.ls, \utf8 
 
+        * title: "Option groups"
+          description: """
+Display option groups as columns by setting groupsAsColumns property to true
+"""          
+          languages:
+            jsx: fs.read-file-sync \public/examples/multi/OptionGroups.jsx, \utf8 
+            ls: fs.read-file-sync \public/examples/multi/OptionGroups.ls, \utf8 
+
+        * title: "Dropdown direction"
+          description: """
+The following example flips the dropdown based on the screen Y value of the select component.
+open the dropdown and scroll up and down past the select component
+"""          
+          languages:
+            jsx: fs.read-file-sync \public/examples/multi/DropdownDirection.jsx, \utf8 
+            ls: fs.read-file-sync \public/examples/multi/DropdownDirection.ls, \utf8 
+            
         * title: "Cursor"
           description: """
 To control the position of the cursor use the anchor & onAnchorChange props.

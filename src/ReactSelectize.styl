@@ -63,7 +63,7 @@
             top 14px
             width 0px
 
-    .options
+    .dropdown
         background white
         border 1px solid #ccc
         box-sizing border-box
@@ -95,7 +95,7 @@
                     border-color #999999 transparent transparent
                     border-width 5px
 
-            .options
+            .dropdown
                 border-bottom none
                 border-top-left-radius 4px
                 border-top-right-radius 4px
@@ -118,10 +118,40 @@
                     border-color transparent transparent #999999
                     border-width 0 5px 5px
 
-            .options
+            .dropdown
                 border-color #b3b3b3 #cccccc #d9d9d9
                 border-top none
                 border-bottom-left-radius 4px
                 border-bottom-right-radius 4px
 
+    .groups.as-columns
+        display flex
 
+        > div 
+            flex 1
+
+    .no-results-found
+        color #aaa !important
+        font-style oblique
+        padding 8px 10px
+        &.red
+            color red !important
+
+    .simple-group-title
+        background-color #fafafa
+        padding 8px 8px
+
+    .simple-option
+        color #666
+        cursor pointer
+        padding 8px 10px
+        
+        &.not-selectable
+            background-color #f8f8f8
+            color #999
+            cursor default
+            font-style oblique
+            text-shadow 0px 1px 0px white
+
+        span.highlight
+            background-color rgba(212, 219, 222, 0.7)

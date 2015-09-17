@@ -12,12 +12,14 @@ LIVE DEMO: [furqanZafar.github.io/react-selectize](http://furqanZafar.github.io/
 * Stateless, therefore extremely flexible & extensible
 * Clean and compact API fully documented on GitHub
 * Multiselect support
+* Option groups
 * Custom filtering &amp; option object
 * Custom option &amp; value rendering
+* Remote data loading
+* Tagging or item creation
 * Caret between items
 * Customizable dropdown direction
-* Tagging or item creation
-* Remote data loading
+* Mark options as unselectable 
 * Customizable styles, comes with Stylus files
 
 ## Install
@@ -100,34 +102,38 @@ to include the default styles when using MultiSelect component, add the followin
 
 ## SimpleSelect Props
 
-|    Property                |   Type                             |   Description|
-|----------------------------|------------------------------------|--------------------------------|
-|    className               | String                             | class name for the outer element, in addition to "simple-select"|
-|    disabled                | Boolean                            | disables interaction with the Select control|
-|    dropdownDirection       | Int                                | defaults to 1, setting it to -1 opens the dropdown upward|
-|    createFromSearch        | [Item] -> String -> Item?          | implement this function to create new items on the fly, `function(options, search){return {label: search, value: search}}`, return null to avoid option creation for the given parameters|
-|    filterOptions           | [Item]-> String -> [Item]          | implement this function for custom synchronous filtering logic, `function(options, search) {return options}`|
-|    onBlur                  | Item -> String -> Void             | `function(value, reason){}` reason can be either "click" (loss of focus because the user clicked elsewhere), "tab" or "blur" (invoked refs.simpleSelect.blur())|
-|    onFocus                 | Item -> String -> Void             | `function(value, reason){}` reason can be either "event" (when the control gains focus outside) or "focus" (when the user invokes refs.simpleSelect.focus())|
-|    onSearchChange          | String -> (a -> Void) -> Void      | `function(search, callback){self.setState({search: search}, callback);}` or `function(search,callback){callback();}` i.e. callback MUST always be invoked|
-|    onValueChange           | Item -> (a -> Void) -> Void        | `function(selectedValue, callback){self.setState({selectedValue: selectedValue}, callback)}` or `function(value, callback){callback()}` i.e. callback MUST always be invoked|
-|    options                 | [Item]                             | list of items by default each option object MUST have label & value property, otherwise you must implement the render* & filterOptions methods|
-|    placeholder             | String                             | displayed when there is no value|
-|    renderNoResultsFound    | Item -> String -> ReactElement     | `function(item, search){return React.DOM.div(null);}` returns a custom way for rendering the "No results found" error|
-|    renderOption            | Int -> Item -> ReactElement        | `function(index, item){return React.DOM.div(null);}` returns a custom way for rendering each option|
-|    renderValue             | Int -> Item -> ReactElement        | `function(index, item){return React.DOM.div(null);}` returns a custom way for rendering the selected value|
-|    restoreOnBackspace      | Item -> String                     | `function(item){return item.label;}` implement this method if you want to go back to editing the item when the user hits the [backspace] key instead of getting removed|
-|    search                  | String                             | the text displayed in the search box|
-|    style                   | Object                             | the CSS styles for the outer element|
-|    value                   | Item                               | the selected value, i.e. one of the objects in the options array|
+|    Property                |   Type                         |   Description                  |
+|----------------------------|--------------------------------|--------------------------------|
+|    className               | String                         | class name for the outer element, in addition to "simple-select"|
+|    disabled                | Boolean                        | disables interaction with the Select control|
+|    dropdownDirection       | Int                            | defaults to 1, setting it to -1 opens the dropdown upward|
+|    createFromSearch        | [Item] -> String -> Item?      | implement this function to create new items on the fly, `function(options, search){return {label: search, value: search}}`, return null to avoid option creation for the given parameters|
+|    filterOptions           | [Item]-> String -> [Item]      | implement this function for custom synchronous filtering logic, `function(options, search) {return options}`|
+|    groupId                 | Item -> b                      | `function(item){return item.groupId}` this function is used to identify which group an option belongs to, it must return a value that matches the groupId property of an object in the groups collection|
+|    groups                  | [Group]                        | collection of objects where each object must atleast have a groupId property|
+|    groupsAsColumns         | Boolean                        | display option groups in columns|
+|    onBlur                  | Item -> String -> Void         | `function(value, reason){}` reason can be either "click" (loss of focus because the user clicked elsewhere), "tab" or "blur" (invoked refs.simpleSelect.blur())|
+|    onFocus                 | Item -> String -> Void         | `function(value, reason){}` reason can be either "event" (when the control gains focus outside) or "focus" (when the user invokes refs.simpleSelect.focus())|
+|    onSearchChange          | String -> (a -> Void) -> Void  | `function(search, callback){self.setState({search: search}, callback);}` or `function(search,callback){callback();}` i.e. callback MUST always be invoked|
+|    onValueChange           | Item -> (a -> Void) -> Void    | `function(selectedValue, callback){self.setState({selectedValue: selectedValue}, callback)}` or `function(value, callback){callback()}` i.e. callback MUST always be invoked|
+|    options                 | [Item]                         | list of items by default each option object MUST have label & value property, otherwise you must implement the render* & filterOptions methods|
+|    placeholder             | String                         | displayed when there is no value|
+|    renderNoResultsFound    | Item -> String -> ReactElement | `function(item, search){return React.DOM.div(null);}` returns a custom way for rendering the "No results found" error|
+|    renderGroupTitle        | Int -> Group -> ReactElement   | `function(index, group){return React.DOM.div(null)}` returns a custom way for rendering the group title|
+|    renderOption            | Int -> Item -> ReactElement    | `function(index, item){return React.DOM.div(null);}` returns a custom way for rendering each option|
+|    renderValue             | Int -> Item -> ReactElement    | `function(index, item){return React.DOM.div(null);}` returns a custom way for rendering the selected value|
+|    restoreOnBackspace      | Item -> String                 | `function(item){return item.label;}` implement this method if you want to go back to editing the item when the user hits the [backspace] key instead of getting removed|
+|    search                  | String                         | the text displayed in the search box|
+|    style                   | Object                         | the CSS styles for the outer element|
+|    value                   | Item                           | the selected value, i.e. one of the objects in the options array|
 
 ## SimpleSelect methods
 
-|    Method                       |    Type                            |    Description                 |
-|---------------------------------|------------------------------------|--------------------------------|
-| focus                           | a -> (a -> Void) -> Void           | `this.refs.selectInstance.focus(callback)` opens the list of options and positions the cursor in the input control, the callback fired when the options menu becomes visible|
-| highlightFirstSelectableOption  | a -> Void                          | `this.refs.selectInstance.highlightFirstSelectableOption()`|
-| value                           | a -> Item                          | `this.refs.selectInstance.value()` returns the current selected item|
+|    Method                       |    Type                  |    Description                 |
+|---------------------------------|--------------------------|--------------------------------|
+| focus                           | a -> (a -> Void) -> Void | `this.refs.selectInstance.focus(callback)` opens the list of options and positions the cursor in the input control, the callback fired when the options menu becomes visible|
+| highlightFirstSelectableOption  | a -> Void                | `this.refs.selectInstance.highlightFirstSelectableOption()`|
+| value                           | a -> Item                | `this.refs.selectInstance.value()` returns the current selected item|
 
 ## MultiSelect Props
 In addition to the props above
