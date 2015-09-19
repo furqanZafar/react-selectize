@@ -18,11 +18,12 @@ Form = React.createClass({
                 if (!!item && !!item.newOption) {
                     self.state.options.unshift({label: item.label, value: item.value});
                     self.setState({options: self.state.options}, callback);
-                }
+                } else
+                    callback();
             }}
         
             // renderOption :: Int -> Item -> ReactElement
-            renderOption={function(index, item){
+            renderOption={function(item){
                 return <div className="simple-option" style={{display: "flex", alignItems: "center"}}>
                     <div style={{
                         backgroundColor: item.label, borderRadius: "50%", width: 24, height: 24
@@ -34,7 +35,7 @@ Form = React.createClass({
             }}
             
             // renderValue :: Int -> Item -> ReactElement
-            renderValue={function(index, item){
+            renderValue={function(item){
                 return <div className="simple-value">
                     <span style={{
                         backgroundColor: item.label, borderRadius: "50%", 

@@ -24,16 +24,18 @@ Form = React.create-class do
             # filter-options :: [Item]  -> String -> [Item]
             filter-options: (options, search) -> options
             
-            render-option: (index, {name, latest, version, homepage}) ~>
+            uid: (.name)
+
+            render-option: ({name, latest, version, homepage}) ~>
                 div class-name: \simple-option, style: font-size: 12,
-                    div key: index,
+                    div null,
                         span style: font-weight: \bold, name
                         span null, "@#{version}"
                     div null, 
                         a {href: homepage, target: \blank}, homepage
                         
-            render-value: (index, {name, version}) ~>
-                div key: index, class-name: \simple-value,
+            render-value: ({name, version}) ~>
+                div class-name: \simple-value,
                     span style: font-weight: \bold, name
                     span null, "@#{version}"
                      

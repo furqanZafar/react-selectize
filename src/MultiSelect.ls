@@ -40,13 +40,18 @@ module.exports = React.create-class do
     render: -> 
         
         {anchor, search, values, on-anchor-change, on-search-change, on-values-change, filtered-options, options} = @get-computed-state!
-        {autosize} = @props
+        {autosize, disabled, dropdown-direction, group-id, groups, groups-as-columns, render-group-title} = @props
 
         ReactSelectize {
             
             autosize
             class-name: "multi-select #{@props.class-name}"
-            disabled: @props.disabled
+            disabled
+            dropdown-direction
+            group-id
+            groups
+            groups-as-columns
+            render-group-title
             ref: \select
 
             # ANCHOR
@@ -56,6 +61,9 @@ module.exports = React.create-class do
             # OPEN
             open: @state.open
             on-open-change: (open, callback) ~> if open then @show-options callback else @set-state {open}, callback
+
+            highlighted-uid: @state.highlighted-uid
+            on-highlighted-uid-change: (highlighted-uid, callback) ~> @set-state {highlighted-uid}, callback
 
             # OPTIONS            
             first-option-index-to-highlight: ~> @first-option-index-to-highlight options
@@ -72,11 +80,10 @@ module.exports = React.create-class do
             values: values
             on-values-change: (new-values, callback) ~>
                 <~ on-values-change new-values
-                @refs.select.focus!
                 if @props.close-on-select or (!!@props.max-values and new-values.length >= @props.max-values) 
                     @set-state {open: false}, callback 
                 else 
-                    callback!
+                    @focus callback
             render-value: @props.render-value
 
             # STYLE
@@ -113,8 +120,18 @@ module.exports = React.create-class do
             | !(@props.has-own-property p) and !(@props.has-own-property camelize "on-#{p}-change") => 
                 (o, callback) ~> @set-state {"#{p}" : o}, callback
 
+        # get options from props.children
+        options-from-children = switch
+            | !!@props?.children =>
+                if typeof! @props.children == \Array then @props.children else [@props.children] 
+                    |> map ({props:{value, children}}) -> label: children, value: value
+            | _ => []
+
+        # props.options is preferred over props.children
+        unfiltered-options = if @props.has-own-property \options then (@props.options ? []) else options-from-children
+
         # filter options and create new one from search text
-        filtered-options = @props.filter-options @props.options, values, search
+        filtered-options = @props.filter-options unfiltered-options, values, search
         new-option = if typeof @props.create-from-search == \function then (@props.create-from-search filtered-options, values, search) else null
         options = (if !!new-option then [{} <<< new-option <<< new-option: true] else []) ++ filtered-options
 
@@ -123,6 +140,7 @@ module.exports = React.create-class do
     # get-initial-state :: a -> UIState
     get-initial-state: ->
         anchor: if !!@props.values then last @props.values else undefined
+        highlighted-uid: undefined
         open: false
         search: ""
         values: []
@@ -140,10 +158,10 @@ module.exports = React.create-class do
                 else
                     1
 
-    # focus :: a -> Void
-    focus: !-> 
+    # focus :: a -> (a -> Void) -> Void
+    focus: (callback) -> 
         @refs.select.focus!
-        @show-options
+        @show-options callback
 
     # highlight-the-first-selectable-option :: a -> Void
     highlight-first-selectable-option: !->

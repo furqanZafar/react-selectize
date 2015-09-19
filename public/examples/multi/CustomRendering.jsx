@@ -4,10 +4,10 @@ Form = React.createClass({
     render: function() {
         self = this;
         return <MultiSelect
-            placeholder = "Select 3 emojis"
+            placeholder = "Select 5 emojis"
             options = {this.state.emojis}
             values = {this.state.selectedEmojis}
-            maxValues = {3}
+            maxValues = {5}
             
             // restoreOnBackspace :: Item -> String
             restoreOnBackspace = {function(item){
@@ -26,7 +26,7 @@ Form = React.createClass({
                 charMap = {
                     ':)' : 'smile', ':(' : 'frowning', ':D' : 'grin',
                     ':((' : 'disappointed', ':P' : 'stuck_out_tongue', ';)' : 'wink',
-                    '<3 ': 'heart', 'o.O' : 'confused', ':o' : 'open_mouth',
+                    '<3' : 'heart', 'o.O' : 'confused', ':o' : 'open_mouth',
                     ':*' : 'kissing', 'B|' : 'sunglasses'
                 };
                 if (!!charMap[search])
@@ -43,12 +43,17 @@ Form = React.createClass({
                         .filter(function(option){
                             return option.label.indexOf(search) == 0;
                         })
-                        .first(50)
+                        .first(100)
                         .value();
             }}
 
+            // uid :: (Eq e) => Item -> e
+            uid = {function(item){
+                return item.label;
+            }}
+
             // renderOption :: Int -> Item -> ReactElement
-            renderOption = {function(index, item){
+            renderOption = {function(item){
                 return <div className = "simple-option">
                     <img src = {item.value} style = {{marginRight: 4, verticalAlign: "middle", width: 24}}/>
                     <span>{item.label}</span>
@@ -56,7 +61,7 @@ Form = React.createClass({
             }}
             
             // renderValue :: Int -> Item -> ReactElement
-            renderValue = {function(index, item){
+            renderValue = {function(item){
                 return <div className = "simple-value">
                     <span onClick = {function(){
                         self.setState({

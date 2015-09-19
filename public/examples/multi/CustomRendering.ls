@@ -3,8 +3,8 @@ Form = React.create-class do
     # render :: a -> ReactElement
     render: ->
         React.create-element MultiSelect, 
-            placeholder: "Select 3 emojis"
-            max-values: 3
+            placeholder: "Select 5 emojis"
+            max-values: 5
             
             # restore-on-backspace :: Item -> String
             restore-on-backspace: (.label)
@@ -27,16 +27,19 @@ Form = React.create-class do
                     options 
                         |> reject ({value}) -> value in map (.value), values 
                         |> filter ({label}) -> (label.index-of search) == 0
-                        |> take 50
-                
+                        |> take 100
+            
+            # uid :: (Eq e) => Item -> e
+            uid: (.label)
+
             # render-option :: Int -> Item -> ReactElement
-            render-option: (index, {label, value}) ~>
+            render-option: ({label, value}) ~>
                 div class-name: \simple-option,
                     img src: value, style: margin-right: 4, vertical-align: \middle, width: 24
                     span null, label
                     
             # render-value :: Int -> Item -> ReactElement
-            render-value: (index, {label, value}) ~>
+            render-value: ({label, value}) ~>
                 div class-name: \simple-value,
                     span do 
                         on-click: ~> @set-state do 

@@ -27,7 +27,8 @@ Form = React.createClass({
                 if (!!item && !!item.newOption) {
                     self.state.options.unshift({label: item.label, value: item.value});
                     self.setState({options: self.state.options}, callback);
-                }
+                } else 
+                    callback();
             }}>
         </SimpleSelect>
     },
