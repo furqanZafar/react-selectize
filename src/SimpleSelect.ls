@@ -35,9 +35,11 @@ module.exports = React.create-class do
     render: -> 
         
         {search, value, values, on-search-change, on-value-change, filtered-options, options} = @get-computed-state!
+        {autosize} = @props
 
         ReactSelectize {
             
+            autosize
             class-name: "simple-select #{@props?.class-name ? ''}"
             disabled: @props.disabled
             ref: \select

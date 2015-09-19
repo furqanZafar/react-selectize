@@ -85,6 +85,7 @@ to include the default styles when using MultiSelect component, add the followin
 
 |    Property                |   Type                             |   Description|
 |----------------------------|------------------------------------|--------------------------------|
+|    autosize                | InputElement -> Int                | `function($search){return $search.value.length * 10}` custom logic for autosizing the input element, the default implementation uses scroll-width, if supported, otherwise it simply multiples the text length with a constant|
 |    className               | String                             | class name for the outer element, in addition to "simple-select"|
 |    disabled                | Boolean                            | disables interaction with the Select control|
 |    createFromSearch        | [Item] -> String -> Item?          | implement this function to create new items on the fly, `function(options, search){return {label: search, value: search}}`, return null to avoid option creation for the given parameters|

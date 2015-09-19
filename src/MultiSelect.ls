@@ -40,9 +40,11 @@ module.exports = React.create-class do
     render: -> 
         
         {anchor, search, values, on-anchor-change, on-search-change, on-values-change, filtered-options, options} = @get-computed-state!
+        {autosize} = @props
 
         ReactSelectize {
             
+            autosize
             class-name: "multi-select #{@props.class-name}"
             disabled: @props.disabled
             ref: \select
