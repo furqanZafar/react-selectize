@@ -7,7 +7,7 @@ Form = React.create-class do
             options: @state.models
             
             # render-option :: Int -> Item -> ReactElement
-            render-option: (index, {label, value, selectable}) ~>
+            render-option: ({label, value, selectable}) ~>
                 div do 
                     class-name: \simple-option
                     style: 

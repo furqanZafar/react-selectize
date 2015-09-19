@@ -24,15 +24,19 @@ Form = React.createClass({
                     delete self.req;
                 });
             }}
-            
+                
             // disable client side filtering
             // filterOptions :: [Item] -> String -> [Item]
             filterOptions = {function(options, search){
                 return options;
             }}
             
-            renderOption = {function(index, item){
-                return <div key={index} className="simple-option" style={{fontSize: 12}}>
+            uid = {function(item){
+                return item.name;
+            }}
+            
+            renderOption = {function(item){
+                return <div className="simple-option" style={{fontSize: 12}}>
                     <div> 
                         <span style={{fontWeight: "bold"}}>{item.name}</span>
                         <span>{"@" + item.version}</span>
@@ -43,8 +47,8 @@ Form = React.createClass({
                 </div>
             }}
             
-            renderValue = {function(index, item){
-                return <div key={index} className="simple-value">
+            renderValue = {function(item){
+                return <div className="simple-value">
                     <span style={{fontWeight: "bold"}}>{item.name}</span>
                     <span>{"@" + item.version}</span>
                 </div>

@@ -1,7 +1,6 @@
 @import "Example"
-@import "../../src/MultiSelect"
-@import "../../src/SimpleSelect"
-
+@require "../../src/MultiSelect"
+@require "../../src/SimpleSelect"
 
 body
     
@@ -23,6 +22,7 @@ body
     
     display flex
     align-items center
+    color rgb(68, 75, 88)
     flex-direction column
     font-family 'Helvetica Neue', Helvetica
     margin 0px
@@ -30,12 +30,33 @@ body
 
     .project-description
         margin 0px 0px 40px 0px
-        width 600px
+        width 700px
+
+        a
+            color #0099ff
 
         .title
             font-size 2.5em
             font-weight lighter
-            margin 16px 0px 8px 0px
+            margin 40px 0px 16px 0px
+
+        .code
+            background-color #f0f0f0
+            font-family monospace
+            font-size 14px
+            padding 1px
+            white-space pre
+
+
+        .features, .install
+            margin-top 24px
+            .sub-title
+                font-weight bold
+
+        .features            
+            ul 
+                li
+                    margin-bottom 5px
 
     .app
         align-items center
@@ -67,11 +88,11 @@ body
                     color black
 
         .examples 
-            padding 40px 0px 0px 0px
+            padding 50px 0px 0px 0px
 
             .title     
                 font-size 1.8em
-                margin 0px 0px 20px 0px        
+                margin 0px 0px 20px 0px
 
         .github-link 
             color #0099ff

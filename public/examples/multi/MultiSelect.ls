@@ -1,3 +1,5 @@
+# {MultiSelect} = require \ReactSelectize
+
 Form = React.create-class do 
     
     # render :: a -> ReactElement

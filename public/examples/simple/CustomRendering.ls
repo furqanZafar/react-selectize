@@ -11,9 +11,11 @@ Form = React.create-class do
             on-value-change: ({label, value, new-option}?, callback) !~>
                 if !!new-option
                     @set-state options: [{label, value}] ++ @state.options, callback 
-            
+                else
+                    callback!
+
             # render-option :: Int -> Item -> ReactElement
-            render-option: (index, {label, new-option}?) ~>
+            render-option: ({label, new-option}?) ~>
                 div do 
                     class-name: \simple-option
                     style: display: \flex, align-items: \center
@@ -21,7 +23,7 @@ Form = React.create-class do
                     div style: margin-left: 10, if !!new-option then "Add #{label}..." else label
             
             # render-value :: Int -> Item -> ReactElement
-            render-value: (index, {label}) ~>
+            render-value: ({label}) ~>
                 div do 
                     class-name: \simple-value
                     style: display: \inline-block
