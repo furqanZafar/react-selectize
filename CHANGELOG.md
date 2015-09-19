@@ -14,3 +14,6 @@
 
 ## v0.1.4 / 15th September 2015
 * fixed option menu toggle on tap/click in mobile safari
+
+## v0.1.6 / 19h September 2015
+* introduced a new prop `autosize`, allows consumers to provide custom autosize logic for search input, the default implementation now supports nonmodern browsers

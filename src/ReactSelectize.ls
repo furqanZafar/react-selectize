@@ -1,4 +1,4 @@
-{filter, find, find-index, initial, last, map, partition, reject, reverse, sort-by} = require \prelude-ls
+{each, filter, find, find-index, initial, last, map, obj-to-pairs, partition, reject, reverse, sort-by} = require \prelude-ls
 {clamp, is-equal-to-object} = require \prelude-extension
 {DOM:{div, input, span}}:React = require \react
 
@@ -23,6 +23,29 @@ module.exports = React.create-class do
     # get-default-props :: a -> Props
     get-default-props: ->
         anchor: null
+        # autosize :: InputElement -> Int
+        autosize: ($search) -> 
+
+            # modern browsers
+            if $search.scroll-width > 0
+                $search.style.width = 2 + $search.scroll-width
+
+            # IE / Edge
+            else
+                $input = document.create-element \div
+                    ..innerHTML = $search.value
+
+                # copy all the styles of the search input 
+                (if !!$search.current-style then $search.current-style else (document.default-view ? window .get-computed-style $search))
+                    |> obj-to-pairs
+                    |> each ([key, value]) -> $input.style[key] = value
+                    |> -> $input.style.width = ""
+
+                # add a new input element to document.body and measure the text width
+                document.body.append-child $input
+                $search.style.width = 4 + $input.client-width
+                document.body.remove-child $input
+
         class-name: ''
         disabled: false
         first-option-index-to-highlight: (options) -> 0
@@ -242,7 +265,7 @@ module.exports = React.create-class do
                                     key: "#{index}"
                                     on-mouse-move: ({current-target}) !~> @scroll-lock = false if @scroll-lock
                                     on-mouse-out: !~> @lowlight-option! if !@scroll-lock
-                                } <<< 
+                                } <<<
                                     switch 
                                     | (typeof option?.selectable == \boolean) and !option.selectable => on-click: cancel-event
                                     | _ => 
@@ -283,7 +306,7 @@ module.exports = React.create-class do
         # autosize the search input to its contents
         $search = @refs.search.get-DOM-node!
             ..style.width = 0
-            ..style.width = $search.scroll-width
+            ..style.width = @props.autosize $search
 
     # component-will-receive-props :: Props -> Void
     component-will-receive-props: (props) !->
@@ -317,16 +340,11 @@ module.exports = React.create-class do
 
     # highlight-and-scroll-to-option :: Int -> Void
     highlight-and-scroll-to-option: (index) !->
-
         {parent-element}:option-element? = @highlight-option index
-        
         if !!option-element
-
             option-height = option-element.offset-height - 1
-
             if (option-element.offset-top - parent-element.scroll-top) >= parent-element.offset-height
                 parent-element.scroll-top = option-element.offset-top - parent-element.offset-height + option-height
-
             else if (option-element.offset-top - parent-element.scroll-top + option-height) <= 0
                 parent-element.scroll-top = option-element.offset-top
 
