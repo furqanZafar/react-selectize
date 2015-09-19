@@ -61,6 +61,9 @@ module.exports = React.create-class do
             open: @state.open
             on-open-change: (open, callback) ~> if open then @show-options callback else @set-state {open}, callback
 
+            highlighted-uid: @state.highlighted-uid
+            on-highlighted-uid-change: (highlighted-uid, callback) ~> @set-state {highlighted-uid}, callback
+
             # OPTIONS            
             first-option-index-to-highlight: ~> @first-option-index-to-highlight options
                 
@@ -136,6 +139,7 @@ module.exports = React.create-class do
     # get-initial-state :: a -> UIState
     get-initial-state: ->
         anchor: if !!@props.values then last @props.values else undefined
+        highlighted-uid: undefined
         open: false
         search: ""
         values: []

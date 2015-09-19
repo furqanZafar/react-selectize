@@ -120,11 +120,12 @@ to include the default styles when using MultiSelect component, add the followin
 |    placeholder             | String                         | displayed when there is no value|
 |    renderNoResultsFound    | Item -> String -> ReactElement | `function(item, search){return React.DOM.div(null);}` returns a custom way for rendering the "No results found" error|
 |    renderGroupTitle        | Int -> Group -> ReactElement   | `function(index, group){return React.DOM.div(null)}` returns a custom way for rendering the group title|
-|    renderOption            | Int -> Item -> ReactElement    | `function(index, item){return React.DOM.div(null);}` returns a custom way for rendering each option|
-|    renderValue             | Int -> Item -> ReactElement    | `function(index, item){return React.DOM.div(null);}` returns a custom way for rendering the selected value|
+|    renderOption            | Item -> ReactElement           | `function(item){return React.DOM.div(null);}` returns a custom way for rendering each option|
+|    renderValue             | Item -> ReactElement           | `function(item){return React.DOM.div(null);}` returns a custom way for rendering the selected value|
 |    restoreOnBackspace      | Item -> String                 | `function(item){return item.label;}` implement this method if you want to go back to editing the item when the user hits the [backspace] key instead of getting removed|
 |    search                  | String                         | the text displayed in the search box|
 |    style                   | Object                         | the CSS styles for the outer element|
+|    uid                     | (Eq e) => Item -> e            | `function(item){return item.value}` returns a unique id for a given option, defaults to the value property|
 |    value                   | Item                           | the selected value, i.e. one of the objects in the options array|
 
 ## SimpleSelect methods

@@ -7,7 +7,7 @@ Form = React.createClass({
             options = {this.state.models}
             
             // renderOption :: Int -> Item -> ReactElement
-            renderOption = {function(index, item){
+            renderOption = {function(item){
                 optionStyle = item.selectable ? {} : {
                     backgroundColor: "\#f8f8f8",
                     color: "\#999",

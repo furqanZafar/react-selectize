@@ -18,4 +18,7 @@
 ## v0.2.0 / 16th September 2015
 * drop in replacement for React.DOM.Select, accepts options as children
 * added a new prop `dropdownDirection`, setting it to -1 forces the options menu to open upwards
+* option group support (as rows and columns)
 * updated the signature of refs.selectInstance.focus from `a -> Void` to `a -> (a -> Void) -> Void`, i.e. the focus function now accepts a callback as the first parameter which is fired when the options menu is visible
+* improved performance by implementing shouldComponentUpdate lifecycle method for *Wrapper classes
+* changed the signature of renderOption & renderValue props from `Int -> Item -> ReactElement` to `Item -> ReactElement`

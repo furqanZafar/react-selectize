@@ -35,7 +35,7 @@ module.exports = React.create-class do
     render: -> 
         
         {search, value, values, on-search-change, on-value-change, filtered-options, options} = @get-computed-state!
-        {disabled, dropdown-direction, group-id, groups, groups-as-columns, render-group-title} = @props
+        {disabled, dropdown-direction, group-id, groups, groups-as-columns, render-group-title, uid} = @props
 
         ReactSelectize {
             
@@ -46,6 +46,7 @@ module.exports = React.create-class do
             groups
             groups-as-columns
             render-group-title
+            uid
             ref: \select
 
             # ANCHOR
@@ -55,6 +56,9 @@ module.exports = React.create-class do
             # OPEN
             open: @state.open
             on-open-change: (open, callback) ~> if !!open then @show-options callback else @set-state {open}, callback
+
+            highlighted-uid: @state.highlighted-uid
+            on-highlighted-uid-change: (highlighted-uid, callback) ~> @set-state {highlighted-uid}, callback
 
             # OPTIONS            
             first-option-index-to-highlight: ~> @first-option-index-to-highlight options, value
@@ -138,6 +142,7 @@ module.exports = React.create-class do
 
     # get-initial-state :: a -> UIState
     get-initial-state: ->
+        highlighted-uid: undefined
         open: false
         search: ""
         value: undefined

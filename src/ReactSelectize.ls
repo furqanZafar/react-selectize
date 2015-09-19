@@ -1,18 +1,45 @@
 {filter, find, find-index, initial, last, map, partition, reject, reverse, sort-by, sum} = require \prelude-ls
 {clamp, is-equal-to-object} = require \prelude-extension
-{DOM:{div, input, span}}:React = require \react
+{DOM:{div, input, span}, create-class, create-factory}:React = require \react
 
 # cancel-event :: Event -> Void
 cancel-event = (e) !->
     e.prevent-default!
     e.stop-propagation!
 
-module.exports = React.create-class do
+# wrapper classes are used for optimizing performance
+OptionWrapper = create-factory create-class do 
+
+    # render :: a -> ReactElement
+    render: ->
+        div do
+            class-name: "option-wrapper #{if !!@props.highlight then 'highlight' else ''}"
+            on-click: @props.on-click
+            on-mouse-move: @props.on-mouse-move
+            on-mouse-out: @props.on-mouse-out
+            on-mouse-over: @props.on-mouse-over
+            @props.render-item @props.item
+
+    # should-component-update :: Props -> Boolean
+    should-component-update: (next-props) ->
+        (next-props?.uid != @props?.uid) or (next-props?.highlight != @props?.highlight)
+
+ValueWrapper = create-factory create-class do 
+
+    # render :: a -> ReactElement
+    render: ->
+        div do 
+            class-name: \value-wrapper
+            @props.render-item @props.item
+
+    # should-component-update :: Props -> Boolean
+    should-component-update: (next-props) ->
+        next-props?.uid != @props?.uid
+
+
+module.exports = create-class do
 
     display-name: \ReactSelectize
-
-    # performance optimization (minimizes calls to render function)
-    highlighted-option: -1
 
     # used to figure out if the focus event was triggered by external action or by @focus!
     focus-lock: false
@@ -30,9 +57,11 @@ module.exports = React.create-class do
         group-id: (.group-id) # Item -> a
         # groups :: [Group]
         groups-as-columns: false
+        highlighted-uid: undefined
         on-anchor-change: ((anchor) ->) # Item -> Void
         on-blur: ((values, reason) !->) # [Item] -> String -> Void
         on-focus: ((values, reason) !->) # [Item] -> String -> Void
+        on-highlighted-uid-change: ((uid, callback) !-> ) # (Eq e) => e -> (a -> Void) -> Void
         on-open-change: ((open, callback) !->) # Boolean -> (a -> Void) -> Void
         on-search-change: ((search, callback) !-> ) # String -> (a -> Void) -> Void
         on-values-change: ((values, callback) !->) # [Item] -> (a -> Void) -> Void
@@ -47,29 +76,28 @@ module.exports = React.create-class do
                 key: group-id
                 title
         # render-option :: Int -> Item -> ReactElement
-        render-option: (index, {label, new-option, selectable}?) ->
+        render-option: ({label, new-option, selectable}?) ->
             is-selectable = (typeof selectable == \undefined) or selectable
             div do 
                 class-name: "simple-option #{if is-selectable then '' else 'not-selectable'}"
-                key: index
                 span null, if !!new-option then "Add #{label} ..." else label
-        # render-value :: Int -> Item -> ReactElement
-        render-value: (index, {label}) ->
+        # render-value :: Int -> Item -> ReactElement        
+        render-value: ({label}) ->
             div do 
                 class-name: \simple-value
-                key: index
                 span null, label
         # restore-on-backspace: ((value) -> ) # Item -> String
         search: ""
         style: {}
+        uid: (.value) # (Eq e) => Item -> e
         values: [] # [Item]
 
     # render :: a -> ReactElement
     render: ->
         anchor-index = 
             | (typeof @props.anchor == \undefined) or @props.anchor == null => -1
-            | _ => (find-index (~> it `is-equal-to-object` @props.anchor), @props.values) ? @props.values.length - 1
-        
+            | _ => (find-index (~> it `is-equal-to-object` @props.anchor), @props.values) ? @props.values.length - 1        
+
         # REACT SELECTIZE
         div do 
             class-name: """react-selectize 
@@ -96,7 +124,12 @@ module.exports = React.create-class do
                         @props.placeholder
 
                 # LIST OF SELECTED VALUES (BEFORE & INCLUDING THE ANCHOR)
-                [0 to anchor-index] |> map (index) ~> @props.render-value index, @props.values[index]
+                [0 to anchor-index] |> map (index) ~> 
+                    item = @props.values[index]
+                    ValueWrapper do 
+                        uid: @props.uid item
+                        item: item
+                        render-item: @props.render-value
 
                 # SEARCH INPUT BOX
                 input do
@@ -109,7 +142,7 @@ module.exports = React.create-class do
                     on-change: ({current-target:{value}}) ~> 
                         @props.on-search-change value, ~> 
                             if !(@highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1)
-                                @lowlight-option!
+                                @props.on-highlighted-uid-change undefined
 
                     # show the list of options (noop if caused by invocation of @focus function)
                     on-focus: !~> 
@@ -194,10 +227,7 @@ module.exports = React.create-class do
                             
                         # ENTER
                         if e.which == 13 and @props.open
-                            <~ @select-highlighted-option anchor-index
-                            if @props.open and !(@highlight-and-scroll-to-selectable-option @highlighted-option, 1)
-                                if !(@highlight-and-scroll-to-selectable-option 0, 1)
-                                    @lowlight-option!
+                            <~ @select-highlighted-uid anchor-index
 
                         else
                             switch e.which
@@ -205,12 +235,12 @@ module.exports = React.create-class do
                             # UP ARROW
                             | 38 => 
                                 @scroll-lock = true
-                                @highlight-and-scroll-to-selectable-option @highlighted-option - 1, -1
+                                @highlight-and-scroll-to-selectable-option (@option-index-from-uid @props.highlighted-uid) - 1, -1
 
                             # DOWN ARROW
                             | 40 => 
                                 @scroll-lock = true
-                                @highlight-and-scroll-to-selectable-option @highlighted-option + 1, 1
+                                @highlight-and-scroll-to-selectable-option (@option-index-from-uid @props.highlighted-uid) + 1, 1
 
                             # REST (we don't need to process or block rest of the keys)
                             | _ => return
@@ -218,7 +248,12 @@ module.exports = React.create-class do
                         cancel-event e
                 
                 # LIST OF SELECTED VALUES (AFTER THE ANCHOR)
-                [anchor-index + 1 til @props.values.length] |> map (index) ~> @props.render-value index, @props.values[index]
+                [anchor-index + 1 til @props.values.length] |> map (index) ~> 
+                    item = @props.values[index]
+                    ValueWrapper do 
+                        uid: @props.uid item
+                        item: item
+                        render-item: @props.render-value
 
                 # RESET BUTTON
                 div do 
@@ -241,24 +276,25 @@ module.exports = React.create-class do
                 render-options = (options, index-offset) ~>
                     [0 til options.length] |> map (index) ~>
                         option = options[index]
+                        uid = @props.uid option
 
                         # OPTION WRAPPER 
-                        div do
+                        OptionWrapper do
                             {
-                                class-name: \option-wrapper
-                                ref: "option-#{index-offset + index}"
-                                key: "#{index-offset + index}"
+                                uid
+                                ref: "option-#{uid}"
+                                key: uid
+                                item: option
+                                highlight: @props.highlighted-uid == uid
                                 on-mouse-move: ({current-target}) !~> @scroll-lock = false if @scroll-lock
-                                on-mouse-out: !~> @lowlight-option! if !@scroll-lock
+                                on-mouse-out: !~> @props.on-highlighted-uid-change undefined if !@scroll-lock
+                                render-item: @props.render-option
                             } <<< 
                                 switch 
                                 | (typeof option?.selectable == \boolean) and !option.selectable => on-click: cancel-event
                                 | _ => 
-                                    on-click: (e) !~> @select-highlighted-option anchor-index, (->)
-                                    on-mouse-over: ({current-target}) !~> @highlight-option (index-offset + index) if !@scroll-lock
-
-                            # OPTION
-                            @props.render-option (index-offset + index), option
+                                    on-click: (e) !~> @select-highlighted-uid anchor-index, (->)
+                                    on-mouse-over: ({current-target}) !~>  @props.on-highlighted-uid-change uid if !@scroll-lock
 
                 div do 
                     class-name: \dropdown
@@ -280,11 +316,11 @@ module.exports = React.create-class do
                         div class-name: "groups #{if !!@props.groups-as-columns then 'as-columns' else ''}",
                             groups 
                                 |> filter (.options.length > 0)
-                                |> map ({index, group, options}) ~>
+                                |> map ({index, {group-id}:group, options}) ~>
                                     offset = [0 til index]
                                         |> map -> groups[it].options.length
                                         |> sum
-                                    div null,
+                                    div key: group-id,
                                         @props.render-group-title index, group, options
                                         div class-name: \options,
                                             render-options options, offset
@@ -312,12 +348,12 @@ module.exports = React.create-class do
     component-did-update: (prev-props, prev-state) !->
 
         # if the list of options opened then highlight the first option & focus on the serach input
-        if @props.open and !prev-props.open and @highlighted-option = -1
+        if @props.open and !prev-props.open and typeof @props.highlighted-uid == \undefined
             @highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1
             @focus!
 
-        # if the list of options was closed then reset the highlighted-option to -1
-        @highlighted-option = -1 if !@props.open and prev-props.open
+        # if the list of options was closed then reset the highlighted-uid to -1
+        @props.on-highlighted-uid-change undefined if !@props.open and prev-props.open
 
         # autosize the search input to its contents
         $search = @refs.search.get-DOM-node!
@@ -332,6 +368,14 @@ module.exports = React.create-class do
         if (typeof @props.disabled == \undefined or @props.disabled == false) and (typeof props.disabled != \undefined and props.disabled == true)
            @props.on-open-change false
 
+    # option-index-from-uid :: (Eq e) => e -> Int
+    option-index-from-uid: (uid) -> @props.options |> find-index ~> uid == @props.uid it
+
+    # blur :: a -> Void
+    blur: !-> 
+        @refs.search.getDOMNode!.blur!
+        @props.on-blur @props.values, \blur
+
     # focus on search input if it doesn't already have it
     # focus :: a -> Void
     focus: !-> 
@@ -339,37 +383,16 @@ module.exports = React.create-class do
             @focus-lock = true
             @refs.search.getDOMNode!.focus!
 
-    # blur :: a -> Void
-    blur: !-> 
-        @refs.search.getDOMNode!.blur!
-        @props.on-blur @props.values, \blur
-
-    # highlight-option :: Int -> DOMElement
-    highlight-option: (index) ->
-        @lowlight-option!
-        @highlighted-option = index
-        option-element = @refs?["option-#{index}"]?.getDOMNode!
-            ..?class-name = "option-wrapper focused"
-        option-element
-    
-    # lowlight-option :: a -> Void
-    lowlight-option: !->
-        @refs?["option-#{@highlighted-option}"]?.getDOMNode!?.class-name = \option-wrapper
-        @highlighted-option = -1
-
     # highlight-and-scroll-to-option :: Int -> Void
     highlight-and-scroll-to-option: (index) !->
-
-        option-element? = @highlight-option index
+        uid = @props.uid @props.options[index]
+        <~ @props.on-highlighted-uid-change uid
+        option-element? = @refs?["option-#{uid}"].getDOMNode!
         parent-element = @refs.dropdown.getDOMNode!
-        
         if !!option-element
-
             option-height = option-element.offset-height - 1
-
             if (option-element.offset-top - parent-element.scroll-top) >= parent-element.offset-height
                 parent-element.scroll-top = option-element.offset-top - parent-element.offset-height + option-height
-
             else if (option-element.offset-top - parent-element.scroll-top + option-height) <= 0
                 parent-element.scroll-top = option-element.offset-top
 
@@ -395,24 +418,33 @@ module.exports = React.create-class do
                 @highlight-and-scroll-to-option index
                 true
 
-    # select-highlighted-option :: Int -> (a -> Void) -> Void
-    select-highlighted-option: (anchor-index, callback) !->
-        if @highlighted-option != -1
+    # select-highlighted-uid :: Int -> (a -> Void) -> Void
+    select-highlighted-uid: (anchor-index, callback) !->
 
-            option = @props.options?[@highlighted-option]
+        return if @props.highlighted-uid == undefined
+        
+        index = @option-index-from-uid @props.highlighted-uid
+        return if typeof index != \number
 
-            # values = (values behind & including the anchor) + highlighted option + (values ahead of the anchor)
-            <~ @props.on-values-change do
-                (map (~> @props.values[it]), [0 to anchor-index]) ++ 
-                [option] ++ 
-                map (~> @props.values[it]), [anchor-index + 1 til @props.values.length]
+        option = @props.options[index]
 
-            value = find (-> it `is-equal-to-object` option), @props.values
+        # values = (values behind & including the anchor) + highlighted option + (values ahead of the anchor)
+        <~ @props.on-values-change do
+            (map (~> @props.values[it]), [0 to anchor-index]) ++ 
+            [option] ++ 
+            (map (~> @props.values[it]), [anchor-index + 1 til @props.values.length])
 
-            # if the consumer did what we asked, then clear the search and move the anchor ahead of the selected value
-            if !!value
-                <~ @props.on-search-change ""
-                @props.on-anchor-change value, callback
+        value = find (-> it `is-equal-to-object` option), @props.values
 
+        # if the consumer did what we asked, then clear the search and move the anchor ahead of the selected value
+        if !!value
+            <~ @props.on-search-change ""
+            <~ @props.on-anchor-change value
+            if !!@props.options?[index]
+                @props.on-highlighted-uid-change @props.uid @props.options[index], callback
             else
+                @highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1
                 callback!
+        
+        else
+            callback!

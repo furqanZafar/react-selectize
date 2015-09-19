@@ -22,6 +22,8 @@ Form = React.createClass({
     componentDidMount: function() {
         self = this;
         this.onScrollChange = function(){
+            if (typeof self.refs.select == "undefined")
+                return;
             screenTop = self.refs.select.getDOMNode().offsetTop - window.scrollY;
             dropdownDirection = window.innerHeight - screenTop < 215 ? -1 : 1
             if (self.state.dropdownDirection != dropdownDirection)
