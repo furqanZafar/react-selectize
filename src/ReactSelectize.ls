@@ -1,4 +1,4 @@
-{filter, find, find-index, initial, last, map, partition, reject, reverse, sort-by, sum} = require \prelude-ls
+{each, filter, find, find-index, initial, last, map, obj-to-pairs, partition, reject, reverse, sort-by, sum} = require \prelude-ls
 {clamp, is-equal-to-object} = require \prelude-extension
 {DOM:{div, input, span}, create-class, create-factory}:React = require \react
 
@@ -50,6 +50,29 @@ module.exports = create-class do
     # get-default-props :: a -> Props
     get-default-props: ->
         anchor: null
+        # autosize :: InputElement -> Int
+        autosize: ($search) -> 
+
+            # modern browsers
+            if $search.scroll-width > 0
+                $search.style.width = 2 + $search.scroll-width
+
+            # IE / Edge
+            else
+                $input = document.create-element \div
+                    ..innerHTML = $search.value
+
+                # copy all the styles of the search input 
+                (if !!$search.current-style then $search.current-style else (document.default-view ? window .get-computed-style $search))
+                    |> obj-to-pairs
+                    |> each ([key, value]) -> $input.style[key] = value
+                    |> -> $input.style.width = ""
+
+                # add a new input element to document.body and measure the text width
+                document.body.append-child $input
+                $search.style.width = 4 + $input.client-width
+                document.body.remove-child $input
+
         class-name: ''
         disabled: false
         dropdown-direction: 1
@@ -240,7 +263,7 @@ module.exports = create-class do
                             # DOWN ARROW
                             | 40 => 
                                 @scroll-lock = true
-                                @highlight-and-scroll-to-selectable-option (@option-index-from-uid @props.highlighted-uid) + 1, 1
+                                @highlight-and-scroll-to-selectable-option ((@option-index-from-uid @props.highlighted-uid) ? -1) + 1, 1
 
                             # REST (we don't need to process or block rest of the keys)
                             | _ => return
@@ -348,7 +371,7 @@ module.exports = create-class do
     component-did-update: (prev-props, prev-state) !->
 
         # if the list of options opened then highlight the first option & focus on the serach input
-        if @props.open and !prev-props.open and typeof @props.highlighted-uid == \undefined
+        if @props.open and !prev-props.open and @props.highlighted-uid == undefined
             @highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1
             @focus!
 
@@ -358,7 +381,7 @@ module.exports = create-class do
         # autosize the search input to its contents
         $search = @refs.search.get-DOM-node!
             ..style.width = 0
-            ..style.width = $search.scroll-width
+            ..style.width = @props.autosize $search
 
         if !!@refs.dropdown
             @refs.dropdown.getDOMNode!.style.bottom = if @props.dropdown-direction == -1 then @refs.control.getDOMNode!.offset-height else ""
@@ -420,7 +443,6 @@ module.exports = create-class do
 
     # select-highlighted-uid :: Int -> (a -> Void) -> Void
     select-highlighted-uid: (anchor-index, callback) !->
-
         return if @props.highlighted-uid == undefined
         
         index = @option-index-from-uid @props.highlighted-uid
@@ -440,11 +462,14 @@ module.exports = create-class do
         if !!value
             <~ @props.on-search-change ""
             <~ @props.on-anchor-change value
-            if !!@props.options?[index]
-                @props.on-highlighted-uid-change @props.uid @props.options[index], callback
-            else
-                @highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1
-                callback!
+
+            # highlight the next selectable option, if available & the dropdown is still open
+            if !!@props.open
+                if !!@props.options?[index]
+                    @props.on-highlighted-uid-change @props.uid @props.options[index], callback
+                else
+                    @highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1
+                    callback!
         
         else
             callback!

@@ -40,10 +40,11 @@ module.exports = React.create-class do
     render: -> 
         
         {anchor, search, values, on-anchor-change, on-search-change, on-values-change, filtered-options, options} = @get-computed-state!
-        {disabled, dropdown-direction, group-id, groups, groups-as-columns, render-group-title} = @props
+        {autosize, disabled, dropdown-direction, group-id, groups, groups-as-columns, render-group-title} = @props
 
         ReactSelectize {
             
+            autosize
             class-name: "multi-select #{@props.class-name}"
             disabled
             dropdown-direction

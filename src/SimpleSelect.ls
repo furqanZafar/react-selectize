@@ -35,10 +35,11 @@ module.exports = React.create-class do
     render: -> 
         
         {search, value, values, on-search-change, on-value-change, filtered-options, options} = @get-computed-state!
-        {disabled, dropdown-direction, group-id, groups, groups-as-columns, render-group-title, uid} = @props
+        {autosize, disabled, dropdown-direction, group-id, groups, groups-as-columns, render-group-title, uid} = @props
 
         ReactSelectize {
             
+            autosize
             class-name: "simple-select #{@props?.class-name ? ''}"
             disabled
             dropdown-direction

@@ -16,7 +16,7 @@ Form = React.create-class do
     component-did-mount: !->
         @on-scroll-change = ~>
             {offset-top} = @refs.select.get-DOM-node!
-            screen-top = offset-top - window.scroll-y
+            screen-top = offset-top - (window.scroll-y ? document.document-element.scroll-top)
             dropdown-direction = if window.inner-height - screen-top < 215 then -1 else 1
             if dropdown-direction != @state.dropdown-direction
                 @set-state {dropdown-direction}

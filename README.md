@@ -104,6 +104,7 @@ to include the default styles when using MultiSelect component, add the followin
 
 |    Property                |   Type                         |   Description                  |
 |----------------------------|--------------------------------|--------------------------------|
+|    autosize                | InputElement -> Int                | `function($search){return $search.value.length * 10}` custom logic for autosizing the input element|
 |    className               | String                         | class name for the outer element, in addition to "simple-select"|
 |    disabled                | Boolean                        | disables interaction with the Select control|
 |    dropdownDirection       | Int                            | defaults to 1, setting it to -1 opens the dropdown upward|

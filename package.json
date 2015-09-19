@@ -49,13 +49,5 @@
     "tags",
     "dropdown",
     "combobox"
-  ],
-  "browserify": {
-    "transform": [
-      "browserify-shim"
-    ]
-  },
-  "browserify-shim": {
-    "react": "global:React"
-  }
+  ]
 }
