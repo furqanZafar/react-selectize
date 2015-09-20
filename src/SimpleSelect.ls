@@ -36,7 +36,7 @@ module.exports = React.create-class do
         
         {search, value, values, on-search-change, on-value-change, filtered-options, options} = @get-computed-state!
         {autosize, disabled, dropdown-direction, group-id, groups, groups-as-columns, render-group-title, uid} = @props
-
+        
         ReactSelectize {
             
             autosize

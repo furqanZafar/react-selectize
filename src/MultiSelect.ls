@@ -40,7 +40,7 @@ module.exports = React.create-class do
     render: -> 
         
         {anchor, search, values, on-anchor-change, on-search-change, on-values-change, filtered-options, options} = @get-computed-state!
-        {autosize, disabled, dropdown-direction, group-id, groups, groups-as-columns, render-group-title} = @props
+        {autosize, disabled, dropdown-direction, group-id, groups, groups-as-columns, render-group-title, uid} = @props
 
         ReactSelectize {
             
@@ -52,6 +52,7 @@ module.exports = React.create-class do
             groups
             groups-as-columns
             render-group-title
+            uid
             ref: \select
 
             # ANCHOR
