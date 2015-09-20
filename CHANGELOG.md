@@ -25,3 +25,8 @@
 * updated the signature of refs.selectInstance.focus from `a -> Void` to `a -> (a -> Void) -> Void`, i.e. the focus function now accepts a callback as the first parameter which is fired when the options menu is visible
 * improved performance by implementing shouldComponentUpdate lifecycle method for *Wrapper classes, added `uid :: (Eq e) => Item -> e` prop
 * changed the signature of renderOption & renderValue props from `Int -> Item -> ReactElement` to `Item -> ReactElement`
+
+## v0.2.1 / 20th September 2015
+* fixed React Warnings caused by missing key property for ValueWrapper components
+* allowing for wide range of react versions including 0.14.x-rc*
+* uid property for MultiSelect components
