@@ -1,6 +1,6 @@
 {each, filter, find, find-index, initial, last, map, obj-to-pairs, partition, reject, reverse, sort-by, sum} = require \prelude-ls
 {clamp, is-equal-to-object} = require \prelude-extension
-{DOM:{div, input, span}, create-class, create-factory}:React = require \react
+{DOM:{div, input, span}, create-class, create-factory, find-DOM-node}:React = require \react
 
 # cancel-event :: Event -> Void
 cancel-event = (e) !->
@@ -121,6 +121,12 @@ module.exports = create-class do
             | (typeof @props.anchor == \undefined) or @props.anchor == null => -1
             | _ => (find-index (~> it `is-equal-to-object` @props.anchor), @props.values) ? @props.values.length - 1        
 
+        # render-selected-values :: [Int] -> [ValueWrapper]
+        render-selected-values = ~> it |> map (index) ~> 
+            item = @props.values[index]
+            uid = @props.uid item
+            ValueWrapper {uid, key: uid, item, render-item: @props.render-value}
+
         # REACT SELECTIZE
         div do 
             class-name: """react-selectize 
@@ -147,13 +153,8 @@ module.exports = create-class do
                         @props.placeholder
 
                 # LIST OF SELECTED VALUES (BEFORE & INCLUDING THE ANCHOR)
-                [0 to anchor-index] |> map (index) ~> 
-                    item = @props.values[index]
-                    ValueWrapper do 
-                        uid: @props.uid item
-                        item: item
-                        render-item: @props.render-value
-
+                render-selected-values [0 to anchor-index]
+                
                 # SEARCH INPUT BOX
                 input do
                     disabled: @props.disabled
@@ -271,13 +272,8 @@ module.exports = create-class do
                         cancel-event e
                 
                 # LIST OF SELECTED VALUES (AFTER THE ANCHOR)
-                [anchor-index + 1 til @props.values.length] |> map (index) ~> 
-                    item = @props.values[index]
-                    ValueWrapper do 
-                        uid: @props.uid item
-                        item: item
-                        render-item: @props.render-value
-
+                render-selected-values [anchor-index + 1 til @props.values.length]
+                 
                 # RESET BUTTON
                 div do 
                     class-name: \reset
@@ -356,7 +352,7 @@ module.exports = create-class do
         @external-click-listener = ({target}) ~>
             dom-node-contains = (element) ~>
                 return false if (typeof element == \undefined) or element == null
-                return true if element == @get-DOM-node!
+                return true if element == find-DOM-node @
                 dom-node-contains element.parent-element
             if !(dom-node-contains target)
                 @props.on-open-change false
@@ -379,12 +375,12 @@ module.exports = create-class do
         @props.on-highlighted-uid-change undefined if !@props.open and prev-props.open
 
         # autosize the search input to its contents
-        $search = @refs.search.get-DOM-node!
+        $search = (find-DOM-node @refs.search)
             ..style.width = 0
             ..style.width = @props.autosize $search
 
         if !!@refs.dropdown
-            @refs.dropdown.getDOMNode!.style.bottom = if @props.dropdown-direction == -1 then @refs.control.getDOMNode!.offset-height else ""
+            (find-DOM-node @refs.dropdown).style.bottom = if @props.dropdown-direction == -1 then (find-DOM-node @refs.control).offset-height else ""
 
     # component-will-receive-props :: Props -> Void
     component-will-receive-props: (props) !->
@@ -396,22 +392,22 @@ module.exports = create-class do
 
     # blur :: a -> Void
     blur: !-> 
-        @refs.search.getDOMNode!.blur!
+        (find-DOM-node @refs.search).blur!
         @props.on-blur @props.values, \blur
 
     # focus on search input if it doesn't already have it
     # focus :: a -> Void
     focus: !-> 
-        if @refs.search.getDOMNode! != document.active-element
+        if (find-DOM-node @refs.search) != document.active-element
             @focus-lock = true
-            @refs.search.getDOMNode!.focus!
+            (find-DOM-node @refs.search).focus!
 
     # highlight-and-scroll-to-option :: Int -> Void
     highlight-and-scroll-to-option: (index) !->
         uid = @props.uid @props.options[index]
         <~ @props.on-highlighted-uid-change uid
-        option-element? = @refs?["option-#{uid}"].getDOMNode!
-        parent-element = @refs.dropdown.getDOMNode!
+        option-element? = find-DOM-node @refs?["option-#{uid}"]
+        parent-element = find-DOM-node @refs.dropdown
         if !!option-element
             option-height = option-element.offset-height - 1
             if (option-element.offset-top - parent-element.scroll-top) >= parent-element.offset-height
