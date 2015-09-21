@@ -55,7 +55,7 @@ module.exports = create-class do
 
             # modern browsers
             if $search.scroll-width > 0
-                $search.style.width = 2 + $search.scroll-width
+                $search.style.width = "#{2 + $search.scroll-width}px"
 
             # IE / Edge
             else
@@ -70,7 +70,7 @@ module.exports = create-class do
 
                 # add a new input element to document.body and measure the text width
                 document.body.append-child $input
-                $search.style.width = 4 + $input.client-width
+                $search.style.width = "#{4 + $input.client-width}px"
                 document.body.remove-child $input
 
         class-name: ''
@@ -376,7 +376,7 @@ module.exports = create-class do
 
         # autosize the search input to its contents
         $search = (find-DOM-node @refs.search)
-            ..style.width = 0
+            ..style.width = "0px"
             ..style.width = "#{@props.autosize $search}px"
 
         if !!@refs.dropdown
