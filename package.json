@@ -4,7 +4,8 @@
   "description": "react implementation of selectize",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha test/index.ls --compilers ls:livescript"
+    "test": "mocha test/index.ls --compilers ls:livescript",
+    "coverage": "istanbul cover _mocha -- test/index.ls --require should --compilers ls:livescript"
   },
   "author": "Furqan Zafar",
   "dependencies": {
@@ -32,6 +33,7 @@
     "livescript": "^1.4.0",
     "nib": "^1.1.0",
     "react-tools": "^0.13.3",
+    "should": "^7.1.0",
     "underscore": "^1.8.3",
     "vinyl-source-stream": "^1.0.0",
     "watchify": "^2.4.0"

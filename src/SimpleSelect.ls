@@ -14,9 +14,8 @@ module.exports = React.create-class do
         # create-from-search :: [Item] -> String -> Item?
         # filter-options :: [Item] -> String -> [Item]
         filter-options: (options, search) -->  
-            options
+            (options ? [])
                 |> filter ~> (it.label.to-lower-case!.trim!.index-of search.to-lower-case!.trim!) > -1
-                |> -> it ? []
         on-blur: ((value, reason) !->) # :: Item -> String -> Void
         on-focus: ((value, reason) !->) # :: Item -> String -> Void
         # on-search-change :: String -> (a -> Void) -> Void
@@ -40,7 +39,7 @@ module.exports = React.create-class do
         ReactSelectize {
             
             autosize
-            class-name: "simple-select #{@props?.class-name ? ''}"
+            class-name: "simple-select #{@props.class-name ? ''}"
             disabled
             dropdown-direction
             group-id
@@ -127,7 +126,7 @@ module.exports = React.create-class do
         # get options from props.children
         options-from-children = switch
             | !!@props?.children =>
-                if typeof! @props.children == \Array then @props.children else [@props.children] 
+                @props.children
                     |> map ({props:{value, children}}) -> label: children, value: value
             | _ => []
 

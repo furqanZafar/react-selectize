@@ -161,7 +161,7 @@ module.exports = create-class do
                     ref: \search
                     type: \text
                     value: @props.search
-                    
+
                     # update the search text & highlight the first option
                     on-change: ({current-target:{value}}) ~> 
                         @props.on-search-change value, ~> 
@@ -169,7 +169,7 @@ module.exports = create-class do
                                 @props.on-highlighted-uid-change undefined
 
                     # show the list of options (noop if caused by invocation of @focus function)
-                    on-focus: !~> 
+                    on-focus: !~>
                         result <~ do ~> (callback) ~> if !!@focus-lock then callback @focus-lock = false else @props.on-open-change true, -> callback true
                         @props.on-focus @props.values, if !!result then \event else \focus
 
@@ -377,7 +377,7 @@ module.exports = create-class do
         # autosize the search input to its contents
         $search = (find-DOM-node @refs.search)
             ..style.width = 0
-            ..style.width = @props.autosize $search
+            ..style.width = "#{@props.autosize $search}px"
 
         if !!@refs.dropdown
             (find-DOM-node @refs.dropdown).style.bottom = if @props.dropdown-direction == -1 then (find-DOM-node @refs.control).offset-height else ""
@@ -397,7 +397,7 @@ module.exports = create-class do
 
     # focus on search input if it doesn't already have it
     # focus :: a -> Void
-    focus: !-> 
+    focus: !->
         if (find-DOM-node @refs.search) != document.active-element
             @focus-lock = true
             (find-DOM-node @refs.search).focus!
