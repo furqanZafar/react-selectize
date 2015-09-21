@@ -166,4 +166,4 @@ module.exports =
 ```
 * `gulp`
 * visit `localhost:8000`
-
+* `npm test` , `npm run-script coverage` for unit tests & coverage
