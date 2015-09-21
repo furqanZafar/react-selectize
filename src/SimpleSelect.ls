@@ -14,9 +14,8 @@ module.exports = React.create-class do
         # create-from-search :: [Item] -> String -> Item?
         # filter-options :: [Item] -> String -> [Item]
         filter-options: (options, search) -->  
-            options
+            (options ? [])
                 |> filter ~> (it.label.to-lower-case!.trim!.index-of search.to-lower-case!.trim!) > -1
-                |> -> it ? []
         on-blur: ((value, reason) !->) # :: Item -> String -> Void
         on-focus: ((value, reason) !->) # :: Item -> String -> Void
         # on-search-change :: String -> (a -> Void) -> Void
@@ -40,14 +39,19 @@ module.exports = React.create-class do
         ReactSelectize {
             
             autosize
-            class-name: "simple-select #{@props?.class-name ? ''}"
+            class-name: "simple-select #{@props.class-name ? ''}"
             disabled
             dropdown-direction
             group-id
             groups
             groups-as-columns
             render-group-title
-            uid
+
+            # render the value only if the search length exceeds 0 or if the uid changes
+            uid: ~> 
+                uid = (@props.uid ? (.value)) it
+                "#{search.length == 0}#{uid}"
+
             ref: \select
 
             # ANCHOR
@@ -70,9 +74,7 @@ module.exports = React.create-class do
 
             # SEARCH
             search: search
-            on-search-change: (search, callback) ~> 
-                <~ do ~> (callback) ~> if search.length > 0 and !!value then on-value-change undefined, callback else callback!
-                on-search-change search, callback
+            on-search-change: (search, callback) ~> on-search-change search, callback
 
             # VALUES
             values: values
@@ -89,11 +91,18 @@ module.exports = React.create-class do
                     <~ @set-state open: false
                     @refs.select.blur!
                     callback!
-            render-value: @props.render-value
+
+            # if the search text length is > 0 then no need to draw the value component
+            # better than emitting a value-change event with undefined
+            render-value: (item) ~> 
+                if search.length > 0
+                    null 
+                else 
+                    (@props.render-value ? ({label}) ~> div class-name: \simple-value, span null, label) item
 
             # STYLE
             on-blur: (, reason) !~> 
-                <~ do ~> (callback) ~> if typeof value == \undefined and search.length > 0 then on-search-change "", callback else callback!
+                <~ do ~> (callback) ~> if search.length > 0 then on-search-change "", callback else callback!
                 @props.on-blur value, reason
             on-focus: (, reason) !~> @props.on-focus value, reason
             placeholder: @props.placeholder
@@ -127,7 +136,7 @@ module.exports = React.create-class do
         # get options from props.children
         options-from-children = switch
             | !!@props?.children =>
-                if typeof! @props.children == \Array then @props.children else [@props.children] 
+                @props.children
                     |> map ({props:{value, children}}) -> label: children, value: value
             | _ => []
 

@@ -1,4 +1,4 @@
-# {MultiSelect} = require \ReactSelectize
+# {MultiSelect} = require \react-selectize
 
 Form = React.create-class do 
     

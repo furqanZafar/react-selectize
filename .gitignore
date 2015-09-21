@@ -5,4 +5,5 @@ npm-debug.log
 *.sublime-workspace
 *.js
 *.css
+coverage/
 node_modules/

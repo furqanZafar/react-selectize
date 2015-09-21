@@ -30,3 +30,7 @@
 * fixed React Warnings caused by missing key property for ValueWrapper components
 * allowing for wide range of react versions including 0.14.x-rc*
 * uid property for MultiSelect components
+
+## v0.2.2 / 21st September 2015
+* fixed a bug where the input element would not autosize on entering search text
+* avoid firing onValueChange with undefined value when the user enters new search text

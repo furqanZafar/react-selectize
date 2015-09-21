@@ -1,4 +1,4 @@
-// SimpleSelect = require("ReactSelectize").SimpleSelect
+// SimpleSelect = require("react-selectize").SimpleSelect
 
 Form = React.createClass({
     
