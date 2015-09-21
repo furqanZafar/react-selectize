@@ -1,4 +1,5 @@
 require! \assert
+{promises:{new-promise}} = require \async-ls
 require! \jsdom
 global <<< 
     document: jsdom.jsdom '<!doctype html><html><body></body></html>'
@@ -40,22 +41,27 @@ open-select = (select) !->
 find-highlighted-option = (select) ->
     find-rendered-DOM-component-with-class select, \highlight
 
+# component-with-class-must-not-exist :: ReactElement -> String -> p String
+component-with-class-must-not-exist = (tree, class-name) ->
+    res, rej <- new-promise
+    try 
+        find-rendered-DOM-component-with-class tree, class-name
+    catch err 
+        res true
+    rej "component with class-name: (#{class-name}) must not exist"
+
 describe "SimpleSelect", ->
 
     specify "empty select must have placeholder", ->
         select = create-simple-select!
         find-rendered-DOM-component-with-class select, \placeholder
 
-    specify "non empty select must not have placeholder", (done) ->
+    specify "non empty select must not have placeholder", ->
         {refs}:select = create-simple-select!
         input = find-DOM-node refs.select.refs.search
             ..value = \test
         change input
-        try 
-            find-rendered-DOM-component-with-class select, \placeholder
-        catch err 
-            return done!
-        throw "placeholder must not be visible when search.length > 0"
+        component-with-class-must-not-exist select, \placeholder
 
     specify "must default the list of options to an empty list", ->
         select = create-simple-select options: undefined
@@ -200,15 +206,11 @@ describe "SimpleSelect", ->
         set-input-text (get-input select), \test
         assert.equal (get-item-text find-highlighted-option select), "Add test ..."
 
-    specify "must not be interactive when disabled", (done) ->
+    specify "must not be interactive when disabled", ->
         select = create-simple-select do 
             disabled: true
         open-select select
-        try 
-            find-rendered-DOM-component-with-class select, \dropdown
-        catch err 
-            return done!
-        throw "dropdown must not be visible when search is disabled"
+        component-with-class-must-not-exist select, \dropdown
 
     specify "must be able to render custom option", ->
         select = create-simple-select do 
@@ -240,7 +242,7 @@ describe "SimpleSelect", ->
         open-select select
         assert.equal (scry-rendered-DOM-components-with-class select, \simple-group-title).length, 2
 
-    specify "unselectable options must not be selectable", (done) ->
+    specify "unselectable options must not be selectable", ->
         select = create-simple-select do 
             options: 
                 * label: \apple
@@ -248,11 +250,7 @@ describe "SimpleSelect", ->
                   selectable: false
                 ...
         open-select select
-        try 
-            find-rendered-DOM-component-with-class select, \highlight
-        catch err 
-            return done!
-        throw "unselectable option must not be highlighted"
+        component-with-class-must-not-exist select, \highlight
 
     specify "selecting the same value must have no effect", ->
         select = create-simple-select!
@@ -262,17 +260,13 @@ describe "SimpleSelect", ->
         click find-highlighted-option select
         assert.equal (get-item-text (find-rendered-DOM-component-with-class select, \simple-value)), \apple
 
-    specify "typing in the search field must deselect current value", (done) ->
+    specify "typing in the search field must deselect current value", ->
         select = create-simple-select!
         open-select select
         click find-highlighted-option select
         open-select select
         set-input-text (get-input select), \e
-        try 
-            find-rendered-DOM-component-with-class select, \simple-value
-        catch err 
-            return done!
-        throw "typing a character in the search field must deselect current value"
+        component-with-class-must-not-exist select, \simple-value
 
     specify "must change value on selecting another item", ->
         select = create-simple-select!
@@ -288,15 +282,11 @@ describe "SimpleSelect", ->
             class-name: \test
         assert.equal ((find-DOM-node select).class-name.index-of \test) > -1, true
 
-    specify "must close options dropdown on pressing the escape key", (done) ->
+    specify "must close options dropdown on pressing the escape key", ->
         select = create-simple-select!
         open-select select
         key-down (get-input select), which: 27
-        try 
-            find-rendered-DOM-component-with-class select, \dropdown
-        catch err 
-            return done!
-        throw "dropdown must not be visible after pressing the escape key"
+        component-with-class-must-not-exist select, \dropdown
 
     specify "must render custom dom for 'no results found'", ->
         select = create-simple-select do 
@@ -343,14 +333,10 @@ describe "SimpleSelect", ->
         select.highlight-first-selectable-option!
         assert.equal (get-item-text find-highlighted-option select), \apple
 
-    specify "highlight-first-selectable-option must not open the select", (done) ->
+    specify "highlight-first-selectable-option must not open the select", ->
         select = create-simple-select!
         select.highlight-first-selectable-option!
-        try 
-            find-rendered-DOM-component-with-class select, \dropdown
-        catch err 
-            return done!
-        throw "dropdown must not be visible when search is disabled"
+        component-with-class-must-not-exist select, \dropdown
 
     specify "must highlight the second option, when creating options from search & search results are non empty", ->
         select = create-simple-select do 
