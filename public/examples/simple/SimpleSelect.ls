@@ -1,4 +1,4 @@
-# {SimpleSelect} = require \ReactSelectize
+# {SimpleSelect} = require \react-selectize
 
 Form = React.create-class do 
     

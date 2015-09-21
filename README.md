@@ -30,7 +30,7 @@ LIVE DEMO: [furqanZafar.github.io/react-selectize](http://furqanZafar.github.io/
 
 ```
 {create-factory}:React = require \react
-{SimpleSelect, MultiSelect, ReactSelectize} = require \ReactSelectize
+{SimpleSelect, MultiSelect, ReactSelectize} = require \react-selectize
 SimpleSelect = create-factory SimpleSelect
 MultiSelect = create-factory MultiSelect
 .
@@ -57,7 +57,7 @@ MultiSelect do
 
 ```
 React = require("react");
-ReactSelectize = require("ReactSelectize");
+ReactSelectize = require("react-selectize");
 SimpleSelect = React.createFactory(ReactSelectize.SimpleSelect);
 MultiSelect = React.createFactory(ReactSelectize.MultiSelect);
 .
