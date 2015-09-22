@@ -7,4 +7,5 @@ rough
 *.styl
 *.sublime-project
 *.sublime-workspace
+coverage/
 public/

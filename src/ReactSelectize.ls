@@ -129,12 +129,7 @@ module.exports = create-class do
 
         # REACT SELECTIZE
         div do 
-            class-name: """react-selectize 
-                #{@props.class-name} 
-                #{if @props.disabled then 'disabled' else ''} 
-                #{if @props.open then 'open' else ''} 
-                #{if @props.dropdown-direction == -1 then 'flipped' else ''}
-            """.replace /\s+/g, ' '
+            class-name: "react-selectize #{@props?.class-name ? ''} #{if @props.disabled then 'disabled' else ''} #{if @props.open then 'open' else ''} #{if @props.dropdown-direction == -1 then 'flipped' else ''}"
             style: @props.style
             
             # CONTROL
@@ -186,6 +181,7 @@ module.exports = create-class do
 
                         # BACKSPACE
                         | 8 => 
+                            
                             return if @props.search.length > 0 or anchor-index == -1
 
                             do ~>
@@ -349,10 +345,11 @@ module.exports = create-class do
 
     # component-did-mount :: a -> Void
     component-did-mount: !->
+        root-node = find-DOM-node @
         @external-click-listener = ({target}) ~>
             dom-node-contains = (element) ~>
                 return false if (typeof element == \undefined) or element == null
-                return true if element == find-DOM-node @
+                return true if element == root-node
                 dom-node-contains element.parent-element
             if !(dom-node-contains target)
                 @props.on-open-change false
