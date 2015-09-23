@@ -159,11 +159,7 @@ same as SimpleSelect but use `this.refs.multiSelectInstance.values()` to get the
 ## Development
 
 * `npm install`
-* copy the following to `config.ls`
-```
-module.exports = 
-    minify: true
-```
 * `gulp`
 * visit `localhost:8000`
 * `npm test` , `npm run-script coverage` for unit tests & coverage
+* for production build/test run `MINIFY=true gulp`
