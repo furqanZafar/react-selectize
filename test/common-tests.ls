@@ -1,12 +1,21 @@
 require! \assert
 {each, map} = require \prelude-ls
+
+# React
 {addons:{TestUtils}, create-class, create-element, DOM:{div, option, span}, find-DOM-node, render} = require \react/addons
-{find-rendered-DOM-component-with-class, scry-rendered-DOM-components-with-class, Simulate:{change, click, focus, key-down}} = TestUtils
-{click-on-the-document, get-input, set-input-text, get-item-text, click-to-open-select-control, find-highlighted-option, component-with-class-must-not-exist}:utils = require \./utils
-ReactSelectize = require \../src/index.ls
 
-module.exports = (select-class) ->
+# TestUtils
+{find-rendered-DOM-component-with-class, scry-rendered-DOM-components-with-class, Simulate:{change, click, focus, key-down, mouse-over, mouse-out, mouse-move}} = TestUtils
 
+# utils
+{create-select, get-input, set-input-text, get-item-text, click-to-open-select-control, click-on-the-document, find-highlighted-option, 
+component-with-class-must-not-exist, press-backspace, press-escape, press-tab, press-return, press-up-arrow, press-down-arrow, press-left-arrow, 
+press-right-arrow, press-command-left, press-command-right}:utils = require \./utils
+
+# :: ReactClass -> Void
+module.exports = (select-class) !->
+
+    # create-select :: Props -> [ReactElement] -> Select
     create-select = (props = {}, children = []) ->
         utils.create-select select-class, props, children
 
@@ -58,20 +67,21 @@ module.exports = (select-class) ->
     specify "must be able to navigate options using down arrow key", ->
         select = create-select!
         click-to-open-select-control select
-        key-down (get-input select), which: 40
+        press-down-arrow (get-input select)
         assert.equal (get-item-text find-highlighted-option select), \mango
 
     specify "must be able to navigate options using up arrow key", ->
         select = create-select!
         click-to-open-select-control select
-        [0 til 3] |> each ~> key-down (get-input select), which: 40
-        key-down (get-input select), which: 38
+        input = get-input select
+        [0 til 3] |> each ~> press-down-arrow input
+        press-up-arrow input
         assert.equal (get-item-text find-highlighted-option select), \orange
 
     specify "must select highlighted option on pressing return key", ->
         select = create-select!
         click-to-open-select-control select
-        key-down (get-input select), which: 13
+        press-return (get-input select)
         assert.equal (get-item-text find-rendered-DOM-component-with-class select, \simple-value), \apple
 
     specify "must select option on click", ->
@@ -110,7 +120,7 @@ module.exports = (select-class) ->
         click-to-open-select-control select
         click find-highlighted-option select
         click-to-open-select-control select
-        key-down (get-input select), which: 8
+        press-backspace (get-input select)
         assert.equal (get-input select).value, \appl
 
     specify "must create new item from search", ->
@@ -174,13 +184,13 @@ module.exports = (select-class) ->
         select = create-select!
         click-to-open-select-control select
         click find-highlighted-option select
-        key-down (get-input select), which: 27
+        press-escape (get-input select)
         component-with-class-must-not-exist select, \simple-option
 
     specify "must close options dropdown on pressing the escape key", ->
         select = create-select!
         click-to-open-select-control select
-        key-down (get-input select), which: 27
+        press-escape (get-input select)
         component-with-class-must-not-exist select, \dropdown
 
     specify "must render custom dom for 'no results found'", ->
@@ -194,7 +204,7 @@ module.exports = (select-class) ->
         select = create-select!
         click-to-open-select-control select
         set-input-text (get-input select), \test 
-        key-down (get-input select), which: 9
+        press-tab (get-input select)
         assert.equal select.state.search, ""
 
     specify "on-focus must default to noop", ->
@@ -225,7 +235,7 @@ module.exports = (select-class) ->
     specify "highlight-first-selectable-option method must highlight the first selectable option", ->
         select = create-select!
         click-to-open-select-control select
-        [0 til 5] |> each -> key-down (get-input select), which: 40
+        press-up-arrow (get-input select)
         select.highlight-first-selectable-option!
         assert.equal (get-item-text find-highlighted-option select), \apple
 
@@ -308,3 +318,15 @@ module.exports = (select-class) ->
             container
         render (div null), container
         document.remove-event-listener = original-remove-event-listener-function
+
+    specify "mouseover on an option must highlight it", ->
+        select = create-select!
+        click-to-open-select-control select
+        mouse-over (scry-rendered-DOM-components-with-class select, \simple-option).1
+        assert.equal (get-item-text find-highlighted-option select), \mango
+
+    specify "mouseout must reset highlighted option furqan", ->
+        select = create-select!
+        click-to-open-select-control select
+        mouse-out find-highlighted-option select
+        component-with-class-must-not-exist select, \highlight

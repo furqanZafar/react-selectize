@@ -1,13 +1,22 @@
 require! \assert
 require! \./common-tests
 {each, map, Str} = require \prelude-ls
-{addons:{TestUtils}, create-class, create-element, DOM:{div, option, span}, find-DOM-node} = require \react/addons
-{find-rendered-DOM-component-with-class, scry-rendered-DOM-components-with-class, find-rendered-DOM-component-with-tag, Simulate:{change, click, focus, key-down}} = TestUtils
-{create-select, get-input, set-input-text, get-item-text, click-to-open-select-control, find-highlighted-option, component-with-class-must-not-exist} = require \./utils
 ReactSelectize = require \../src/index.ls
+
+# React
+{addons:{TestUtils}, create-class, create-element, DOM:{div, option, span}, find-DOM-node} = require \react/addons
+
+# TestUtils
+{find-rendered-DOM-component-with-class, scry-rendered-DOM-components-with-class, find-rendered-DOM-component-with-tag, Simulate:{change, click, focus, key-down}} = TestUtils
+
+# utils
+{create-select, get-input, set-input-text, get-item-text, click-to-open-select-control, find-highlighted-option, 
+component-with-class-must-not-exist, press-backspace, press-escape, press-tab, press-return, press-up-arrow, press-down-arrow, press-left-arrow, 
+press-right-arrow, press-command-left, press-command-right} = require \./utils
 
 describe "MultiSelect", ->
     
+    # create-multi-select :: Props -> [ReactElement] -> MultiSelect
     create-multi-select = (props = {}, children = []) ->
         create-select ReactSelectize.MultiSelect, props, children
 
@@ -16,9 +25,9 @@ describe "MultiSelect", ->
     specify "the values method must return the current selected values", ->
         select = create-multi-select!
         click-to-open-select-control select
-        key-down (get-input select), which: 40
-        key-down (get-input select), which: 13
-        key-down (get-input select), which: 13
+        press-down-arrow (get-input select)
+        press-return (get-input select)
+        press-return (get-input select)
         assert.equal select.values!.length, 2
         assert.equal select.values!.0.label, \mango
 
@@ -29,7 +38,7 @@ describe "MultiSelect", ->
                 * label: \mango, value: \mango
                 ...
         click-to-open-select-control select
-        [0 til 3] |> each ~> key-down (get-input select), which: 40
+        [0 til 3] |> each ~> press-down-arrow (get-input select)
         click find-highlighted-option select
         assert.equal select.values!.length, 2
 
@@ -54,7 +63,7 @@ describe "MultiSelect", ->
                 assert.equal values.1.label, \orange
                 done!
         click-to-open-select-control select
-        key-down (get-input select), which: 40
+        press-down-arrow (get-input select)
         click find-highlighted-option select
 
     specify "must use anchor from props instead of state when available", ->
@@ -82,8 +91,8 @@ describe "MultiSelect", ->
                     done!
         click-to-open-select-control select
         [0 til 4] |> each ~> click find-highlighted-option select
-        key-down (get-input select), which: 37
-        key-down (get-input select), which: 39
+        press-left-arrow (get-input select)
+        press-right-arrow (get-input select)
 
     specify "must be able to remove items on pressing backspace", ->
         select = create-multi-select!
@@ -92,7 +101,7 @@ describe "MultiSelect", ->
         click find-highlighted-option select
         click find-highlighted-option select
         click-to-open-select-control select
-        key-down (get-input select), which: 8
+        press-backspace (get-input select)
         assert select.values!.length, 2
 
     specify "@props.max-values must restrict the maximum selectable values", ->
@@ -119,5 +128,6 @@ describe "MultiSelect", ->
                 callback!
         click-to-open-select-control select
         [0 til 4] |> each -> click find-highlighted-option select
-        key-down (get-input select), which: 37, meta-key: true
-        key-down (get-input select), which: 39, meta-key: true
+        input = get-input select
+        press-command-left input
+        press-command-right input

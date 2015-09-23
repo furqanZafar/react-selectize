@@ -185,7 +185,6 @@ module.exports = create-class do
                             return if @props.search.length > 0 or anchor-index == -1
 
                             do ~>
-
                                 # compute the next-anchor
                                 anchor-index-on-remove = anchor-index
                                 next-anchor = if (anchor-index - 1) < 0 then undefined else @props.values[anchor-index - 1]
@@ -196,7 +195,7 @@ module.exports = create-class do
                                 # result is true if the user removed the value we requested him to remove
                                 result <~ do ~> (callback) ~>
 
-                                    if typeof find (~> it `is-equal-to-object` value-to-remove), @props.values == \undefined
+                                    if typeof (find (~> it `is-equal-to-object` value-to-remove), @props.values) == \undefined
 
                                         if !!@props.restore-on-backspace
                                             <~ @props.on-search-change @props.restore-on-backspace value-to-remove
