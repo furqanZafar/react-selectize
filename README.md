@@ -1,7 +1,9 @@
-# React Selectize
-A flexible & stateless select component for ReactJS built with livescript and love.
+[![Build Status](https://travis-ci.org/furqanZafar/react-selectize.svg?branch=develop)](https://travis-ci.org/furqanZafar/react-selectize)    [![Coverage Status](https://coveralls.io/repos/furqanZafar/react-selectize/badge.svg?branch=develop&service=github)](https://coveralls.io/github/furqanZafar/react-selectize?branch=develop)
 
-ReactSelectize comes in 3 flavors SimpleSelect (or single select), MultiSelect & ReactSelectize. Both the SimpleSelect & the MultiSelect components are built on top of the stateless ReactSelectize component.
+# React Selectize
+A flexible & stateless select component for ReactJS built with livescript and love. Inspired by [Selectize](http://brianreavis.github.io/selectize.js/) & [React Select](http://jedwatson.github.io/react-select/)
+
+ReactSelectize comes in 3 flavors `SimpleSelect` (or single select), `MultiSelect` & `ReactSelectize`. Both the `SimpleSelect` & the `MultiSelect` components are built on top of the stateless `ReactSelectize` component.
 
 LIVE DEMO: [furqanZafar.github.io/react-selectize](http://furqanZafar.github.io/react-selectize/)
 
@@ -99,6 +101,40 @@ to include the default styles when using SimpleSelect component, add the followi
 to include the default styles when using MultiSelect component, add the following import statement to your stylus file:
 
 `@import 'node_modules/react-selectize/src/MultiSelect.css'`
+
+## Gotchas
+* the default structure of an option object is `{label: String, value :: a}` where `a` implies that `value` property can be of any equatable type
+
+* SimpleSelect notifies change via `onValueChange` prop whereas MultiSelect notifies change via `onValuesChange` prop
+
+* the onValueChange callback for SimpleSelect is passed 2 parameters. the `selected option object` (instead of the value property of the option object) and a `callback`
+
+* the onValuesChange callback for MultiSelect is passed 2 parameters an Array  of selected option objects (instead of a collection of the value properties or a comma separated string of value properties) and a `callback`
+
+* all the `on*Change` functions receive a callback as the final parameter, which MUST always be invoked, for example when using state for the `value` prop of `SimpleSelect` the `onValueChange` callback implementation would look like this:
+```
+value = {{label: "apple", value: "apple"}}
+onValueChange = {function(value, callback){
+    self.setState(value, callback);
+}}
+```
+when relying on the components internal state for managing the value:
+```
+onValueChange = {function(value, callback){
+    console.log(value);
+    callback(); // must invoke callback    
+}}
+```
+
+* when using custom option object, you MUST implement the `uid` function which accepts an option object and returns a unique id, for example:
+```
+// assuming the type of our option object is:
+// {firstName :: String, lastName :: String, age :: Int}
+uid = {function(item){
+    return item.firstName + item.lastName;    
+}}
+```
+the `uid` function is used internally for faster performance by avoiding unnecessary option & value rendering. 
 
 ## SimpleSelect Props
 
