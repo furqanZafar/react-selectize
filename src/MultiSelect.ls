@@ -1,7 +1,7 @@
 {all, any, camelize, difference, drop, filter, find, find-index, last, map, reject} = require \prelude-ls
 {is-equal-to-object} = require \prelude-extension
 {create-factory, DOM:{div, img, span}}:React = require \react
-ReactSelectize = create-factory require \./ReactSelectize
+ReactSelectize = create-factory require \./ReactSelectize 
 
 module.exports = React.create-class do
 
