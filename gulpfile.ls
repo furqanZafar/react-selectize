@@ -1,5 +1,5 @@
 require! \browserify
-require! \./config
+# require! \./config
 require! \fs
 require! \gulp
 require! \gulp-connect
@@ -13,6 +13,9 @@ require! \nib
 {basename, dirname, extname} = require \path
 source = require \vinyl-source-stream
 require! \watchify
+
+config = 
+    minify: process.env.MINIFY == \true
 
 create-bundler = (entries) ->
     bundler = browserify {} <<< watchify.args <<< {debug: config.minify, paths: <[./src ./public/components]>}

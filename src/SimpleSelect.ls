@@ -14,7 +14,7 @@ module.exports = React.create-class do
         # create-from-search :: [Item] -> String -> Item?
         # filter-options :: [Item] -> String -> [Item]
         filter-options: (options, search) -->  
-            (options ? [])
+            options
                 |> filter ~> (it.label.to-lower-case!.trim!.index-of search.to-lower-case!.trim!) > -1
         on-blur: ((value, reason) !->) # :: Item -> String -> Void
         on-focus: ((value, reason) !->) # :: Item -> String -> Void
@@ -28,6 +28,7 @@ module.exports = React.create-class do
         # restore-on-backspace :: Item -> String
         # search :: String
         style: {}
+        uid: (.value)
         # value :: Item
 
     # render :: a -> ReactElement
@@ -49,7 +50,7 @@ module.exports = React.create-class do
 
             # render the value only if the search length exceeds 0 or if the uid changes
             uid: ~> 
-                uid = (@props.uid ? (.value)) it
+                uid = @props.uid it
                 "#{search.length == 0}#{uid}"
 
             ref: \select
@@ -100,11 +101,14 @@ module.exports = React.create-class do
                 else 
                     (@props.render-value ? ({label}) ~> div class-name: \simple-value, span null, label) item
 
-            # STYLE
+            # on blur clear out the search text
             on-blur: (, reason) !~> 
                 <~ do ~> (callback) ~> if search.length > 0 then on-search-change "", callback else callback!
                 @props.on-blur value, reason
+
             on-focus: (, reason) !~> @props.on-focus value, reason
+
+            # STYLE
             placeholder: @props.placeholder
             style: @props.style
 
@@ -135,9 +139,10 @@ module.exports = React.create-class do
 
         # get options from props.children
         options-from-children = switch
-            | !!@props?.children =>
-                @props.children
-                    |> map ({props:{value, children}}) -> label: children, value: value
+            | !!@props?.children => 
+                (if typeof! @props.children == \Array then @props.children else [@props.children]) |> map -> 
+                    {value, children}? = it?.props
+                    label: children, value: value
             | _ => []
 
         # props.options is preferred over props.children
@@ -163,7 +168,7 @@ module.exports = React.create-class do
         switch
             | typeof index != \undefined => index
             | options.length == 1 => 0
-            | typeof options?.0?.new-option == \undefined => 0
+            | (typeof options.0?.new-option) == \undefined => 0
             | _ =>    
                 if (options
                     |> drop 1

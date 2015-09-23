@@ -1,7 +1,7 @@
 {all, any, camelize, difference, drop, filter, find, find-index, last, map, reject} = require \prelude-ls
 {is-equal-to-object} = require \prelude-extension
 {create-factory, DOM:{div, img, span}}:React = require \react
-ReactSelectize = create-factory require \./ReactSelectize
+ReactSelectize = create-factory require \./ReactSelectize 
 
 module.exports = React.create-class do
 
@@ -15,18 +15,17 @@ module.exports = React.create-class do
         # disabled :: Boolean
         # create-from-search :: [Item] -> [Item] -> String -> Item?
         # filter-options :: [Item] -> [Item] -> String -> [Item]
-        filter-options: (options, values, search) -->  
+        filter-options: (options, values, search) -->   
             options
                 |> reject ~> it.label.to-lower-case!.trim! in (map (.label.to-lower-case!.trim!), values ? [])
                 |> filter ~> (it.label.to-lower-case!.trim!.index-of search.to-lower-case!.trim!) > -1
-                |> -> it ? []
         # max-values :: Int
         # on-anchor-change :: Item -> (a -> Void) -> Void
         on-blur: ((values, reason) !->) # :: [Item] -> String -> Void
         on-focus: ((values, reason) !->) # :: [Item] -> String -> Void
         # on-search-change :: String -> (a -> Void) -> Void
         # on-value-change :: Item -> (a -> Void) -> Void 
-        options: []
+        # options :: [Item]
         # placeholder :: String
         # render-no-results-found :: [Item] -> String -> ReactElement
         # render-option :: Int -> Item -> ReactElement
@@ -87,11 +86,15 @@ module.exports = React.create-class do
                     @focus callback
             render-value: @props.render-value
 
-            # STYLE
+            # on blur move the anchor to the end, and reset the search text
             on-blur: (, reason) !~> 
                 <~ @set-state {anchor: last values}
+                <~ on-search-change ""
                 @props.on-blur values, reason
+            
             on-focus: (, reason) !~> @props.on-focus values, reason
+
+            # STYLE
             placeholder: @props.placeholder
             style: @props.style
 
@@ -123,9 +126,10 @@ module.exports = React.create-class do
 
         # get options from props.children
         options-from-children = switch
-            | !!@props?.children =>
-                if typeof! @props.children == \Array then @props.children else [@props.children] 
-                    |> map ({props:{value, children}}) -> label: children, value: value
+            | !!@props?.children => 
+                (if typeof! @props.children == \Array then @props.children else [@props.children]) |> map ({props}?) -> 
+                    {value, children}? = props
+                    label: children, value: value
             | _ => []
 
         # props.options is preferred over props.children
@@ -150,7 +154,7 @@ module.exports = React.create-class do
     first-option-index-to-highlight: (options) ->
         switch
             | options.length == 1 => 0
-            | typeof options?.0?.new-option == \undefined => 0
+            | typeof options.0?.new-option == \undefined => 0
             | _ =>    
                 if (options
                     |> drop 1
@@ -171,7 +175,7 @@ module.exports = React.create-class do
         @refs.select.highlight-and-scroll-to-selectable-option (@first-option-index-to-highlight options), 1
 
     # show-options :: (a -> Void)? -> Void
-    show-options: (callback = (->)) !->
+    show-options: (callback) !->
         @set-state do 
             open: 
                 | @props.disabled => false 

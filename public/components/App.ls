@@ -19,6 +19,12 @@ examples =
             jsx: fs.read-file-sync \public/examples/multi/MultiSelect.jsx, \utf8 
             ls: fs.read-file-sync \public/examples/multi/MultiSelect.ls, \utf8 
 
+        * title: "On values change"
+          description: ""
+          languages:
+            jsx: fs.read-file-sync \public/examples/multi/ChangeCallback.jsx, \utf8 
+            ls: fs.read-file-sync \public/examples/multi/ChangeCallback.ls, \utf8 
+
         * title: "Max values"
           description: """
 This example only allows 2 items. 
@@ -81,6 +87,12 @@ This demonstrates two main things:
           languages:
             jsx: fs.read-file-sync \public/examples/simple/SimpleSelect.jsx, \utf8 
             ls: fs.read-file-sync \public/examples/simple/SimpleSelect.ls, \utf8 
+
+        * title: "On value change"
+          description: ""
+          languages:
+            jsx: fs.read-file-sync \public/examples/simple/ChangeCallback.jsx, \utf8 
+            ls: fs.read-file-sync \public/examples/simple/ChangeCallback.ls, \utf8 
 
         * title: "Restore on backspace"
           description: """

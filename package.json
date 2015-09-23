@@ -1,11 +1,12 @@
 {
   "name": "react-selectize",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "react implementation of selectize",
   "main": "src/index.js",
   "scripts": {
     "test": "mocha test/index.ls --compilers ls:livescript",
-    "coverage": "istanbul cover _mocha -- test/index.ls --require should --compilers ls:livescript"
+    "coverage": "istanbul cover _mocha -- test/index.ls --require should --compilers ls:livescript",
+    "coveralls": "istanbul cover _mocha -- test/index.ls --require should --compilers ls:livescript  && cat coverage/lcov.info | coveralls"
   },
   "author": "Furqan Zafar",
   "dependencies": {
@@ -19,6 +20,7 @@
     "brfs": "^1.4.1",
     "browserify": "^9.0.3",
     "browserify-shim": "^3.8.10",
+    "coveralls": "^2.11.4",
     "gulp": "^3.8.11",
     "gulp-connect": "^2.2.0",
     "gulp-if": "^1.2.5",
@@ -27,10 +29,13 @@
     "gulp-stylus": "^2.0.1",
     "gulp-uglify": "^1.4.1",
     "gulp-util": "^3.0.4",
+    "istanbul": "^0.3.20",
     "jquery-browserify": "^1.8.1",
     "jsdom": "^3.1.2",
     "liveify": "^2.0.0",
     "livescript": "^1.4.0",
+    "mocha": "^2.3.3",
+    "mocha-lcov-reporter": "^1.0.0",
     "nib": "^1.1.0",
     "react-tools": "^0.13.3",
     "should": "^7.1.0",

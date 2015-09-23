@@ -8,7 +8,7 @@ Form = React.createClass({
             options = ["apple", "mango", "grapes", "melon", "strawberry"].map(function(fruit){
                 return {label: fruit, value: fruit}
             });
-        return <SimpleSelect options={options} placeholder="Select a fruit"></SimpleSelect>
+        return <SimpleSelect options = {options} placeholder = "Select a fruit"></SimpleSelect>
     }
     
 });
