@@ -34,3 +34,7 @@
 ## v0.2.2 / 21st September 2015
 * fixed a bug where the input element would not autosize on entering search text
 * avoid firing onValueChange with undefined value when the user enters new search text
+
+## v0.2.3 / 23rd September 2015
+* fixed a bug where passing a single child element would not show up in the dropdown
+* fixed other minor bugs identified by unit testing
