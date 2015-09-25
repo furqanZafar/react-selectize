@@ -65,25 +65,27 @@ body
 
         .categories
             display flex
-            border-bottom 1px solid #ccc
             justify-content center
             width 100%
+            .line 
+                flex 1
+                border-bottom 1px solid #ccc
             > a
                 display flex
                 align-items center
+                border-bottom 1px solid #ccc
                 color #0099ff
                 cursor pointer
                 justify-content center
                 text-decoration none
                 text-transform capitalize
                 position: relative
-                top 1px
                 width 88px
                 height 44px
 
                 &.selected
                     border 1px solid #ccc
-                    border-bottom 1px solid white
+                    border-bottom none
                     border-top-left-radius 8px
                     border-top-right-radius 8px
                     color black

@@ -171,12 +171,15 @@ App = React.create-class do
             
             # CATEGORIES
             div class-name: \categories,
+                div class-name: \line
                 <[multi simple]> |> map (category) ~> 
-                    Link do 
+                    Link do
                         key: category
                         class-name: if category == selected-category then \selected else ''
+                        on-click: ~> console.log \apple
                         to: "?category=#{category}"
                         category
+                div class-name: \line
 
             # EXAMPLES
             div class-name: \examples,
@@ -212,13 +215,13 @@ App = React.create-class do
             <~ set-timeout _, 150
             example-element.scroll-into-view!
 
+    # external links
     # component-did-mount :: a -> Void
     component-did-mount: !-> @scroll-to-example!
 
+    # changing the query string manually, or clicking on a different example
     # component-did-update :: Props -> Void
-    component-did-update: (prev-props) !->
-        if (prev-props.location.query.example) != @props.location.query.example
-            @scroll-to-example!
+    component-did-update: (prev-props) !-> @scroll-to-example!
             
 React.render do 
     Router do 
