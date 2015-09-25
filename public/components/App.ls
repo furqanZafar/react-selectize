@@ -6,8 +6,9 @@ require \livescript
 reject, reverse, Str, sort-by, take, unique,  unique-by, values, zip-with} = require \prelude-ls
 {create-factory, DOM:{a, button, div, form, h1, h2, img, input, li, ol, option, span, ul}, find-DOM-node}:React = require \react
 require! \react-router
-Router = create-factory react-router.Router
+Link = create-factory react-router.Link
 Route = create-factory react-router.Route
+Router = create-factory react-router.Router
 create-history = require \history/lib/createHashHistory
 require! \react-tools
 Example = create-factory require \./Example.ls
@@ -171,10 +172,10 @@ App = React.create-class do
             # CATEGORIES
             div class-name: \categories,
                 <[multi simple]> |> map (category) ~> 
-                    div do 
+                    Link do 
                         key: category
                         class-name: if category == selected-category then \selected else ''
-                        on-click: ~> @props.location.category = category
+                        to: "?category=#{category}"
                         category
 
             # EXAMPLES
