@@ -1,5 +1,5 @@
 {each, filter, find, find-index, initial, last, map, obj-to-pairs, partition, reject, reverse, sort-by, sum} = require \prelude-ls
-{clamp, is-equal-to-object} = require \prelude-extension
+{clamp} = require \prelude-extension
 {DOM:{div, input, span}, create-class, create-factory, find-DOM-node}:React = require \react
 
 # cancel-event :: Event -> Void
@@ -119,7 +119,7 @@ module.exports = create-class do
     render: ->
         anchor-index = 
             | (typeof @props.anchor == \undefined) or @props.anchor == null => -1
-            | _ => (find-index (~> it `is-equal-to-object` @props.anchor), @props.values) ? @props.values.length - 1        
+            | _ => (find-index (~> it `@is-equal-to-object` @props.anchor), @props.values) ? @props.values.length - 1        
 
         # render-selected-values :: [Int] -> [ValueWrapper]
         render-selected-values = ~> it |> map (index) ~> 
@@ -190,12 +190,12 @@ module.exports = create-class do
                                 next-anchor = if (anchor-index - 1) < 0 then undefined else @props.values[anchor-index - 1]
 
                                 value-to-remove = @props.values[anchor-index]
-                                <~ @props.on-values-change (reject (-> it `is-equal-to-object` value-to-remove), @props.values) ? []
+                                <~ @props.on-values-change (reject (~> it `@is-equal-to-object` value-to-remove), @props.values) ? []
 
                                 # result is true if the user removed the value we requested him to remove
                                 result <~ do ~> (callback) ~>
 
-                                    if typeof (find (~> it `is-equal-to-object` value-to-remove), @props.values) == \undefined
+                                    if typeof (find (~> it `@is-equal-to-object` value-to-remove), @props.values) == \undefined
 
                                         if !!@props.restore-on-backspace
                                             <~ @props.on-search-change @props.restore-on-backspace value-to-remove
@@ -213,7 +213,7 @@ module.exports = create-class do
                                 # change the anchor iff the consumer removed the requested value & the predicted next-anchor is still present
                                 if !!result and 
                                     anchor-index == anchor-index-on-remove and 
-                                    ((typeof next-anchor == \undefined) or !!(find (-> it `is-equal-to-object` next-anchor), @props.values))
+                                    ((typeof next-anchor == \undefined) or !!(find (~> it `@is-equal-to-object` next-anchor), @props.values))
                                         <~ @props.on-anchor-change next-anchor
 
                             cancel-event e
@@ -433,6 +433,9 @@ module.exports = create-class do
                 @highlight-and-scroll-to-option index
                 true
 
+    # is-equal-to-object :: Item -> Item -> Boolean
+    is-equal-to-object: --> (@props.uid &0) == @props.uid &1
+
     # select-highlighted-uid :: Int -> (a -> Void) -> Void
     select-highlighted-uid: (anchor-index, callback) !->
         return if @props.highlighted-uid == undefined
@@ -448,7 +451,7 @@ module.exports = create-class do
             [option] ++ 
             (map (~> @props.values[it]), [anchor-index + 1 til @props.values.length])
 
-        value = find (-> it `is-equal-to-object` option), @props.values
+        value = find (~> it `@is-equal-to-object` option), @props.values
 
         # if the consumer did what we asked, then clear the search and move the anchor ahead of the selected value
         if !!value
