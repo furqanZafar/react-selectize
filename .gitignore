@@ -7,4 +7,5 @@ npm-debug.log
 *.sublime-workspace
 coverage/
 node_modules/
+public/
 src/
