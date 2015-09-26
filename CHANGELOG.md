@@ -38,3 +38,7 @@
 ## v0.2.3 / 23rd September 2015
 * fixed a bug where passing a single child element would not show up in the dropdown
 * fixed other minor bugs identified by unit testing
+
+## v0.2.4 / 26th September 2015
+* perf optimization, using result of props.uid method to compare items instead of deep equals
+* added HighlightedText component to help with search highlighting
