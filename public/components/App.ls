@@ -4,6 +4,7 @@ require \livescript
 {compile} = require \livescript
 {concat-map, drop, filter, find, fold, group-by, id, keys, last, map, Obj, obj-to-pairs, pairs-to-obj, 
 reject, reverse, Str, sort-by, take, unique,  unique-by, values, zip-with} = require \prelude-ls
+{partition-string} = require \prelude-extension
 {create-factory, DOM:{a, button, div, form, h1, h2, img, input, li, ol, option, span, ul}, find-DOM-node}:React = require \react
 require! \react-router
 Link = create-factory react-router.Link
@@ -12,8 +13,7 @@ Router = create-factory react-router.Router
 create-history = require \history/lib/createHashHistory
 require! \react-tools
 Example = create-factory require \./Example.ls
-require! \MultiSelect.ls
-require! \SimpleSelect.ls
+{HighlightedText, SimpleSelect, MultiSelect, ReactSelectize} = require \index.ls
 _ = require \underscore
 
 examples = 
@@ -129,6 +129,12 @@ A demonstration showing how to use the API to cascade controls for a classic mak
             jsx: fs.read-file-sync \public/examples/simple/EventListeners.jsx, \utf8 
             ls: fs.read-file-sync \public/examples/simple/EventListeners.ls, \utf8 
         
+        * title: "Search highlighting"
+          description: ""
+          languages: 
+            jsx: fs.read-file-sync \public/examples/simple/SearchHighlighting.jsx, \utf8 
+            ls: fs.read-file-sync \public/examples/simple/SearchHighlighting.ls, \utf8 
+
         * title: "Custom option and value rendering"
           description: ""
           languages:

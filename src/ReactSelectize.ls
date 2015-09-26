@@ -1,5 +1,5 @@
 {each, filter, find, find-index, initial, last, map, obj-to-pairs, partition, reject, reverse, sort-by, sum} = require \prelude-ls
-{clamp} = require \prelude-extension
+{clamp, is-equal-to-object} = require \prelude-extension
 {DOM:{div, input, span}, create-class, create-factory, find-DOM-node}:React = require \react
 
 # cancel-event :: Event -> Void
@@ -434,7 +434,7 @@ module.exports = create-class do
                 true
 
     # is-equal-to-object :: Item -> Item -> Boolean
-    is-equal-to-object: --> (@props.uid &0) == @props.uid &1
+    is-equal-to-object: --> (@props.uid &0) `is-equal-to-object` @props.uid &1
 
     # select-highlighted-uid :: Int -> (a -> Void) -> Void
     select-highlighted-uid: (anchor-index, callback) !->

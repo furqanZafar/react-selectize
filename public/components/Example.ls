@@ -92,4 +92,5 @@ module.exports = React.create-class do
     # component-did-mount :: a -> Void
     component-did-mount: !-> 
         @execute!
-        @debounced-execute = debounce @.execute, 250
+        # @debounced-execute = debounce @.execute, 250
+        @debounced-execute = (->)
