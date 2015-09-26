@@ -1,35 +1,42 @@
 [![Build Status](https://travis-ci.org/furqanZafar/react-selectize.svg?branch=develop)](https://travis-ci.org/furqanZafar/react-selectize)    [![Coverage Status](https://coveralls.io/repos/furqanZafar/react-selectize/badge.svg?branch=develop&service=github)](https://coveralls.io/github/furqanZafar/react-selectize?branch=develop)
 
-# React Selectize
-A flexible & stateless select component for ReactJS built with livescript and love. Inspired by [Selectize](http://brianreavis.github.io/selectize.js/) & [React Select](http://jedwatson.github.io/react-select/)
+# Motivation
+* existing components do not behave like built-in React.DOM.* components. 
+* existing components [synchronize props with state](http://facebook.github.io/react/tips/props-in-getInitialState-as-anti-pattern.html) an anti pattern, which makes them prone to bugs & difficult for contributers to push new features without breaking something else.
+* use React Selectize as an example for other components, to build stateless, bug free components, that are easy to maintain and contribute too.
+* more features.
 
-ReactSelectize comes in 3 flavors `SimpleSelect` (or single select), `MultiSelect` & `ReactSelectize`. Both the `SimpleSelect` & the `MultiSelect` components are built on top of the stateless `ReactSelectize` component.
+# React Selectize
+`ReactSelectize` is a stateless Select component for ReactJS, that provides a platform for the more developer friendly `SimpleSelect` & `MultiSelect` components. 
+
+Both `SimpleSelect` & `MultiSelect` have been designed to work as drop in replacement for the built-in `React.DOM.Select` component.
+
+styles & features inspired by [React Select](http://jedwatson.github.io/react-select/) & [Selectize](http://brianreavis.github.io/selectize.js/).
 
 LIVE DEMO: [furqanZafar.github.io/react-selectize](http://furqanZafar.github.io/react-selectize/)
 
 [![](http://i.imgur.com/rRmufxm.gif)](http://furqanZafar.github.io/react-selectize/)
 
 ## Features
-* Drop in replacement for React.DOM.Select
+* [Drop in replacement for React.DOM.Select](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=drop-in-replacement-for-react.dom.select)
 * Stateless, therefore extremely flexible & extensible
 * Clean and compact API fully documented on GitHub
-* Multiselect support
-* Option groups
-* Custom filtering &amp; option object
-* Custom option &amp; value rendering
-* Remote data loading
-* Tagging or item creation
-* Caret between items
-* Customizable dropdown direction
-* Mark options as unselectable 
+* [Multiselect support](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=multi-select)
+* [Option groups](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=option-groups)
+* [Custom filtering &amp; option object](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=custom-filtering-and-rendering)
+* [Search highlighting](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=search-highlighting)
+* [Custom option &amp; value rendering](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=custom-option-and-value-rendering)
+* [Remote data loading](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=remote-options)
+* [Tagging or item creation](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=tags)
+* [Caret between items](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=tags)
+* [Customizable dropdown direction](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=dropdown-direction)
+* [Mark options as unselectable](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=selectability)
 * Customizable styles, comes with Stylus files
 
 ## Install
-
 `npm install react-selectize`
 
 ## Usage (livescript)
-
 ```
 {create-factory}:React = require \react
 {SimpleSelect, MultiSelect, ReactSelectize} = require \react-selectize
@@ -56,7 +63,6 @@ MultiSelect do
 ```
 
 ## Usage (jsx)
-
 ```
 React = require("react");
 ReactSelectize = require("react-selectize");
@@ -112,14 +118,14 @@ to include the default styles when using MultiSelect component, add the followin
 * the onValuesChange callback for MultiSelect is passed 2 parameters an Array  of selected option objects (instead of a collection of the value properties or a comma separated string of value properties) and a `callback`
 
 * all the `on*Change` functions receive a callback as the final parameter, which MUST always be invoked, for example when using state for the `value` prop of `SimpleSelect` the `onValueChange` callback implementation would look like this:
-```
+``` jsx
 value = {{label: "apple", value: "apple"}}
 onValueChange = {function(value, callback){
     self.setState(value, callback);
 }}
 ```
 when relying on the components internal state for managing the value:
-```
+``` jsx
 onValueChange = {function(value, callback){
     console.log(value);
     callback(); // must invoke callback    
@@ -127,7 +133,7 @@ onValueChange = {function(value, callback){
 ```
 
 * when using custom option object, you MUST implement the `uid` function which accepts an option object and returns a unique id, for example:
-```
+``` jsx
 // assuming the type of our option object is:
 // {firstName :: String, lastName :: String, age :: Int}
 uid = {function(item){
@@ -136,7 +142,7 @@ uid = {function(item){
 ```
 the `uid` function is used internally for faster performance by avoiding unnecessary option & value rendering. 
 
-## SimpleSelect Props
+## SimpleSelect props
 
 |    Property                |   Type                         |   Description                  |
 |----------------------------|--------------------------------|--------------------------------|
@@ -173,7 +179,7 @@ the `uid` function is used internally for faster performance by avoiding unneces
 | highlightFirstSelectableOption  | a -> Void                | `this.refs.selectInstance.highlightFirstSelectableOption()`|
 | value                           | a -> Item                | `this.refs.selectInstance.value()` returns the current selected item|
 
-## MultiSelect Props
+## MultiSelect props
 In addition to the props above
 
 |    Property                |   Type                               |   Description|
@@ -189,11 +195,20 @@ In addition to the props above
 |    closeOnSelect           | Boolean                              | as the name implies, closes the options list on selecting an option|
 
 ## MultiSelect methods
-
 same as SimpleSelect but use `this.refs.multiSelectInstance.values()` to get the selected values instead of the `value` method.
 
-## Development
+## HighlightedText props
+used for [search highlighting](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=search-highlighting)
 
+|    Property                |   Type                               |   Description|
+|--------------------------- |--------------------------------------|---------------------------------|
+|    partitions              | [[Int, Int, Boolean]]                | collection of ranges which should or should not be highlighted, its the result of the partitionString method of the [prelude-extension](https://www.npmjs.com/package/prelude-extension) library|
+|    text                    | String                               | the string that is partitioned, the partitions collection above only has the ranges & so we need to pass the original text as well|
+|    style                   | inline CSS styles object             | inline styles applied to the root node|
+|    highlightStyle          | inline CSS styles object             | inline styles applied to the highlighted spans|
+
+
+## Development
 * `npm install`
 * `gulp`
 * visit `localhost:8000`

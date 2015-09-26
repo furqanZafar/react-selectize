@@ -5,3 +5,4 @@ global <<<
     window: document.parent-window
 require! \./simple-select
 require! \./multi-select
+require! \./highlighted-text
