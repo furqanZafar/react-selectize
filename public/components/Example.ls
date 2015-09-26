@@ -36,7 +36,7 @@ module.exports = React.create-class do
                                 on-click: ~> 
                                     <~ @set-state language: id
                                     @execute!
-                                name
+                                "#{name}#{if id == @state.language then ' - live editor' else ''}"
 
                     # CODE EDITOR
                     AceEditor do 
@@ -92,5 +92,4 @@ module.exports = React.create-class do
     # component-did-mount :: a -> Void
     component-did-mount: !-> 
         @execute!
-        # @debounced-execute = debounce @.execute, 250
-        @debounced-execute = (->)
+        @debounced-execute = debounce @.execute, 250

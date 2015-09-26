@@ -24,6 +24,7 @@ LIVE DEMO: [furqanZafar.github.io/react-selectize](http://furqanZafar.github.io/
 * [Multiselect support](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=multi-select)
 * [Option groups](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=option-groups)
 * [Custom filtering &amp; option object](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=custom-filtering-and-rendering)
+* [Search highlighting](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=search-highlighting)
 * [Custom option &amp; value rendering](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=custom-option-and-value-rendering)
 * [Remote data loading](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=remote-options)
 * [Tagging or item creation](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=tags)
@@ -195,6 +196,17 @@ In addition to the props above
 
 ## MultiSelect methods
 same as SimpleSelect but use `this.refs.multiSelectInstance.values()` to get the selected values instead of the `value` method.
+
+## HighlightedText props
+used for [search highlighting](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=search-highlighting)
+
+|    Property                |   Type                               |   Description|
+|--------------------------- |--------------------------------------|---------------------------------|
+|    partitions              | [[Int, Int, Boolean]]                | collection of ranges which should or should not be highlighted, its the result of the partitionString method of the [prelude-extension](https://www.npmjs.com/package/prelude-extension) library|
+|    text                    | String                               | the string that is partitioned, the partitions collection above only has the ranges & so we need to pass the original text as well|
+|    style                   | inline CSS styles object             | inline styles applied to the root node|
+|    highlightStyle          | inline CSS styles object             | inline styles applied to the highlighted spans|
+
 
 ## Development
 * `npm install`
