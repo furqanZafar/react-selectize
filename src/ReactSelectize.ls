@@ -36,7 +36,6 @@ ValueWrapper = create-factory create-class do
     should-component-update: (next-props) ->
         next-props?.uid != @props?.uid
 
-
 module.exports = create-class do
 
     display-name: \ReactSelectize
@@ -246,7 +245,7 @@ module.exports = create-class do
                             
                         # ENTER
                         if e.which == 13 and @props.open
-                            <~ @select-highlighted-uid anchor-index
+                            @select-highlighted-uid anchor-index
 
                         else
                             switch e.which
@@ -281,7 +280,7 @@ module.exports = create-class do
                     \×
 
                 # ARROW ICON
-                div {class-name: \arrow}, null
+                div class-name: \arrow
 
             # DROPDOWN
             if @props.open
@@ -307,7 +306,7 @@ module.exports = create-class do
                                 switch 
                                 | (typeof option?.selectable == \boolean) and !option.selectable => on-click: cancel-event
                                 | _ => 
-                                    on-click: (e) !~> @select-highlighted-uid anchor-index, (->)
+                                    on-click: (e) !~> @select-highlighted-uid anchor-index
                                     on-mouse-over: ({current-target}) !~>  @props.on-highlighted-uid-change uid if !@scroll-lock
 
                 div do 
@@ -353,7 +352,7 @@ module.exports = create-class do
             if !(dom-node-contains target)
                 @props.on-open-change false
                 @props.on-blur @props.values, \click
-        document.add-event-listener \click, @external-click-listener, true        
+        document.add-event-listener \click, @external-click-listener, true
 
     # component-will-unmount :: a -> Void
     component-will-unmount: !->
@@ -436,8 +435,8 @@ module.exports = create-class do
     # is-equal-to-object :: Item -> Item -> Boolean
     is-equal-to-object: --> (@props.uid &0) `is-equal-to-object` @props.uid &1
 
-    # select-highlighted-uid :: Int -> (a -> Void) -> Void
-    select-highlighted-uid: (anchor-index, callback) !->
+    # select-highlighted-uid :: Int -> Void
+    select-highlighted-uid: (anchor-index) !->
         return if @props.highlighted-uid == undefined
         
         index = @option-index-from-uid @props.highlighted-uid
@@ -461,10 +460,6 @@ module.exports = create-class do
             # highlight the next selectable option, if available & the dropdown is still open
             if !!@props.open
                 if !!@props.options?[index]
-                    @props.on-highlighted-uid-change @props.uid @props.options[index], callback
+                    @props.on-highlighted-uid-change @props.uid @props.options[index]
                 else
                     @highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1
-                    callback!
-        
-        else
-            callback!
