@@ -40,7 +40,7 @@ Form = React.create-class do
                     
             # render-value :: Int -> Item -> ReactElement
             render-value: ({label, value}) ~>
-                div class-name: \simple-value,
+                div class-name: \removeable-emoji,
                     span do 
                         on-click: ~> @set-state do 
                             selected-emojis: @state.selected-emojis |> reject ~> it.value == value
