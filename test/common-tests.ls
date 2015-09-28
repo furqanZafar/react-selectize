@@ -330,3 +330,11 @@ module.exports = (select-class) !->
         click-to-open-select-control select
         mouse-out find-highlighted-option select
         component-with-class-must-not-exist select, \highlight
+
+    specify "clicking arrow button must toggle the dropdown", ->
+        select = create-select!
+        arrow = find-rendered-DOM-component-with-class select, \arrow
+        click arrow
+        find-rendered-DOM-component-with-class select, \dropdown
+        click arrow
+        component-with-class-must-not-exist select, \dropdown

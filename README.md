@@ -28,6 +28,7 @@ LIVE DEMO: [furqanZafar.github.io/react-selectize](http://furqanZafar.github.io/
 * [Custom option &amp; value rendering](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=custom-option-and-value-rendering)
 * [Remote data loading](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=remote-options)
 * [Tagging or item creation](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=tags)
+* [Editable values](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=restore-on-backspace)
 * [Caret between items](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=tags)
 * [Customizable dropdown direction](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=dropdown-direction)
 * [Mark options as unselectable](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=selectability)
@@ -100,13 +101,10 @@ MultiSelect = React.createFactory(ReactSelectize.MultiSelect);
 ```
 
 ## Usage (stylus)
-to include the default styles when using SimpleSelect component, add the following import statement to your stylus file:
+to include the default styles add the following import statement to your stylus file:
 
-`@import 'node_modules/react-selectize/src/SimpleSelect.css'`
+`@import 'node_modules/react-selectize/src/index.css'`
 
-to include the default styles when using MultiSelect component, add the following import statement to your stylus file:
-
-`@import 'node_modules/react-selectize/src/MultiSelect.css'`
 
 ## Gotchas
 * the default structure of an option object is `{label: String, value :: a}` where `a` implies that `value` property can be of any equatable type
@@ -140,13 +138,13 @@ uid = {function(item){
     return item.firstName + item.lastName;    
 }}
 ```
-the `uid` function is used internally for faster performance by avoiding unnecessary option & value rendering. 
+the `uid` function is used internally for performance optimization. 
 
 ## SimpleSelect props
 
 |    Property                |   Type                         |   Description                  |
 |----------------------------|--------------------------------|--------------------------------|
-|    autosize                | InputElement -> Int                | `function($search){return $search.value.length * 10}` custom logic for autosizing the input element|
+|    autosize                | InputElement -> Int            | `function($search){return $search.value.length * 10}` custom logic for autosizing the input element|
 |    className               | String                         | class name for the outer element, in addition to "simple-select"|
 |    disabled                | Boolean                        | disables interaction with the Select control|
 |    dropdownDirection       | Int                            | defaults to 1, setting it to -1 opens the dropdown upward|

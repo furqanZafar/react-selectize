@@ -62,7 +62,7 @@ Form = React.createClass({
             
             // renderValue :: Int -> Item -> ReactElement
             renderValue = {function(item){
-                return <div className = "simple-value">
+                return <div className = "removable-emoji">
                     <span onClick = {function(){
                         self.setState({
                             selectedEmojis: _.reject(self.state.selectedEmojis, function(emoji){

@@ -9,3 +9,5 @@ rough
 *.sublime-workspace
 coverage/
 public/
+src/*.css
+!src/index.css

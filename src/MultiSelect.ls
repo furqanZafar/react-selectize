@@ -44,7 +44,7 @@ module.exports = React.create-class do
         ReactSelectize {
             
             autosize
-            class-name: "multi-select #{@props.class-name}"
+            class-name: "multi-select" + if !!@props.class-name then " #{@props.class-name}" else ""
             disabled
             dropdown-direction
             group-id

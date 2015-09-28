@@ -36,7 +36,6 @@ ValueWrapper = create-factory create-class do
     should-component-update: (next-props) ->
         next-props?.uid != @props?.uid
 
-
 module.exports = create-class do
 
     display-name: \ReactSelectize
@@ -73,7 +72,7 @@ module.exports = create-class do
                 $search.style.width = "#{4 + $input.client-width}px"
                 document.body.remove-child $input
 
-        class-name: ''
+        # class-name :: String
         disabled: false
         dropdown-direction: 1
         first-option-index-to-highlight: (options) -> 0
@@ -129,7 +128,9 @@ module.exports = create-class do
 
         # REACT SELECTIZE
         div do 
-            class-name: "react-selectize #{@props?.class-name ? ''} #{if @props.disabled then 'disabled' else ''} #{if @props.open then 'open' else ''} #{if @props.dropdown-direction == -1 then 'flipped' else ''}"
+            class-name: "react-selectize" + 
+                (if !!@props.class-name then " #{@props.class-name}" else "") + 
+                "#{if @props.disabled then ' disabled' else ''}#{if @props.open then ' open' else ''}#{if @props.dropdown-direction == -1 then ' flipped' else ''}"
             style: @props.style
             
             # CONTROL
@@ -246,7 +247,7 @@ module.exports = create-class do
                             
                         # ENTER
                         if e.which == 13 and @props.open
-                            <~ @select-highlighted-uid anchor-index
+                            @select-highlighted-uid anchor-index
 
                         else
                             switch e.which
@@ -280,8 +281,18 @@ module.exports = create-class do
                         cancel-event e
                     \×
 
-                # ARROW ICON
-                div {class-name: \arrow}, null
+                # ARROW ICON 
+                div do 
+                    class-name: \arrow
+                    on-click: (e) ~>
+                        if @props.open 
+                            @props.on-open-change false
+                            @props.on-blur @props.values, \arrow-click
+                        else
+                            <~ @props.on-anchor-change last @props.values
+                            <~ @props.on-open-change true
+                            @focus!
+                        cancel-event e
 
             # DROPDOWN
             if @props.open
@@ -307,7 +318,7 @@ module.exports = create-class do
                                 switch 
                                 | (typeof option?.selectable == \boolean) and !option.selectable => on-click: cancel-event
                                 | _ => 
-                                    on-click: (e) !~> @select-highlighted-uid anchor-index, (->)
+                                    on-click: (e) !~> @select-highlighted-uid anchor-index
                                     on-mouse-over: ({current-target}) !~>  @props.on-highlighted-uid-change uid if !@scroll-lock
 
                 div do 
@@ -353,7 +364,7 @@ module.exports = create-class do
             if !(dom-node-contains target)
                 @props.on-open-change false
                 @props.on-blur @props.values, \click
-        document.add-event-listener \click, @external-click-listener, true        
+        document.add-event-listener \click, @external-click-listener, true
 
     # component-will-unmount :: a -> Void
     component-will-unmount: !->
@@ -362,7 +373,7 @@ module.exports = create-class do
     # component-did-update :: Props -> UIState -> Void
     component-did-update: (prev-props, prev-state) !->
 
-        # if the list of options opened then highlight the first option & focus on the serach input
+        # if the list of options opened then highlight the first option & focus on the search input
         if @props.open and !prev-props.open and @props.highlighted-uid == undefined
             @highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1
             @focus!
@@ -436,8 +447,8 @@ module.exports = create-class do
     # is-equal-to-object :: Item -> Item -> Boolean
     is-equal-to-object: --> (@props.uid &0) `is-equal-to-object` @props.uid &1
 
-    # select-highlighted-uid :: Int -> (a -> Void) -> Void
-    select-highlighted-uid: (anchor-index, callback) !->
+    # select-highlighted-uid :: Int -> Void
+    select-highlighted-uid: (anchor-index) !->
         return if @props.highlighted-uid == undefined
         
         index = @option-index-from-uid @props.highlighted-uid
@@ -461,10 +472,6 @@ module.exports = create-class do
             # highlight the next selectable option, if available & the dropdown is still open
             if !!@props.open
                 if !!@props.options?[index]
-                    @props.on-highlighted-uid-change @props.uid @props.options[index], callback
+                    @props.on-highlighted-uid-change @props.uid @props.options[index]
                 else
                     @highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1
-                    callback!
-        
-        else
-            callback!
