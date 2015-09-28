@@ -42,3 +42,8 @@
 ## v0.2.4 / 26th September 2015
 * perf optimization, using result of props.uid method to compare items instead of deep equals
 * added HighlightedText component to help with search highlighting
+
+## v0.2.5 / 28th September 2015
+* create index.css to fix style duplication when importing both SimpleSelect.css & MultiSelect.css
+* clicking on the arrow button toggles the dropdown
+* minor css tweaks

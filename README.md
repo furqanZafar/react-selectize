@@ -101,13 +101,10 @@ MultiSelect = React.createFactory(ReactSelectize.MultiSelect);
 ```
 
 ## Usage (stylus)
-to include the default styles when using SimpleSelect component, add the following import statement to your stylus file:
+to include the default styles add the following import statement to your stylus file:
 
-`@import 'node_modules/react-selectize/src/SimpleSelect.css'`
+`@import 'node_modules/react-selectize/src/index.css'`
 
-to include the default styles when using MultiSelect component, add the following import statement to your stylus file:
-
-`@import 'node_modules/react-selectize/src/MultiSelect.css'`
 
 ## Gotchas
 * the default structure of an option object is `{label: String, value :: a}` where `a` implies that `value` property can be of any equatable type
