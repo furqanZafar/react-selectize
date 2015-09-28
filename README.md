@@ -28,6 +28,7 @@ LIVE DEMO: [furqanZafar.github.io/react-selectize](http://furqanZafar.github.io/
 * [Custom option &amp; value rendering](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=custom-option-and-value-rendering)
 * [Remote data loading](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=remote-options)
 * [Tagging or item creation](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=tags)
+* [Editable values](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=restore-on-backspace)
 * [Caret between items](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=tags)
 * [Customizable dropdown direction](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=dropdown-direction)
 * [Mark options as unselectable](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=selectability)
