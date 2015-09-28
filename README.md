@@ -140,13 +140,13 @@ uid = {function(item){
     return item.firstName + item.lastName;    
 }}
 ```
-the `uid` function is used internally for faster performance by avoiding unnecessary option & value rendering. 
+the `uid` function is used internally for performance optimization. 
 
 ## SimpleSelect props
 
 |    Property                |   Type                         |   Description                  |
 |----------------------------|--------------------------------|--------------------------------|
-|    autosize                | InputElement -> Int                | `function($search){return $search.value.length * 10}` custom logic for autosizing the input element|
+|    autosize                | InputElement -> Int            | `function($search){return $search.value.length * 10}` custom logic for autosizing the input element|
 |    className               | String                         | class name for the outer element, in addition to "simple-select"|
 |    disabled                | Boolean                        | disables interaction with the Select control|
 |    dropdownDirection       | Int                            | defaults to 1, setting it to -1 opens the dropdown upward|

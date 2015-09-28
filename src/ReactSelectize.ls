@@ -72,7 +72,7 @@ module.exports = create-class do
                 $search.style.width = "#{4 + $input.client-width}px"
                 document.body.remove-child $input
 
-        class-name: ''
+        # class-name :: String
         disabled: false
         dropdown-direction: 1
         first-option-index-to-highlight: (options) -> 0
@@ -128,7 +128,9 @@ module.exports = create-class do
 
         # REACT SELECTIZE
         div do 
-            class-name: "react-selectize #{@props?.class-name ? ''} #{if @props.disabled then 'disabled' else ''} #{if @props.open then 'open' else ''} #{if @props.dropdown-direction == -1 then 'flipped' else ''}"
+            class-name: "react-selectize" + 
+                (if !!@props.class-name then " #{@props.class-name}" else "") + 
+                "#{if @props.disabled then ' disabled' else ''}#{if @props.open then ' open' else ''}#{if @props.dropdown-direction == -1 then ' flipped' else ''}"
             style: @props.style
             
             # CONTROL
@@ -279,8 +281,18 @@ module.exports = create-class do
                         cancel-event e
                     \×
 
-                # ARROW ICON
-                div class-name: \arrow
+                # ARROW ICON 
+                div do 
+                    class-name: \arrow
+                    on-click: (e) ~>
+                        if @props.open 
+                            @props.on-open-change false
+                            @props.on-blur @props.values, \arrow-click
+                        else
+                            <~ @props.on-anchor-change last @props.values
+                            <~ @props.on-open-change true
+                            @focus!
+                        cancel-event e
 
             # DROPDOWN
             if @props.open
@@ -361,7 +373,7 @@ module.exports = create-class do
     # component-did-update :: Props -> UIState -> Void
     component-did-update: (prev-props, prev-state) !->
 
-        # if the list of options opened then highlight the first option & focus on the serach input
+        # if the list of options opened then highlight the first option & focus on the search input
         if @props.open and !prev-props.open and @props.highlighted-uid == undefined
             @highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1
             @focus!

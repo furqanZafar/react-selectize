@@ -40,7 +40,7 @@ module.exports = React.create-class do
         ReactSelectize {
             
             autosize
-            class-name: "simple-select #{@props.class-name ? ''}"
+            class-name: "simple-select" + if !!@props.class-name then " #{@props.class-name}" else ""
             disabled
             dropdown-direction
             group-id
