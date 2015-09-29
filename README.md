@@ -3,7 +3,6 @@
 # Motivation
 * existing components do not behave like built-in React.DOM.* components. 
 * existing components [synchronize props with state](http://facebook.github.io/react/tips/props-in-getInitialState-as-anti-pattern.html) an anti pattern, which makes them prone to bugs & difficult for contributers to push new features without breaking something else.
-* use React Selectize as an example for other components, to build stateless, bug free components, that are easy to maintain and contribute too.
 * more features.
 
 # React Selectize

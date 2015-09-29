@@ -34,11 +34,9 @@ Form = React.create-class do
 
     # component-will-mount :: a -> Void
     component-will-mount: ->
-        @req = $.getJSON "https://restcountries.eu/rest/v1/all"
+        @req = $.getJSON "http://restverse.com/countries"
             ..done (countries) ~> 
-                <~ @set-state do 
-                    countries: countries |> map ({name, alpha2-code}) -> 
-                        label: name, value: alpha2-code
+                <~ @set-state {countries}
                 @refs.select.highlight-first-selectable-option!
             ..always ~> delete @req
 
