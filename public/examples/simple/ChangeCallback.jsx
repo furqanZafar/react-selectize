@@ -43,12 +43,8 @@ Form = React.createClass({
     // component-will-mount :: a -> Void
     componentWillMount: function(){
         var self = this;
-        this.req = $.getJSON("https://restcountries.eu/rest/v1/all").done(function(countries){
-            self.setState({
-                countries: countries.map(function(country){
-                    return {label: country.name, value: country.alpha2Code};
-                })
-            }, function(){
+        this.req = $.getJSON("http://restverse.com/countries").done(function(countries){
+            self.setState({countries: countries}, function(){
                 self.refs.select.highlightFirstSelectableOption();
             });
         }).always(function(){
