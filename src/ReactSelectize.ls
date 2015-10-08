@@ -471,7 +471,8 @@ module.exports = create-class do
 
             # highlight the next selectable option, if available & the dropdown is still open
             if !!@props.open
-                if !!@props.options?[index]
+                {selectable}:option? = @props.options?[index]
+                if !!option and (typeof selectable == \undefined) or selectable
                     @props.on-highlighted-uid-change @props.uid @props.options[index]
                 else
                     @highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1
