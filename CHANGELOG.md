@@ -47,3 +47,6 @@
 * create index.css to fix style duplication when importing both SimpleSelect.css & MultiSelect.css
 * clicking on the arrow button toggles the dropdown
 * minor css tweaks
+
+## v0.2.6 / 8th October 2015
+* fixed a bug where selecting an option did not update the highlighted-uid (multi select). Thanks @edgarzakaryan
