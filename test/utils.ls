@@ -1,7 +1,8 @@
 {promises:{new-promise}} = require \async-ls
 {map} = require \prelude-ls
-{addons:{TestUtils}, create-element, find-DOM-node} = require \react/addons
-{find-rendered-DOM-component-with-class, find-rendered-DOM-component-with-tag, Simulate:{change, click, key-down}} = TestUtils
+{create-element} = require \react
+{find-DOM-node} = require \react-dom
+{find-rendered-DOM-component-with-class, find-rendered-DOM-component-with-tag, Simulate:{change, click, key-down}}:TestUtils = require \react-addons-test-utils
 
 # create-select :: Select -> Props -> Select
 export create-select = (select-class, props, children) -->
@@ -24,7 +25,7 @@ export set-input-text = (input, text) !-->
 
 # get-item-text :: Item -> String
 export get-item-text = (item) ->
-    find-DOM-node find-rendered-DOM-component-with-tag item, \span .innerHTML
+    (item.get-elements-by-tag-name \span).0.innerHTML
 
 # click-to-open-select-control :: Select -> Void
 export click-to-open-select-control = (select) !->

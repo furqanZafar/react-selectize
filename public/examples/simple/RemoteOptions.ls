@@ -51,4 +51,4 @@ Form = React.create-class do
         libraries: []
         search: ""
                 
-React.render (React.create-element Form, null), mount-node
+render (React.create-element Form, null), mount-node

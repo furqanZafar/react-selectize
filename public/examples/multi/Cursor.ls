@@ -23,4 +23,4 @@ Form = React.create-class do
         channels: channels
         selected-channels: [last channels]
                 
-React.render (React.create-element Form, null), mount-node
+render (React.create-element Form, null), mount-node

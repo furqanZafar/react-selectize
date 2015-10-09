@@ -24,4 +24,4 @@ Form = React.create-class do
                     alert "selected value: #{JSON.stringify @refs.select.value!, null, 4}"
                 "Get current value"
 
-React.render (React.create-element Form, null), mount-node
+render (React.create-element Form, null), mount-node

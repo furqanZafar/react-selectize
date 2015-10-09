@@ -9,4 +9,4 @@ Form = React.create-class do
             # restore-on-backspace :: Item -> String
             restore-on-backspace: ~> it.label.substr 0, it.label.length - 1
                 
-React.render (React.create-element Form, null), mount-node
+render (React.create-element Form, null), mount-node

@@ -38,4 +38,4 @@ Form = React.create-class do
     get-initial-state: ->
         search: ""
 
-React.render (React.create-element Form, null), mount-node
+render (React.create-element Form, null), mount-node

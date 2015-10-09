@@ -2,10 +2,12 @@ require! \assert
 {each, map} = require \prelude-ls
 
 # React
-{addons:{TestUtils}, create-class, create-element, DOM:{div, option, span}, find-DOM-node, render} = require \react/addons
+{create-class, create-element, DOM:{div, option, span}} = require \react
+{find-DOM-node, render} = require \react-dom
 
 # TestUtils
-{find-rendered-DOM-component-with-class, scry-rendered-DOM-components-with-class, Simulate:{change, click, focus, key-down, mouse-over, mouse-out, mouse-move}} = TestUtils
+{find-rendered-DOM-component-with-class, scry-rendered-DOM-components-with-class, 
+Simulate:{change, click, focus, key-down, mouse-over, mouse-out, mouse-move}}:TestUtils = require \react-addons-test-utils
 
 # utils
 {create-select, get-input, set-input-text, get-item-text, click-to-open-select-control, click-on-the-document, find-highlighted-option, 

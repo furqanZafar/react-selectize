@@ -5,7 +5,8 @@ require \livescript
 {concat-map, drop, filter, find, fold, group-by, id, keys, last, map, Obj, obj-to-pairs, pairs-to-obj, 
 reject, reverse, Str, sort-by, take, unique,  unique-by, values, zip-with} = require \prelude-ls
 {partition-string} = require \prelude-extension
-{create-factory, DOM:{a, button, div, form, h1, h2, img, input, li, ol, option, span, ul}, find-DOM-node}:React = require \react
+{create-factory, DOM:{a, button, div, form, h1, h2, img, input, li, ol, option, span, ul}}:React = require \react
+{find-DOM-node, render} = require \react-dom
 require! \react-router
 Link = create-factory react-router.Link
 Route = create-factory react-router.Route
@@ -229,7 +230,7 @@ App = React.create-class do
     # component-did-update :: Props -> Void
     component-did-update: (prev-props) !-> @scroll-to-example!
             
-React.render do 
+render do 
     Router do 
         history: create-history query-key: false
         Route path: \/, component: App

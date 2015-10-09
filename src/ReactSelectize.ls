@@ -1,6 +1,7 @@
 {each, filter, find, find-index, initial, last, map, obj-to-pairs, partition, reject, reverse, sort-by, sum} = require \prelude-ls
 {clamp, is-equal-to-object} = require \prelude-extension
-{DOM:{div, input, span}, create-class, create-factory, find-DOM-node}:React = require \react
+{DOM:{div, input, span}, create-class, create-factory}:React = require \react
+{find-DOM-node} = require \react-dom
 
 # cancel-event :: Event -> Void
 cancel-event = (e) !->

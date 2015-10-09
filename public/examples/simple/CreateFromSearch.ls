@@ -26,4 +26,4 @@ Form = React.create-class do
     get-initial-state: ->
         options: <[apple mango grapes melon strawberry]> |> map ~> label: it, value: it
                 
-React.render (React.create-element Form, null), mount-node
+render (React.create-element Form, null), mount-node

@@ -8,4 +8,4 @@ Form = React.create-class do
             options: <[apple mango grapes melon strawberry]> |> map ~> label: it, value: it
             placeholder: "Select a fruit"
 
-React.render (React.create-element Form, null), mount-node
+render (React.create-element Form, null), mount-node

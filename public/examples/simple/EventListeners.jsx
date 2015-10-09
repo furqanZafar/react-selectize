@@ -74,4 +74,4 @@ Form = React.createClass({
     
 });
 
-React.render(<Form/>, mountNode);
+render(<Form/>, mountNode);
