@@ -76,6 +76,12 @@ To position the cursor at the start, set anchor to undefined
             jsx: fs.read-file-sync \public/examples/multi/Cursor.jsx, \utf8 
             ls: fs.read-file-sync \public/examples/multi/Cursor.ls, \utf8 
         
+        * title: "Disable selected"
+          description: ""
+          languages:
+            jsx: fs.read-file-sync \public/examples/multi/DisableSelected.jsx, \utf8 
+            ls: fs.read-file-sync \public/examples/multi/DisableSelected.ls, \utf8 
+        
         * title: "Custom filtering and rendering"
           description: """
 This demonstrates two main things: 

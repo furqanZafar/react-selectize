@@ -1,4 +1,4 @@
-{each, filter, find, find-index, initial, last, map, obj-to-pairs, partition, reject, reverse, sort-by, sum} = require \prelude-ls
+{each, filter, find, find-index, id, initial, last, map, obj-to-pairs, partition, reject, reverse, sort-by, sum, values} = require \prelude-ls
 {clamp, is-equal-to-object} = require \prelude-extension
 {DOM:{div, input, span}, create-class, create-factory}:React = require \react
 {find-DOM-node} = require \react-dom
@@ -23,7 +23,9 @@ OptionWrapper = create-factory create-class do
 
     # should-component-update :: Props -> Boolean
     should-component-update: (next-props) ->
-        (next-props?.uid != @props?.uid) or (next-props?.highlight != @props?.highlight)
+        (!(next-props?.uid `is-equal-to-object` @props?.uid)) or 
+        (next-props?.highlight != @props?.highlight) or 
+        (next-props?.selectable != @props?.selectable)
 
 ValueWrapper = create-factory create-class do 
 
@@ -35,7 +37,7 @@ ValueWrapper = create-factory create-class do
 
     # should-component-update :: Props -> Boolean
     should-component-update: (next-props) ->
-        next-props?.uid != @props?.uid
+        !(next-props?.uid `is-equal-to-object` @props?.uid)
 
 module.exports = create-class do
 
@@ -112,7 +114,7 @@ module.exports = create-class do
         # restore-on-backspace: ((value) -> ) # Item -> String
         search: ""
         style: {}
-        uid: (.value) # (Eq e) => Item -> e
+        uid: id # (Eq e) => Item -> e
         values: [] # [Item]
 
     # render :: a -> ReactElement
@@ -125,7 +127,12 @@ module.exports = create-class do
         render-selected-values = ~> it |> map (index) ~> 
             item = @props.values[index]
             uid = @props.uid item
-            ValueWrapper {uid, key: uid, item, render-item: @props.render-value}
+
+            ValueWrapper do 
+                uid: uid
+                key: @uid-to-string uid
+                item: item
+                render-item: @props.render-value
 
         # REACT SELECTIZE
         div do 
@@ -162,8 +169,7 @@ module.exports = create-class do
                     # update the search text & highlight the first option
                     on-change: ({current-target:{value}}) ~> 
                         @props.on-search-change value, ~> 
-                            if !(@highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1)
-                                @props.on-highlighted-uid-change undefined
+                            @highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1
 
                     # show the list of options (noop if caused by invocation of @focus function)
                     on-focus: !~>
@@ -308,10 +314,10 @@ module.exports = create-class do
                         OptionWrapper do
                             {
                                 uid
-                                ref: "option-#{uid}"
-                                key: uid
+                                ref: "option-#{@uid-to-string uid}"
+                                key: @uid-to-string uid
                                 item: option
-                                highlight: @props.highlighted-uid == uid
+                                highlight: @props.highlighted-uid `is-equal-to-object` uid
                                 on-mouse-move: ({current-target}) !~> @scroll-lock = false if @scroll-lock
                                 on-mouse-out: !~> @props.on-highlighted-uid-change undefined if !@scroll-lock
                                 render-item: @props.render-option
@@ -379,7 +385,7 @@ module.exports = create-class do
             @highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1
             @focus!
 
-        # if the list of options was closed then reset the highlighted-uid to -1
+        # if the list of options was closed then reset highlighted-uid 
         @props.on-highlighted-uid-change undefined if !@props.open and prev-props.open
 
         # autosize the search input to its contents
@@ -396,7 +402,7 @@ module.exports = create-class do
            @props.on-open-change false
 
     # option-index-from-uid :: (Eq e) => e -> Int
-    option-index-from-uid: (uid) -> @props.options |> find-index ~> uid == @props.uid it
+    option-index-from-uid: (uid) -> @props.options |> find-index ~> uid `is-equal-to-object` @props.uid it
 
     # blur :: a -> Void
     blur: !-> 
@@ -414,7 +420,7 @@ module.exports = create-class do
     highlight-and-scroll-to-option: (index) !->
         uid = @props.uid @props.options[index]
         <~ @props.on-highlighted-uid-change uid
-        option-element? = find-DOM-node @refs?["option-#{uid}"]
+        option-element? = find-DOM-node @refs?["option-#{@uid-to-string uid}"]
         parent-element = find-DOM-node @refs.dropdown
         if !!option-element
             option-height = option-element.offset-height - 1
@@ -431,6 +437,7 @@ module.exports = create-class do
 
         # end recursion if the index violates the bounds
         if index < 0 or index >= @props.options.length
+            @props.on-highlighted-uid-change undefined, ~>
             false
 
         else
@@ -473,7 +480,10 @@ module.exports = create-class do
             # highlight the next selectable option, if available & the dropdown is still open
             if !!@props.open
                 {selectable}:option? = @props.options?[index]
-                if !!option and (typeof selectable == \undefined) or selectable
+                if !!option and ((typeof selectable == \undefined) or selectable)
                     @props.on-highlighted-uid-change @props.uid @props.options[index]
                 else
                     @highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1
+
+    # uid-to-string :: a -> String
+    uid-to-string: (uid) -> (if typeof uid == \object then JSON.stringify else id) uid

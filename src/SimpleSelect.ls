@@ -28,7 +28,7 @@ module.exports = React.create-class do
         # restore-on-backspace :: Item -> String
         # search :: String
         style: {}
-        uid: (.value)
+        # uid :: (Equatable e) => Item -> e
         # value :: Item
 
     # render :: a -> ReactElement
@@ -47,11 +47,7 @@ module.exports = React.create-class do
             groups
             groups-as-columns
             render-group-title
-
-            # render the value only if the search length exceeds 0 or if the uid changes
-            uid: ~> 
-                uid = @props.uid it
-                "#{search.length == 0}#{uid}"
+            uid
 
             ref: \select
 
@@ -84,22 +80,13 @@ module.exports = React.create-class do
                     <~ on-value-change undefined
                     @focus callback
                 else
-                    value = 
-                        | new-values.length == 1 => new-values.0
-                        | new-values.0 `is-equal-to-object` new-values.1 => undefined
-                        | _ => new-values.1
-                    <~ do ~> (callback) ~> if !!value then on-value-change value, callback else callback!
+                    new-value = last new-values
+                    changed = !(new-value `is-equal-to-object` value)
+                    <~ do ~> (callback) ~> if changed then on-value-change new-value, callback else callback!
                     <~ @set-state open: false
                     @refs.select.blur!
                     callback!
-
-            # if the search text length is > 0 then no need to draw the value component
-            # better than emitting a value-change event with undefined
-            render-value: (item) ~> 
-                if search.length > 0
-                    null 
-                else 
-                    (@props.render-value ? ({label}) ~> div class-name: \simple-value, span null, label) item
+            render-value: @props.render-value
 
             # on blur clear out the search text
             on-blur: (, reason) !~> 
@@ -126,7 +113,7 @@ module.exports = React.create-class do
         # decide whether to use state or props
         search = if @props.has-own-property \search then @props.search else @state.search
         value = if @props.has-own-property \value then @props.value else @state.value
-        values = if !!value then [value] else []
+        values = if !!value and search.length == 0 then [value] else []
         [on-search-change, on-value-change] = <[search value]> |> map (p) ~>
             | @props.has-own-property p and @props.has-own-property camelize "on-#{p}-change" => @props[camelize "on-#{p}-change"]
             | @props.has-own-property p and !(@props.has-own-property camelize "on-#{p}-change") => (, callback) ~> callback!

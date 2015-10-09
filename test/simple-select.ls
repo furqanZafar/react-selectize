@@ -69,12 +69,18 @@ describe "SimpleSelect", ->
         assert.equal typeof select.state.value, \undefined
 
     specify "selecting the same value must have no effect", ->
-        select = create-simple-select!
+        called = 0
+        select = create-simple-select do 
+            on-value-change: (, callback) ~> 
+                called := called + 1
+                callback!
         click-to-open-select-control select
+        set-input-text (get-input select), \e
         click find-highlighted-option select
         click-to-open-select-control select
+        set-input-text (get-input select), \e
         click find-highlighted-option select
-        assert.equal (get-item-text (find-rendered-DOM-component-with-class select, \simple-value)), \apple
+        assert called == 1
 
     specify "typing in the search field must deselect current value", ->
         select = create-simple-select!
