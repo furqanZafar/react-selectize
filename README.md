@@ -14,7 +14,7 @@ styles & features inspired by [React Select](http://jedwatson.github.io/react-se
 
 LIVE DEMO: [furqanZafar.github.io/react-selectize](http://furqanZafar.github.io/react-selectize/)
 
-[![](http://i.imgur.com/rRmufxm.gif)](http://furqanZafar.github.io/react-selectize/)
+[![](http://i.imgsafe.co/rQmogzn.gif)](http://furqanZafar.github.io/react-selectize/)
 
 ## Features
 * [Drop in replacement for React.DOM.Select](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=drop-in-replacement-for-react.dom.select)
@@ -27,10 +27,12 @@ LIVE DEMO: [furqanZafar.github.io/react-selectize](http://furqanZafar.github.io/
 * [Custom option &amp; value rendering](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=custom-option-and-value-rendering)
 * [Remote data loading](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=remote-options)
 * [Tagging or item creation](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=tags)
-* [Editable values](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=restore-on-backspace)
+* [Restore on backspace](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=restore-on-backspace)
+* [Editable value](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=editable-value)
 * [Caret between items](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=tags)
 * [Customizable dropdown direction](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=dropdown-direction)
 * [Mark options as unselectable](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=selectability)
+* [Disable selected values](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=disable-selected)
 * Customizable styles, comes with Stylus files
 
 ## Install
@@ -129,7 +131,7 @@ onValueChange = {function(value, callback){
 }}
 ```
 
-* when using custom option object, you MUST implement the `uid` function which accepts an option object and returns a unique id, for example:
+* when using custom option object, you should implement the `uid` function which accepts an option object and returns a unique id, for example:
 ``` jsx
 // assuming the type of our option object is:
 // {firstName :: String, lastName :: String, age :: Int}
@@ -145,9 +147,10 @@ the `uid` function is used internally for performance optimization.
 |----------------------------|--------------------------------|--------------------------------|
 |    autosize                | InputElement -> Int            | `function($search){return $search.value.length * 10}` custom logic for autosizing the input element|
 |    className               | String                         | class name for the outer element, in addition to "simple-select"|
+|    createFromSearch        | [Item] -> String -> Item?      | implement this function to create new items on the fly, `function(options, search){return {label: search, value: search}}`, return null to avoid option creation for the given parameters|
 |    disabled                | Boolean                        | disables interaction with the Select control|
 |    dropdownDirection       | Int                            | defaults to 1, setting it to -1 opens the dropdown upward|
-|    createFromSearch        | [Item] -> String -> Item?      | implement this function to create new items on the fly, `function(options, search){return {label: search, value: search}}`, return null to avoid option creation for the given parameters|
+|    editable                | Boolean                        | defaults to false, setting it to true makes the selected option editable|
 |    filterOptions           | [Item]-> String -> [Item]      | implement this function for custom synchronous filtering logic, `function(options, search) {return options}`|
 |    groupId                 | Item -> b                      | `function(item){return item.groupId}` this function is used to identify which group an option belongs to, it must return a value that matches the groupId property of an object in the groups collection|
 |    groups                  | [Group]                        | collection of objects where each object must atleast have a groupId property|
