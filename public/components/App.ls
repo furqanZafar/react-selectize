@@ -114,6 +114,14 @@ Press the [backspace] key and go back to editing the item without it being fully
             jsx: fs.read-file-sync \public/examples/simple/RestoreOnBackspace.jsx, \utf8 
             ls: fs.read-file-sync \public/examples/simple/RestoreOnBackspace.ls, \utf8 
         
+        * title: "Editable value"
+          description: """
+Edit or select all & copy text of the selected value, after selecting it (similar to an AutoComplete component)
+"""
+          languages:
+            jsx: fs.read-file-sync \public/examples/simple/Editable.jsx, \utf8 
+            ls: fs.read-file-sync \public/examples/simple/Editable.ls, \utf8 
+
         * title: "Create from search"
           description: """
 Create item from search text

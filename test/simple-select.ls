@@ -118,3 +118,12 @@ describe "SimpleSelect", ->
         click-to-open-select-control select
         press-backspace get-input select
         find-rendered-DOM-component-with-class select, \simple-value
+
+    specify "selected value must be displayed as search text when props.editable is true ", ->
+        select = create-simple-select do 
+            editable: (.label)
+        click-to-open-select-control select
+        click find-highlighted-option select
+        click-to-open-select-control select
+        component-with-class-must-not-exist select, \simple-value
+        assert.equal (get-input select).value, \apple

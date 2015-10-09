@@ -12,6 +12,7 @@ module.exports = React.create-class do
         # class-name :: String
         # disabled :: Boolean
         # create-from-search :: [Item] -> String -> Item?
+        # editable :: Item -> String
         # filter-options :: [Item] -> String -> [Item]
         filter-options: (options, search) -->  
             options
@@ -57,7 +58,13 @@ module.exports = React.create-class do
 
             # OPEN
             open: @state.open
-            on-open-change: (open, callback) ~> if !!open then @show-options callback else @set-state {open}, callback
+            on-open-change: (open, callback = (->)) ~>
+                <~ do ~> (callback) ~> if !!open then @show-options callback else @set-state {open}, callback
+                if !!@props.editable and (!!@state.open and !!value)
+                    <~ on-search-change @props.editable value
+                    @highlight-first-selectable-option callback
+                else 
+                    callback!
 
             highlighted-uid: @state.highlighted-uid
             on-highlighted-uid-change: (highlighted-uid, callback) ~> @set-state {highlighted-uid}, callback
@@ -112,8 +119,9 @@ module.exports = React.create-class do
 
         # decide whether to use state or props
         search = if @props.has-own-property \search then @props.search else @state.search
-        value = if @props.has-own-property \value then @props.value else @state.value
-        values = if !!value and search.length == 0 then [value] else []
+        value = if @props.has-own-property \value then @props.value else @state.value  
+        show-value = if !!@props.editable then !@state.open else search.length == 0
+        values = if !!value and show-value then [value] else []
         [on-search-change, on-value-change] = <[search value]> |> map (p) ~>
             | @props.has-own-property p and @props.has-own-property camelize "on-#{p}-change" => @props[camelize "on-#{p}-change"]
             | @props.has-own-property p and !(@props.has-own-property camelize "on-#{p}-change") => (, callback) ~> callback!
@@ -169,11 +177,14 @@ module.exports = React.create-class do
         @refs.select.focus!
         @show-options callback
 
-    # highlight-the-first-selectable-option :: a -> Void
-    highlight-first-selectable-option: !->
-        return if !@state.open
+    # highlight-the-first-selectable-option :: (a -> Void) -> Void
+    highlight-first-selectable-option: (callback = (->)) !->
+        return callback! if !@state.open
         {options, value} = @get-computed-state!
-        @refs.select.highlight-and-scroll-to-selectable-option (@first-option-index-to-highlight options, value), 1
+        @refs.select.highlight-and-scroll-to-selectable-option do 
+            @first-option-index-to-highlight options, value
+            1
+            callback
 
     # show-options :: (a -> Void) -> Void
     show-options: (callback) !->
