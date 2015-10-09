@@ -99,9 +99,7 @@ describe "MultiSelect", ->
     specify "must be able to remove items on pressing backspace", ->
         select = create-multi-select!
         click-to-open-select-control select
-        click find-highlighted-option select
-        click find-highlighted-option select
-        click find-highlighted-option select
+        [0 til 3] |> each ~> click find-highlighted-option select
         click-to-open-select-control select
         press-backspace (get-input select)
         assert select.values!.length, 2
@@ -133,3 +131,9 @@ describe "MultiSelect", ->
         input = get-input select
         press-command-left input
         press-command-right input
+
+    specify "must close dorpdown when there are no more options left to select", ->
+        select = create-multi-select!
+        click-to-open-select-control select
+        [0 til 8] |> each ~> click find-highlighted-option select
+        component-with-class-must-not-exist select, \dropdown

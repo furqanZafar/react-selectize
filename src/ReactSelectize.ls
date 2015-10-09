@@ -259,15 +259,22 @@ module.exports = create-class do
                         else
                             switch e.which
 
+                            # wrap around upon hitting the boundary
                             # UP ARROW
                             | 38 => 
                                 @scroll-lock = true
-                                @highlight-and-scroll-to-selectable-option (@option-index-from-uid @props.highlighted-uid) - 1, -1
+                                index = -1 + @option-index-from-uid @props.highlighted-uid
+                                result <~ @highlight-and-scroll-to-selectable-option index, -1
+                                if !result
+                                    @highlight-and-scroll-to-selectable-option (@props.options.length - 1), -1
 
                             # DOWN ARROW
                             | 40 => 
                                 @scroll-lock = true
-                                @highlight-and-scroll-to-selectable-option ((@option-index-from-uid @props.highlighted-uid) ? -1) + 1, 1
+                                index = 1 + @option-index-from-uid @props.highlighted-uid
+                                result <~ @highlight-and-scroll-to-selectable-option index, 1
+                                if !result
+                                    @highlight-and-scroll-to-selectable-option 0, 1
 
                             # REST (we don't need to process or block rest of the keys)
                             | _ => return
@@ -416,8 +423,8 @@ module.exports = create-class do
             @focus-lock = true
             (find-DOM-node @refs.search).focus!
 
-    # highlight-and-scroll-to-option :: Int -> Void
-    highlight-and-scroll-to-option: (index) !->
+    # highlight-and-scroll-to-option :: Int, (a -> Void)? -> Void
+    highlight-and-scroll-to-option: (index, callback = (->)) !->
         uid = @props.uid @props.options[index]
         <~ @props.on-highlighted-uid-change uid
         option-element? = find-DOM-node @refs?["option-#{@uid-to-string uid}"]
@@ -428,29 +435,30 @@ module.exports = create-class do
                 parent-element.scroll-top = option-element.offset-top - parent-element.offset-height + option-height
             else if (option-element.offset-top - parent-element.scroll-top + option-height) <= 0
                 parent-element.scroll-top = option-element.offset-top
+        callback!
 
-    # highlight-and-scroll-to-selectable-option :: Int -> Int -> Boolean
-    highlight-and-scroll-to-selectable-option: (index, direction) ->
+    # highlight-and-scroll-to-selectable-option :: Int, Int, (Boolean -> Void)? -> Void
+    highlight-and-scroll-to-selectable-option: (index, direction, callback = (->)) !->
 
         # open the list of items
         <~ do ~> if !@props.open then (~> @props.on-open-change true, it) else (-> it!)
 
         # end recursion if the index violates the bounds
         if index < 0 or index >= @props.options.length
-            @props.on-highlighted-uid-change undefined, ~>
-            false
+            <~ @props.on-highlighted-uid-change undefined
+            callback false
 
         else
 
             # recurse until a selectable option is found while moving in the given direction
             option = @props?.options?[index]
             if typeof option?.selectable == \boolean and !option.selectable
-                @highlight-and-scroll-to-selectable-option index + direction, direction
+                @highlight-and-scroll-to-selectable-option index + direction, direction, callback
 
             # highlight the option found & end the recursion
             else
-                @highlight-and-scroll-to-option index
-                true
+                <~ @highlight-and-scroll-to-option index
+                callback true
 
     # is-equal-to-object :: Item -> Item -> Boolean
     is-equal-to-object: --> (@props.uid &0) `is-equal-to-object` @props.uid &1
@@ -471,19 +479,20 @@ module.exports = create-class do
             (map (~> @props.values[it]), [anchor-index + 1 til @props.values.length])
 
         value = find (~> it `@is-equal-to-object` option), @props.values
-
+        return if !value
+        
         # if the consumer did what we asked, then clear the search and move the anchor ahead of the selected value
-        if !!value
-            <~ @props.on-search-change ""
-            <~ @props.on-anchor-change value
-
-            # highlight the next selectable option, if available & the dropdown is still open
-            if !!@props.open
-                {selectable}:option? = @props.options?[index]
-                if !!option and ((typeof selectable == \undefined) or selectable)
-                    @props.on-highlighted-uid-change @props.uid @props.options[index]
-                else
-                    @highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1
+        <~ @props.on-search-change ""
+        <~ @props.on-anchor-change value
+        return if !@props.open
+        
+        # highlight the next selectable option
+        result <~ @highlight-and-scroll-to-selectable-option index, 1
+        return if !!result
+        
+        # if there are no highlightable/selectable options left (then close the dropdown)
+        result <~ @highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1
+        (@props.on-open-change false, ~>) if !result
 
     # uid-to-string :: a -> String
     uid-to-string: (uid) -> (if typeof uid == \object then JSON.stringify else id) uid

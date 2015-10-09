@@ -340,3 +340,11 @@ module.exports = (select-class) !->
         find-rendered-DOM-component-with-class select, \dropdown
         click arrow
         component-with-class-must-not-exist select, \dropdown
+
+    specify "must wrap around on hitting the boundary", ->
+        select = create-select!
+        click-to-open-select-control select
+        [0 til 8] |> each ~> press-down-arrow (get-input select)
+        assert.equal (get-item-text find-highlighted-option select), \apple
+        [0 til 8] |> each ~> press-up-arrow (get-input select)
+        assert.equal (get-item-text find-highlighted-option select), \apple
