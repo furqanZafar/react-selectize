@@ -59,4 +59,4 @@ Form = React.create-class do
                     |> obj-to-pairs
                     |> map ([label, value]) -> {label, value}
 
-React.render (React.create-element Form, null), mount-node
+render (React.create-element Form, null), mount-node

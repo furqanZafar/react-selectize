@@ -52,4 +52,4 @@ Form = React.create-class do
             Volkswagen: ["Beetle", "Fox", "Jetta", "Passat", "Rabbit"]
               
     
-React.render (React.create-element Form, null), mount-node
+render (React.create-element Form, null), mount-node

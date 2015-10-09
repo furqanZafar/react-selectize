@@ -25,4 +25,4 @@ Form = React.create-class do
             options: countries |> map ([group-id, label]) ~> {group-id, label, value: label}
             placeholder: "Select countries"
                 
-React.render (React.create-element Form, null), mount-node
+render (React.create-element Form, null), mount-node

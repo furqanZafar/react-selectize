@@ -5,7 +5,8 @@ require \livescript
 {concat-map, drop, filter, find, fold, group-by, id, keys, last, map, Obj, obj-to-pairs, pairs-to-obj, 
 reject, reverse, Str, sort-by, take, unique,  unique-by, values, zip-with} = require \prelude-ls
 {partition-string} = require \prelude-extension
-{create-factory, DOM:{a, button, div, form, h1, h2, img, input, li, ol, option, span, ul}, find-DOM-node}:React = require \react
+{create-factory, DOM:{a, button, div, form, h1, h2, img, input, li, ol, option, span, ul}}:React = require \react
+{find-DOM-node, render} = require \react-dom
 require! \react-router
 Link = create-factory react-router.Link
 Route = create-factory react-router.Route
@@ -75,6 +76,12 @@ To position the cursor at the start, set anchor to undefined
             jsx: fs.read-file-sync \public/examples/multi/Cursor.jsx, \utf8 
             ls: fs.read-file-sync \public/examples/multi/Cursor.ls, \utf8 
         
+        * title: "Disable selected"
+          description: ""
+          languages:
+            jsx: fs.read-file-sync \public/examples/multi/DisableSelected.jsx, \utf8 
+            ls: fs.read-file-sync \public/examples/multi/DisableSelected.ls, \utf8 
+        
         * title: "Custom filtering and rendering"
           description: """
 This demonstrates two main things: 
@@ -107,6 +114,14 @@ Press the [backspace] key and go back to editing the item without it being fully
             jsx: fs.read-file-sync \public/examples/simple/RestoreOnBackspace.jsx, \utf8 
             ls: fs.read-file-sync \public/examples/simple/RestoreOnBackspace.ls, \utf8 
         
+        * title: "Editable value"
+          description: """
+Edit or select all & copy text of the selected value, after selecting it (similar to an AutoComplete component)
+"""
+          languages:
+            jsx: fs.read-file-sync \public/examples/simple/Editable.jsx, \utf8 
+            ls: fs.read-file-sync \public/examples/simple/Editable.ls, \utf8 
+
         * title: "Create from search"
           description: """
 Create item from search text
@@ -229,7 +244,7 @@ App = React.create-class do
     # component-did-update :: Props -> Void
     component-did-update: (prev-props) !-> @scroll-to-example!
             
-React.render do 
+render do 
     Router do 
         history: create-history query-key: false
         Route path: \/, component: App

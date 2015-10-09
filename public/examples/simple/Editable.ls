@@ -5,8 +5,8 @@ Form = React.create-class do
         React.create-element SimpleSelect,
             options: <[apple mango grapes melon strawberry]> |> map ~> label: it, value: it
             placeholder: "Select a fruit"
-            
-            # restore-on-backspace :: Item -> String
-            restore-on-backspace: ~> it.label.substr 0, it.label.length - 1
-                
+
+            # editable :: Item -> String
+            editable: (.label)
+
 render (React.create-element Form, null), mount-node

@@ -50,3 +50,11 @@
 
 ## v0.2.6 / 8th October 2015
 * fixed a bug where selecting an option did not update the highlighted-uid (multi select). Thanks @edgarzakaryan
+
+## v0.3.0 / 9th October 2015
+* upgraded to react 0.14.0
+* you can now return an object from the uid prop, made uid prop optional (even for custom option object)
+* added `editable` prop for `SimpleSelect`
+* fixed a bug where changing the selectable property would not rerender the option
+* wrap around when navigating options with arrow keys
+* close multi-select when there are no more options left to select

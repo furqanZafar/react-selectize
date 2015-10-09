@@ -45,4 +45,4 @@ Form = React.create-class do
                 @refs.select.highlight-first-selectable-option!
             ..always ~> delete @req
 
-React.render (React.create-element Form, null), mount-node
+render (React.create-element Form, null), mount-node

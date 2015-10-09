@@ -4,10 +4,12 @@ require! \./common-tests
 ReactSelectize = require \../src/index.ls
 
 # React
-{addons:{TestUtils}, create-class, create-element, DOM:{div, option, span}, find-DOM-node} = require \react/addons
+{create-class, create-element, DOM:{div, option, span}} = require \react
+{find-DOM-node} = require \react-dom
 
 # TestUtils
-{find-rendered-DOM-component-with-class, scry-rendered-DOM-components-with-class, find-rendered-DOM-component-with-tag, Simulate:{change, click, focus}} = TestUtils
+{find-rendered-DOM-component-with-class, scry-rendered-DOM-components-with-class, 
+find-rendered-DOM-component-with-tag, Simulate:{change, click, focus}}:TestUtils = require \react-addons-test-utils
 
 # utils
 {create-select, get-input, set-input-text, get-item-text, click-to-open-select-control, find-highlighted-option, 
@@ -67,12 +69,18 @@ describe "SimpleSelect", ->
         assert.equal typeof select.state.value, \undefined
 
     specify "selecting the same value must have no effect", ->
-        select = create-simple-select!
+        called = 0
+        select = create-simple-select do 
+            on-value-change: (, callback) ~> 
+                called := called + 1
+                callback!
         click-to-open-select-control select
+        set-input-text (get-input select), \e
         click find-highlighted-option select
         click-to-open-select-control select
+        set-input-text (get-input select), \e
         click find-highlighted-option select
-        assert.equal (get-item-text (find-rendered-DOM-component-with-class select, \simple-value)), \apple
+        assert called == 1
 
     specify "typing in the search field must deselect current value", ->
         select = create-simple-select!
@@ -110,3 +118,12 @@ describe "SimpleSelect", ->
         click-to-open-select-control select
         press-backspace get-input select
         find-rendered-DOM-component-with-class select, \simple-value
+
+    specify "selected value must be displayed as search text when props.editable is true ", ->
+        select = create-simple-select do 
+            editable: (.label)
+        click-to-open-select-control select
+        click find-highlighted-option select
+        click-to-open-select-control select
+        component-with-class-must-not-exist select, \simple-value
+        assert.equal (get-input select).value, \apple

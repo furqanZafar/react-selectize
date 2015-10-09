@@ -4,10 +4,12 @@ require! \./common-tests
 ReactSelectize = require \../src/index.ls
 
 # React
-{addons:{TestUtils}, create-class, create-element, DOM:{div, option, span}, find-DOM-node} = require \react/addons
+{create-class, create-element, DOM:{div, option, span}, find-DOM-node} = require \react
+{find-DOM-node} = require \react-dom
 
 # TestUtils
-{find-rendered-DOM-component-with-class, scry-rendered-DOM-components-with-class, find-rendered-DOM-component-with-tag, Simulate:{change, click, focus, key-down}} = TestUtils
+{find-rendered-DOM-component-with-class, scry-rendered-DOM-components-with-class, 
+find-rendered-DOM-component-with-tag, Simulate:{change, click, focus, key-down}}:TestUtils = require \react-addons-test-utils
 
 # utils
 {create-select, get-input, set-input-text, get-item-text, click-to-open-select-control, find-highlighted-option, 
@@ -97,9 +99,7 @@ describe "MultiSelect", ->
     specify "must be able to remove items on pressing backspace", ->
         select = create-multi-select!
         click-to-open-select-control select
-        click find-highlighted-option select
-        click find-highlighted-option select
-        click find-highlighted-option select
+        [0 til 3] |> each ~> click find-highlighted-option select
         click-to-open-select-control select
         press-backspace (get-input select)
         assert select.values!.length, 2
@@ -131,3 +131,9 @@ describe "MultiSelect", ->
         input = get-input select
         press-command-left input
         press-command-right input
+
+    specify "must close dorpdown when there are no more options left to select", ->
+        select = create-multi-select!
+        click-to-open-select-control select
+        [0 til 8] |> each ~> click find-highlighted-option select
+        component-with-class-must-not-exist select, \dropdown

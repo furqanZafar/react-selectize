@@ -34,4 +34,4 @@ Form = React.create-class do
                 value: "#{size}#{color}"
                 selectable: Math.random! < 0.5
             
-React.render (React.create-element Form, null), mount-node
+render (React.create-element Form, null), mount-node

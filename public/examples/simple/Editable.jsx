@@ -6,7 +6,15 @@ Form = React.createClass({
             options = ["apple", "mango", "grapes", "melon", "strawberry"].map(function(fruit){
                 return {label: fruit, value: fruit}
             });
-        return <MultiSelect placeholder="Select 2 fruits" options={options} maxValues={2}/>
+        return <SimpleSelect 
+            placeholder = "Select a fruit"
+            options = {options} 
+
+            // editable :: Item -> String
+            editable = {function(item){
+                return item.label;
+            }}
+        />
     }
     
 });

@@ -15,7 +15,7 @@ Form = React.create-class do
     # component-did-mount :: a -> Void
     component-did-mount: !->
         @on-scroll-change = ~>
-            {offset-top} = @refs.select.get-DOM-node!
+            {offset-top} = find-DOM-node @refs.select
             screen-top = offset-top - (window.scroll-y ? document.document-element.scroll-top)
             dropdown-direction = if window.inner-height - screen-top < 215 then -1 else 1
             if dropdown-direction != @state.dropdown-direction
@@ -26,4 +26,4 @@ Form = React.create-class do
     component-will-unmount: !->
         window.remove-event-listener \scroll, @on-scroll-change
                 
-React.render (React.create-element Form, null), mount-node
+render (React.create-element Form, null), mount-node

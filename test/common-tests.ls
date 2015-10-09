@@ -2,10 +2,12 @@ require! \assert
 {each, map} = require \prelude-ls
 
 # React
-{addons:{TestUtils}, create-class, create-element, DOM:{div, option, span}, find-DOM-node, render} = require \react/addons
+{create-class, create-element, DOM:{div, option, span}} = require \react
+{find-DOM-node, render} = require \react-dom
 
 # TestUtils
-{find-rendered-DOM-component-with-class, scry-rendered-DOM-components-with-class, Simulate:{change, click, focus, key-down, mouse-over, mouse-out, mouse-move}} = TestUtils
+{find-rendered-DOM-component-with-class, scry-rendered-DOM-components-with-class, 
+Simulate:{change, click, focus, key-down, mouse-over, mouse-out, mouse-move}}:TestUtils = require \react-addons-test-utils
 
 # utils
 {create-select, get-input, set-input-text, get-item-text, click-to-open-select-control, click-on-the-document, find-highlighted-option, 
@@ -338,3 +340,11 @@ module.exports = (select-class) !->
         find-rendered-DOM-component-with-class select, \dropdown
         click arrow
         component-with-class-must-not-exist select, \dropdown
+
+    specify "must wrap around on hitting the boundary", ->
+        select = create-select!
+        click-to-open-select-control select
+        [0 til 8] |> each ~> press-down-arrow (get-input select)
+        assert.equal (get-item-text find-highlighted-option select), \apple
+        [0 til 8] |> each ~> press-up-arrow (get-input select)
+        assert.equal (get-item-text find-highlighted-option select), \apple

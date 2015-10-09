@@ -1,5 +1,6 @@
 {filter, find, map, pairs-to-obj} = require \prelude-ls
 {create-factory, DOM:{div, span}}:React = require \react
+{find-DOM-node} = require \react-dom
 AceEditor = create-factory require \AceEditor.ls
 SimpleSelect = require \SimpleSelect.ls
 {debounce} = require \underscore
@@ -85,7 +86,7 @@ module.exports = React.create-class do
 
         # compile
         try
-            on-execute @state[@state.language], @refs.output.get-DOM-node!
+            on-execute @state[@state.language], find-DOM-node @refs.output
         catch err
             @set-state err: err.to-string!
 

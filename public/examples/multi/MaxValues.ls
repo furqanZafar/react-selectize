@@ -7,4 +7,4 @@ Form = React.create-class do
             placeholder: "Select 2 fruits"
             max-values: 2
                 
-React.render (React.create-element Form, null), mount-node
+render (React.create-element Form, null), mount-node
