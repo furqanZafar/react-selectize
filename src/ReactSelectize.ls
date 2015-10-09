@@ -1,7 +1,6 @@
 {each, filter, find, find-index, id, initial, last, map, obj-to-pairs, partition, reject, reverse, sort-by, sum, values} = require \prelude-ls
 {clamp, is-equal-to-object} = require \prelude-extension
 {DOM:{div, input, span}, create-class, create-factory}:React = require \react
-{find-DOM-node} = require \react-dom
 
 # cancel-event :: Event -> Void
 cancel-event = (e) !->
@@ -362,7 +361,7 @@ module.exports = create-class do
 
     # component-did-mount :: a -> Void
     component-did-mount: !->
-        root-node = find-DOM-node @
+        root-node = @
         @external-click-listener = ({target}) ~>
             dom-node-contains = (element) ~>
                 return false if (typeof element == \undefined) or element == null
@@ -389,12 +388,12 @@ module.exports = create-class do
         @props.on-highlighted-uid-change undefined if !@props.open and prev-props.open
 
         # autosize the search input to its contents
-        $search = (find-DOM-node @refs.search)
+        $search = (@refs.search)
             ..style.width = "0px"
             ..style.width = "#{@props.autosize $search}px"
 
         if !!@refs.dropdown
-            (find-DOM-node @refs.dropdown).style.bottom = if @props.dropdown-direction == -1 then (find-DOM-node @refs.control).offset-height else ""
+            (@refs.dropdown).style.bottom = if @props.dropdown-direction == -1 then (@refs.control).offset-height else ""
 
     # component-will-receive-props :: Props -> Void
     component-will-receive-props: (props) !->
@@ -406,22 +405,22 @@ module.exports = create-class do
 
     # blur :: a -> Void
     blur: !-> 
-        (find-DOM-node @refs.search).blur!
+        (@refs.search).blur!
         @props.on-blur @props.values, \blur
 
     # focus on search input if it doesn't already have it
     # focus :: a -> Void
     focus: !->
-        if (find-DOM-node @refs.search) != document.active-element
+        if (@refs.search) != document.active-element
             @focus-lock = true
-            (find-DOM-node @refs.search).focus!
+            (@refs.search).focus!
 
     # highlight-and-scroll-to-option :: Int -> Void
     highlight-and-scroll-to-option: (index) !->
         uid = @props.uid @props.options[index]
         <~ @props.on-highlighted-uid-change uid
-        option-element? = find-DOM-node @refs?["option-#{@uid-to-string uid}"]
-        parent-element = find-DOM-node @refs.dropdown
+        option-element? = @refs?["option-#{@uid-to-string uid}"]
+        parent-element = @refs.dropdown
         if !!option-element
             option-height = option-element.offset-height - 1
             if (option-element.offset-top - parent-element.scroll-top) >= parent-element.offset-height

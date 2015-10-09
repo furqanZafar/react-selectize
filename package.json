@@ -12,8 +12,7 @@
   "dependencies": {
     "prelude-extension": "0.0.5",
     "prelude-ls": "^1.1.1",
-    "react": "0.14.0",
-    "react-dom": "^0.14.0"
+    "react": "0.14.0"    
   },
   "devDependencies": {
     "async-ls": "0.0.3",
@@ -40,6 +39,7 @@
     "mocha-lcov-reporter": "^1.0.0",
     "nib": "^1.1.0",
     "react-addons-test-utils": "^0.14.0",
+    "react-dom": "^0.14.0",
     "react-router": "^1.0.0-rc1",
     "react-tools": "^0.13.3",
     "should": "^7.1.0",
