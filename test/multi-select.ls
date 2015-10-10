@@ -137,3 +137,17 @@ describe "MultiSelect", ->
         click-to-open-select-control select
         [0 til 8] |> each ~> click find-highlighted-option select
         component-with-class-must-not-exist select, \dropdown
+
+    specify "must be able to select other values when props.default-values is defined", ->
+        select = create-multi-select do 
+            default-values:
+                * label: \apple 
+                  value: \apple 
+                * label: \mango 
+                  value: \mango
+                ...
+        click-to-open-select-control select
+        assert.equal select.values!.length, 2
+        set-input-text (get-input select), \grapes
+        click find-highlighted-option select
+        assert.equal select.values!.length, 3

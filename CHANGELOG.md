@@ -58,3 +58,6 @@
 * fixed a bug where changing the selectable property would not rerender the option
 * wrap around when navigating options with arrow keys
 * close multi-select when there are no more options left to select
+
+## v0.3.1 / 10th October 2015
+* added `defaultValue` prop for `SimpleSelect` & `defaultValues` prop for `MultiSelect`

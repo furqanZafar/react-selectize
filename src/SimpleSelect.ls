@@ -155,7 +155,7 @@ module.exports = React.create-class do
         highlighted-uid: undefined
         open: false
         search: ""
-        value: undefined
+        value: @props?.default-value
 
     # first-option-index-to-highlight :: [Item] -> Item -> Int
     first-option-index-to-highlight: (options, value) ->

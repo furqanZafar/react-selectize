@@ -243,7 +243,9 @@ App = React.create-class do
     # changing the query string manually, or clicking on a different example
     # component-did-update :: Props -> Void
     component-did-update: (prev-props) !-> @scroll-to-example!
-            
+
+console.log \ref, document.referrer
+
 render do 
     Router do 
         history: create-history query-key: false
