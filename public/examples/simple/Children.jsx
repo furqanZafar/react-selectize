@@ -8,6 +8,7 @@ Form = React.createClass({
             <SimpleSelect 
                 placeholder = "Select a fruit" 
                 ref = "select"
+                defaultValue = {{label: "melon", value: "melon"}}
                 onValueChange = {function(value, callback){
                     alert("you selected: " + JSON.stringify(value, null, 4));
                     callback();

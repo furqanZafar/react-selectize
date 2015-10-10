@@ -148,6 +148,7 @@ the `uid` function is used internally for performance optimization.
 |    autosize                | InputElement -> Int            | `function($search){return $search.value.length * 10}` custom logic for autosizing the input element|
 |    className               | String                         | class name for the outer element, in addition to "simple-select"|
 |    createFromSearch        | [Item] -> String -> Item?      | implement this function to create new items on the fly, `function(options, search){return {label: search, value: search}}`, return null to avoid option creation for the given parameters|
+|    defaultValue            | Item                           | similar to the defaultValue prop of React.DOM.Select |
 |    disabled                | Boolean                        | disables interaction with the Select control|
 |    dropdownDirection       | Int                            | defaults to 1, setting it to -1 opens the dropdown upward|
 |    editable                | Boolean                        | defaults to false, setting it to true makes the selected option editable|
@@ -186,6 +187,7 @@ In addition to the props above
 |--------------------------- |--------------------------------------|---------------------------------|
 |    anchor                  | Item                                 | positions the cursor ahead of the anchor item, set this property to undefined to lock the cursor at the start|
 |    createFromSearch        | [Item] -> [Item] -> String -> Item?  | function(options, values, search){return {label: search, value: search}}|
+|    defaultValues           | [Item]                               | similar to the defaultValue prop of React.DOM.Select but instead takes an array of items|
 |    filterOptions           | [Item] -> [Item] -> String -> [Item] | function(options, values, search){return options}|
 |    onAnchorChange          | Item -> (a -> Void) -> Void          | function(anchor, callback){callback();} implement this method if you want to override the default behaviour of the cursor|
 |    onBlur                  | [Item] -> String -> Void             | function(values, reason){}|

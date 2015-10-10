@@ -9,6 +9,7 @@ Form = React.create-class do
             SimpleSelectFactory do
                 placeholder: "Select a fruit"
                 ref: \select
+                default-value: label: \apple, value: \apple
                 on-value-change: (selected-fruit, callback) ~> 
                     alert "selected value: #{JSON.stringify selected-fruit, null, 4}"
                     callback!

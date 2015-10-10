@@ -12,6 +12,7 @@ module.exports = React.create-class do
         # anchor :: Item
         # class-name :: String
         close-on-select: false
+        default-values: []
         # disabled :: Boolean
         # create-from-search :: [Item] -> [Item] -> String -> Item?
         # filter-options :: [Item] -> [Item] -> String -> [Item]
@@ -148,7 +149,7 @@ module.exports = React.create-class do
         highlighted-uid: undefined
         open: false
         search: ""
-        values: []
+        values: @props.default-values
 
     # first-option-index-to-highlight :: [Item] -> Int
     first-option-index-to-highlight: (options) ->

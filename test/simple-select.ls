@@ -127,3 +127,12 @@ describe "SimpleSelect", ->
         click-to-open-select-control select
         component-with-class-must-not-exist select, \simple-value
         assert.equal (get-input select).value, \apple
+
+    specify "must be able to select another value when props.default-value is defined", ->
+        select = create-simple-select do 
+            default-value: label: \mango, value: \mango
+        click-to-open-select-control select
+        assert.equal select.value!.label. \mango
+        set-input-text (get-input select), \apple
+        click find-highlighted-option select
+        assert.equal select.value!.label. \apple
