@@ -1,4 +1,6 @@
-## SimpleSelect props
+# API Reference
+
+### SimpleSelect props
 
 |    Property                |   Type                         |   Description                  |
 |----------------------------|--------------------------------|--------------------------------|
@@ -29,7 +31,7 @@
 |    uid                     | (Eq e) => Item -> e            | `function(item){return item.value}` returns a unique id for a given option, defaults to the value property|
 |    value                   | Item                           | the selected value, i.e. one of the objects in the options array|
 
-## SimpleSelect methods
+### SimpleSelect methods
 
 |    Method                       |    Type                  |    Description                 |
 |---------------------------------|--------------------------|--------------------------------|
@@ -37,7 +39,7 @@
 | highlightFirstSelectableOption  | a -> Void                | `this.refs.selectInstance.highlightFirstSelectableOption()`|
 | value                           | a -> Item                | `this.refs.selectInstance.value()` returns the current selected item|
 
-## MultiSelect props
+### MultiSelect props
 In addition to the props above
 
 |    Property                |   Type                               |   Description|
@@ -53,10 +55,10 @@ In addition to the props above
 |    maxValues               | Int                                  | the maximum values that can be selected, after which the control is disabled|
 |    closeOnSelect           | Boolean                              | as the name implies, closes the options list on selecting an option|
 
-## MultiSelect methods
+### MultiSelect methods
 same as SimpleSelect but use `this.refs.multiSelectInstance.values()` to get the selected values instead of the `value` method.
 
-## HighlightedText props
+### HighlightedText props
 used for [search highlighting](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=search-highlighting)
 
 |    Property                |   Type                               |   Description|
