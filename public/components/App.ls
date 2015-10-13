@@ -31,6 +31,12 @@ examples =
             jsx: fs.read-file-sync \public/examples/multi/ChangeCallback.jsx, \utf8 
             ls: fs.read-file-sync \public/examples/multi/ChangeCallback.ls, \utf8 
 
+        * title: "Animated dropdown"
+          description: ""
+          languages:
+            jsx: fs.read-file-sync \public/examples/multi/Animation.jsx, \utf8 
+            ls: fs.read-file-sync \public/examples/multi/Animation.ls, \utf8 
+
         * title: "Max values"
           description: """
 This example only allows 2 items. 

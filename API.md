@@ -28,6 +28,10 @@
 |    restoreOnBackspace      | Item -> String                 | `function(item){return item.label;}` implement this method if you want to go back to editing the item when the user hits the [backspace] key instead of getting removed|
 |    search                  | String                         | the text displayed in the search box|
 |    style                   | Object                         | the CSS styles for the outer element|
+|    transitionEnter         | Boolean                        | defaults to false, setting this to true animates the opening of the dropdown using the `slide-*` css classes|
+|    transitionEnterTimeout  | Number                         | duration specified in milliseconds, it must match the transition duration specified under the CSS class `.slide-enter-active` |
+|    transitionLeave         | Boolean                        | defaults to false, setting this to true animates the closing of the dropdown using the `slide-*` css classes|
+|    transitionLeaveTimeout  | Number                         | duration specified in milliseconds, it must match the transition duration specified under the CSS class `.slide-leave-active` |
 |    uid                     | (Eq e) => Item -> e            | `function(item){return item.value}` returns a unique id for a given option, defaults to the value property|
 |    value                   | Item                           | the selected value, i.e. one of the objects in the options array|
 

@@ -2,6 +2,7 @@
 {clamp, is-equal-to-object} = require \prelude-extension
 {DOM:{div, input, span}, create-class, create-factory}:React = require \react
 {find-DOM-node} = require \react-dom
+ReactCSSTransitionGroup = create-factory require \react-addons-css-transition-group
 
 # cancel-event :: Event -> Void
 cancel-event = (e) !->
@@ -114,6 +115,10 @@ module.exports = create-class do
         # restore-on-backspace: ((value) -> ) # Item -> String
         search: ""
         style: {}
+        transition-enter: false
+        transition-leave: false
+        transition-enter-timeout: 200
+        transition-leave-timeout: 200
         uid: id # (Eq e) => Item -> e
         values: [] # [Item]
 
@@ -308,64 +313,74 @@ module.exports = create-class do
                             @focus!
                         cancel-event e
 
-            # DROPDOWN
-            if @props.open
-                
-                # render-options :: [Item] -> Int -> [ReactEleent]
-                render-options = (options, index-offset) ~>
-                    [0 til options.length] |> map (index) ~>
-                        option = options[index]
-                        uid = @props.uid option
-
-                        # OPTION WRAPPER 
-                        OptionWrapper do
-                            {
-                                uid
-                                ref: "option-#{@uid-to-string uid}"
-                                key: @uid-to-string uid
-                                item: option
-                                highlight: @props.highlighted-uid `is-equal-to-object` uid
-                                on-mouse-move: ({current-target}) !~> @scroll-lock = false if @scroll-lock
-                                on-mouse-out: !~> @props.on-highlighted-uid-change undefined if !@scroll-lock
-                                render-item: @props.render-option
-                            } <<< 
-                                switch 
-                                | (typeof option?.selectable == \boolean) and !option.selectable => on-click: cancel-event
-                                | _ => 
-                                    on-click: (e) !~> @select-highlighted-uid anchor-index
-                                    on-mouse-over: ({current-target}) !~>  @props.on-highlighted-uid-change uid if !@scroll-lock
-
-                div do 
-                    class-name: \dropdown
-                    ref: \dropdown
-
-                    # NO RESULT FOUND   
-                    if @props.options.length == 0
-                        @props.render-no-results-found!
+            # DROPDOWN                            
+            ReactCSSTransitionGroup do 
+                component: \div
+                transition-name: \slide 
+                transition-enter: @props.transition-enter
+                transition-leave: @props.transition-leave
+                transition-enter-timeout: @props.transition-enter-timeout
+                transition-leave-timeout: @props.transition-leave-timeout
+                class-name: \dropdown-transition
+                ref: \dropdown-transition
+                if @props.open
                     
-                    else if @props?.groups?.length > 0
+                    # render-options :: [Item] -> Int -> [ReactEleent]
+                    render-options = (options, index-offset) ~>
+                        [0 til options.length] |> map (index) ~>
+                            option = options[index]
+                            uid = @props.uid option
 
-                        # convert [Group] to [{index: Int, group: Group, options: [Item]}]
-                        groups = [0 til @props.groups.length] |> map (index) ~>  
-                            {group-id}:group = @props.groups[index]
-                            options = @props.options |> filter ~> (@props.group-id it) == group-id
-                            {index, group, options}
+                            # OPTION WRAPPER 
+                            OptionWrapper do
+                                {
+                                    uid
+                                    ref: "option-#{@uid-to-string uid}"
+                                    key: @uid-to-string uid
+                                    item: option
+                                    highlight: @props.highlighted-uid `is-equal-to-object` uid
+                                    on-mouse-move: ({current-target}) !~> @scroll-lock = false if @scroll-lock
+                                    on-mouse-out: !~> @props.on-highlighted-uid-change undefined if !@scroll-lock
+                                    render-item: @props.render-option
+                                } <<< 
+                                    switch 
+                                    | (typeof option?.selectable == \boolean) and !option.selectable => on-click: cancel-event
+                                    | _ => 
+                                        on-click: (e) !~> @select-highlighted-uid anchor-index
+                                        on-mouse-over: ({current-target}) !~>  @props.on-highlighted-uid-change uid if !@scroll-lock
 
-                        # GROUPS
-                        div class-name: "groups #{if !!@props.groups-as-columns then 'as-columns' else ''}",
-                            groups 
-                                |> filter (.options.length > 0)
-                                |> map ({index, {group-id}:group, options}) ~>
-                                    offset = [0 til index]
-                                        |> map -> groups[it].options.length
-                                        |> sum
-                                    div key: group-id,
-                                        @props.render-group-title index, group, options
-                                        div class-name: \options,
-                                            render-options options, offset
+                    div do 
+                        class-name: \dropdown
+                        key: \dropdown
+                        ref: \dropdown
 
-                    else
-                        render-options @props.options, 0
+                        # NO RESULT FOUND   
+                        if @props.options.length == 0
+                            @props.render-no-results-found!
+                        
+                        else if @props?.groups?.length > 0
+
+                            # convert [Group] to [{index: Int, group: Group, options: [Item]}]
+                            groups = [0 til @props.groups.length] |> map (index) ~>  
+                                {group-id}:group = @props.groups[index]
+                                options = @props.options |> filter ~> (@props.group-id it) == group-id
+                                {index, group, options}
+
+                            # GROUPS
+                            div class-name: "groups #{if !!@props.groups-as-columns then 'as-columns' else ''}",
+                                groups 
+                                    |> filter (.options.length > 0)
+                                    |> map ({index, {group-id}:group, options}) ~>
+                                        offset = [0 til index]
+                                            |> map -> groups[it].options.length
+                                            |> sum
+                                        div key: group-id,
+                                            @props.render-group-title index, group, options
+                                            div class-name: \options,
+                                                render-options options, offset
+
+                        else
+                            render-options @props.options, 0
 
     # component-did-mount :: a -> Void
     component-did-mount: !->
@@ -401,7 +416,9 @@ module.exports = create-class do
             ..style.width = "#{@props.autosize $search}px"
 
         if !!@refs.dropdown
-            (find-DOM-node @refs.dropdown).style.bottom = if @props.dropdown-direction == -1 then (find-DOM-node @refs.control).offset-height else ""
+            (find-DOM-node @refs[\dropdown-transition]).style <<< 
+                bottom: if @props.dropdown-direction == -1 then (find-DOM-node @refs.control).offset-height else ""
+                height: "#{@refs.dropdown.offset-height}px"
 
     # component-will-receive-props :: Props -> Void
     component-will-receive-props: (props) !->

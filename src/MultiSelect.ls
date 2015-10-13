@@ -40,7 +40,10 @@ module.exports = React.create-class do
     render: -> 
         
         {anchor, search, values, on-anchor-change, on-search-change, on-values-change, filtered-options, options} = @get-computed-state!
-        {autosize, disabled, dropdown-direction, group-id, groups, groups-as-columns, render-group-title, uid} = @props
+
+        # props
+        {autosize, disabled, dropdown-direction, group-id, groups, groups-as-columns, render-group-title, transition-enter, 
+        transition-leave, transition-enter-timeout, transition-leave-timeout, uid} = @props
 
         ReactSelectize {
             
@@ -52,6 +55,10 @@ module.exports = React.create-class do
             groups
             groups-as-columns
             render-group-title
+            transition-enter
+            transition-enter-timeout
+            transition-leave
+            transition-leave-timeout
             uid
             ref: \select
 
