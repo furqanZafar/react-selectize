@@ -64,3 +64,6 @@
 
 ## v0.3.2 / 13th October 2015
 * animated dropdown
+
+## v0.3.3 / 13th October 2015
+* added missing dependency react-addons-css-transition-group to package.json
