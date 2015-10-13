@@ -1,6 +1,6 @@
 {
   "name": "react-selectize",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "react implementation of selectize",
   "main": "src/index.js",
   "scripts": {
@@ -13,6 +13,7 @@
     "prelude-extension": "0.0.5",
     "prelude-ls": "^1.1.1",
     "react": "0.14.0",
+    "react-addons-css-transition-group": "^0.14.0",
     "react-dom": "^0.14.0"
   },
   "devDependencies": {
