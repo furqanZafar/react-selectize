@@ -1,6 +1,6 @@
 {
   "name": "react-selectize",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "react implementation of selectize",
   "main": "src/index.js",
   "scripts": {

@@ -61,3 +61,6 @@
 
 ## v0.3.1 / 10th October 2015
 * added `defaultValue` prop for `SimpleSelect` & `defaultValues` prop for `MultiSelect`
+
+## v0.3.2 / 13th October 2015
+* animated dropdown

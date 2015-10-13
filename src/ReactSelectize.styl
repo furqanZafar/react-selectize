@@ -4,7 +4,7 @@
     border-radius 4px
     font-family Helvetica Neue, Helvetica, Arial, sans-serif
     -webkit-user-select none
-    position relative
+    position relative    
 
     &.disabled
         pointer-events none
@@ -66,25 +66,47 @@
         .value-wrapper
             display inline-block
             
-    .dropdown
-        background white
-        border 1px solid #ccc
-        box-sizing border-box
-        max-height 200px
-        overflow auto
+    .dropdown-transition
+        overflow hidden
         position absolute
         width 100%
-        z-index 10
 
-        .option-wrapper.highlight
-            background #f2f9fc
-            color #333        
+        .dropdown
+            background white
+            border 1px solid #ccc
+            box-sizing border-box
+            max-height 200px
+            overflow auto
+            position absolute
+            width 100%
+            z-index 10
+
+            &.slide-enter-active, &.slide-leave-active
+                transition transform 0.2s 0s ease
+            
+            .option-wrapper.highlight
+                background #f2f9fc
+                color #333
 
     &.flipped
 
         .arrow
             border-color transparent transparent #999999
             border-width 0 5px 5px
+
+        .dropdown
+
+            &.slide-enter
+                transform translateY(100%)
+            
+            &.slide-enter-active
+                transform translateY(0%)
+            
+            &.slide-leave
+                transform translateY(0%)
+
+            &.slide-leave-active
+                transform translateY(100%)
 
         &.open
 
@@ -109,6 +131,20 @@
             border-color #999999 transparent transparent
             border-width 5px
         
+        .dropdown
+
+            &.slide-enter
+                transform translateY(-100%)
+            
+            &.slide-enter-active
+                transform translateY(0%)
+            
+            &.slide-leave
+                transform translateY(0%)
+            
+            &.slide-leave-active
+                transform translateY(-100%)
+
         &.open   
             
             .control
