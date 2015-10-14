@@ -415,10 +415,14 @@ module.exports = create-class do
             ..style.width = "0px"
             ..style.width = "#{@props.autosize $search}px"
 
+        $dropdown-transition = find-DOM-node @refs[\dropdown-transition]
+
         if !!@refs.dropdown
-            (find-DOM-node @refs[\dropdown-transition]).style <<< 
+            $dropdown-transition.style <<< 
                 bottom: if @props.dropdown-direction == -1 then (find-DOM-node @refs.control).offset-height else ""
                 height: "#{@refs.dropdown.offset-height}px"
+        else 
+            $dropdown-transition.style.height = \0px
 
     # component-will-receive-props :: Props -> Void
     component-will-receive-props: (props) !->
