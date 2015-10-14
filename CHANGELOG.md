@@ -67,3 +67,6 @@
 
 ## v0.3.3 / 13th October 2015
 * added missing dependency react-addons-css-transition-group to package.json
+
+## v0.3.4 / 14th October 2015
+* fixed a bug where the height of the ".dropdown-transition" element blocked the dom underneath (#6)
