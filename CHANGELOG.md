@@ -70,3 +70,6 @@
 
 ## v0.3.4 / 14th October 2015
 * fixed a bug where the height of the ".dropdown-transition" element blocked the dom underneath (#6)
+
+## v0.3.5 / 16th October 2015
+* improved the default auto-size implementation

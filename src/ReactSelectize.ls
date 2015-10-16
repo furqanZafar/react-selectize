@@ -53,28 +53,33 @@ module.exports = create-class do
     # get-default-props :: a -> Props
     get-default-props: ->
         anchor: null
-        # autosize :: InputElement -> Int
-        autosize: ($search) -> 
+        # autosize :: InputElement -> Voud
+        autosize: ($search) !-> 
 
-            # modern browsers
-            if $search.scroll-width > 0
-                $search.style.width = "#{2 + $search.scroll-width}px"
+            if $search.value.length == 0
+                $search.style.width = if !!$search?.current-style then \4px else \2px
 
-            # IE / Edge
             else
-                $input = document.create-element \div
-                    ..innerHTML = $search.value
 
-                # copy all the styles of the search input 
-                (if !!$search.current-style then $search.current-style else (document.default-view ? window .get-computed-style $search))
-                    |> obj-to-pairs
-                    |> each ([key, value]) -> $input.style[key] = value
-                    |> -> $input.style.width = ""
+                # modern browsers
+                if $search.scroll-width > 0
+                    $search.style.width = "#{2 + $search.scroll-width}px"
 
-                # add a new input element to document.body and measure the text width
-                document.body.append-child $input
-                $search.style.width = "#{4 + $input.client-width}px"
-                document.body.remove-child $input
+                # IE / Edge
+                else
+                    $input = document.create-element \div
+                        ..innerHTML = $search.value
+
+                    # copy all the styles of the search input 
+                    (if !!$search.current-style then $search.current-style else (document.default-view ? window .get-computed-style $search))
+                        |> obj-to-pairs
+                        |> each ([key, value]) -> $input.style[key] = value
+                        |> -> $input.style.width = ""
+
+                    # add a new input element to document.body and measure the text width
+                    document.body.append-child $input
+                    $search.style.width = "#{4 + $input.client-width}px"
+                    document.body.remove-child $input
 
         # class-name :: String
         disabled: false
