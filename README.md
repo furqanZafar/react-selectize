@@ -74,8 +74,8 @@ MultiSelect do
 ```
 React = require("react");
 ReactSelectize = require("react-selectize");
-SimpleSelect = React.createFactory(ReactSelectize.SimpleSelect);
-MultiSelect = React.createFactory(ReactSelectize.MultiSelect);
+SimpleSelect = ReactSelectize.SimpleSelect;
+MultiSelect = ReactSelectize.MultiSelect;
 .
 .
 .
