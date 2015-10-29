@@ -12,7 +12,7 @@
   "dependencies": {
     "prelude-extension": "0.0.5",
     "prelude-ls": "^1.1.1",
-    "react": "0.14.0",
+    "react": "^0.14.0",
     "react-addons-css-transition-group": "^0.14.0",
     "react-dom": "^0.14.0"
   },
