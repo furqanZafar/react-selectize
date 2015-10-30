@@ -13,7 +13,7 @@ LIVE DEMO: [furqanZafar.github.io/react-selectize](http://furqanZafar.github.io/
 
 [![](http://i.imgsafe.co/rQmogzn.gif)](http://furqanZafar.github.io/react-selectize/)
 
-- [Changelog](CHANGELOG.md) (last updated on 16th October 2015)
+- [Changelog](CHANGELOG.md) (last updated on 30th October 2015)
 - [API Reference](API.md)
 
 # Motivation
