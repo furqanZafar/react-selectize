@@ -9,7 +9,7 @@ cancel-event = (e) !->
     e.prevent-default!
     e.stop-propagation!
 
-# wrapper classes are used for optimizing performance
+# wrapper classes are used for optimizing performance 
 OptionWrapper = create-factory create-class do 
 
     # render :: a -> ReactElement
@@ -74,7 +74,7 @@ module.exports = create-class do
                     (if !!$search.current-style then $search.current-style else (document.default-view ? window .get-computed-style $search))
                         |> obj-to-pairs
                         |> each ([key, value]) -> $input.style[key] = value
-                        |> -> $input.style.width = ""
+                        |> -> $input.style <<< display: \inline-block, width: ""
 
                     # add a new input element to document.body and measure the text width
                     document.body.append-child $input
