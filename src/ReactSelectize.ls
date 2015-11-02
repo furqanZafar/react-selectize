@@ -395,7 +395,7 @@ module.exports = create-class do
                 return false if (typeof element == \undefined) or element == null
                 return true if element == root-node
                 dom-node-contains element.parent-element
-            if !(dom-node-contains target)
+            if !(dom-node-contains target) and @props.open
                 @props.on-open-change false
                 @props.on-blur @props.values, \click
         document.add-event-listener \click, @external-click-listener, true

@@ -9,11 +9,11 @@ Both `SimpleSelect` & `MultiSelect` have been designed to work as drop in replac
 
 styles & features inspired by [React Select](http://jedwatson.github.io/react-select/) & [Selectize](http://brianreavis.github.io/selectize.js/).
 
-LIVE DEMO: [furqanZafar.github.io/react-selectize](http://furqanZafar.github.io/react-selectize/)
+**DEMO / Examples**: [furqanZafar.github.io/react-selectize](http://furqanZafar.github.io/react-selectize/)
 
 [![](http://i.imgsafe.co/rQmogzn.gif)](http://furqanZafar.github.io/react-selectize/)
 
-- [Changelog](CHANGELOG.md) (last updated on 30th October 2015)
+- [Changelog](CHANGELOG.md) (last updated on 2nd November 2015)
 - [API Reference](API.md)
 
 # Motivation

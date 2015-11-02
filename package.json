@@ -1,6 +1,6 @@
 {
   "name": "react-selectize",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "A Stateless & Flexible Select component for React inspired by Selectize",
   "main": "src/index.js",
   "scripts": {
@@ -11,7 +11,9 @@
   "author": "Furqan Zafar",
   "dependencies": {
     "prelude-extension": "0.0.5",
-    "prelude-ls": "^1.1.1",
+    "prelude-ls": "^1.1.1"
+  },
+  "peerDependencies": {
     "react": "^0.14.0",
     "react-addons-css-transition-group": "^0.14.0",
     "react-dom": "^0.14.0"
@@ -40,6 +42,9 @@
     "mocha": "^2.3.3",
     "mocha-lcov-reporter": "^1.0.0",
     "nib": "^1.1.0",
+    "react": "^0.14.0",
+    "react-addons-css-transition-group": "^0.14.0",
+    "react-dom": "^0.14.0",
     "react-addons-test-utils": "^0.14.0",
     "react-router": "^1.0.0-rc1",
     "react-tools": "^0.13.3",
