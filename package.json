@@ -11,7 +11,9 @@
   "author": "Furqan Zafar",
   "dependencies": {
     "prelude-extension": "0.0.5",
-    "prelude-ls": "^1.1.1",
+    "prelude-ls": "^1.1.1"
+  },
+  "peerDependencies": {
     "react": "^0.14.0",
     "react-addons-css-transition-group": "^0.14.0",
     "react-dom": "^0.14.0"
