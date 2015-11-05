@@ -331,7 +331,7 @@ module.exports = create-class do
                 if @props.open
                     
                     # render-options :: [Item] -> Int -> [ReactEleent]
-                    render-options = (options, index-offset) ~>
+                    render-options = (options) ~>
                         [0 til options.length] |> map (index) ~>
                             option = options[index]
                             uid = @props.uid option
@@ -376,16 +376,14 @@ module.exports = create-class do
                                 groups 
                                     |> filter (.options.length > 0)
                                     |> map ({index, {group-id}:group, options}) ~>
-                                        offset = [0 til index]
-                                            |> map -> groups[it].options.length
-                                            |> sum
+
+                                        # GROUP
                                         div key: group-id,
                                             @props.render-group-title index, group, options
-                                            div class-name: \options,
-                                                render-options options, offset
+                                            div class-name: \options, (render-options options)
 
                         else
-                            render-options @props.options, 0
+                            render-options @props.options
 
     # component-did-mount :: a -> Void
     component-did-mount: !->
