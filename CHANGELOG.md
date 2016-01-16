@@ -79,3 +79,6 @@
 
 ## v0.3.7 / 2nd November 2015
 * call `on-blur` only if the dropdown is open, thanks @alurim 
+
+## v0.3.8 / 16th January 2016
+* fixed a bug where passing `restore-on-backspace` prop wouldn't work in conjunction with `render-no-results-found` prop (#14)
