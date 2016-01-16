@@ -1,4 +1,7 @@
-{each, filter, find, find-index, id, initial, last, map, obj-to-pairs, partition, reject, reverse, sort-by, sum, values} = require \prelude-ls
+# prelude ls
+{each, filter, find, find-index, id, initial, last, map, obj-to-pairs, 
+partition, reject, reverse, Str, sort-by, sum, values} = require \prelude-ls
+
 {clamp, is-equal-to-object} = require \prelude-extension
 {DOM:{div, input, span}, create-class, create-factory}:React = require \react
 {find-DOM-node} = require \react-dom
@@ -9,8 +12,29 @@ cancel-event = (e) !->
     e.prevent-default!
     e.stop-propagation!
 
+# converts {a: 1, b: 1, c: 0, d: 1} to "a b d"
+# class-name-from-object :: Map String, Boolean -> String
+class-name-from-object = ->
+    it 
+    |> obj-to-pairs
+    |> filter -> !!it.1
+    |> map (.0)
+    |> Str.join ' '
+
 # wrapper classes are used for optimizing performance 
 OptionWrapper = create-factory create-class do 
+
+    # get-default-porps :: () -> Props
+    get-default-props: ->
+        # item :: Item
+        # on-click :: Event -> Void
+        # on-mouse-move :: Event -> Void
+        # on-mouse-over :: Event -> Void
+        # render-item :: Item -> ReactElement
+        # highlight :: Boolean
+        # selectable :: Bolean
+        # uid :: a
+        {}
 
     # render :: a -> ReactElement
     render: ->
@@ -29,6 +53,13 @@ OptionWrapper = create-factory create-class do
         (next-props?.selectable != @props?.selectable)
 
 ValueWrapper = create-factory create-class do 
+
+    # get-default-porps :: () -> Props
+    get-default-props: ->
+        # item :: Item
+        # render-item :: Item -> ReactElement
+        # uid :: a
+        {}
 
     # render :: a -> ReactElement
     render: ->
@@ -52,7 +83,8 @@ module.exports = create-class do
 
     # get-default-props :: a -> Props
     get-default-props: ->
-        anchor: null
+        anchor: null # :: Item
+        
         # autosize :: InputElement -> Voud
         autosize: ($search) !-> 
 
@@ -71,7 +103,12 @@ module.exports = create-class do
                         ..innerHTML = $search.value
 
                     # copy all the styles of the search input 
-                    (if !!$search.current-style then $search.current-style else (document.default-view ? window .get-computed-style $search))
+                    (
+                        if !!$search.current-style 
+                            $search.current-style 
+                        else 
+                            document.default-view ? window .get-computed-style $search
+                    )
                         |> obj-to-pairs
                         |> each ([key, value]) -> $input.style[key] = value
                         |> -> $input.style <<< display: \inline-block, width: ""
@@ -98,26 +135,33 @@ module.exports = create-class do
         on-values-change: ((values, callback) !->) # [Item] -> (a -> Void) -> Void
         open: false
         options: [] # [Item]
+        
         # render-no-results-found :: a -> ReactElement
-        render-no-results-found: -> div class-name: \no-results-found, "No results found"
+        render-no-results-found: -> 
+            div class-name: \no-results-found, "No results found"
+        
         # render-group-title :: Int -> Group -> ReactElement
         render-group-title: (index, {group-id, title}?) ->
             div do 
                 class-name: \simple-group-title
                 key: group-id
                 title
+        
         # render-option :: Int -> Item -> ReactElement
         render-option: ({label, new-option, selectable}?) ->
             is-selectable = (typeof selectable == \undefined) or selectable
             div do 
                 class-name: "simple-option #{if is-selectable then '' else 'not-selectable'}"
                 span null, if !!new-option then "Add #{label} ..." else label
+        
         # render-value :: Int -> Item -> ReactElement        
         render-value: ({label}) ->
             div do 
                 class-name: \simple-value
                 span null, label
+        
         # restore-on-backspace: ((value) -> ) # Item -> String
+
         search: ""
         style: {}
         transition-enter: false
@@ -146,9 +190,12 @@ module.exports = create-class do
 
         # REACT SELECTIZE
         div do 
-            class-name: "react-selectize" + 
-                (if !!@props.class-name then " #{@props.class-name}" else "") + 
-                "#{if @props.disabled then ' disabled' else ''}#{if @props.open then ' open' else ''}#{if @props.dropdown-direction == -1 then ' flipped' else ''}"
+            class-name: class-name-from-object do
+                \react-selectize : 1
+                "#{@props.class-name}" : 1
+                disabled: @props.disabled
+                open: @props.open
+                flipped: @props.dropdown-direction == -1
             style: @props.style
             
             # CONTROL
@@ -183,7 +230,11 @@ module.exports = create-class do
 
                     # show the list of options (noop if caused by invocation of @focus function)
                     on-focus: !~>
-                        result <~ do ~> (callback) ~> if !!@focus-lock then callback @focus-lock = false else @props.on-open-change true, -> callback true
+                        result <~ do ~> (callback) ~> 
+                            if !!@focus-lock 
+                                callback @focus-lock = false 
+                            else 
+                                @props.on-open-change true, -> callback true
                         @props.on-focus @props.values, if !!result then \event else \focus
 
                     on-key-down: (e) ~>
@@ -207,6 +258,9 @@ module.exports = create-class do
                                 anchor-index-on-remove = anchor-index
                                 next-anchor = if (anchor-index - 1) < 0 then undefined else @props.values[anchor-index - 1]
 
+                                # remove the item at the current carret position, 
+                                # by requesting the user to update the values array, 
+                                # via (@props.on-value-change new-values, callback)
                                 value-to-remove = @props.values[anchor-index]
                                 <~ @props.on-values-change (reject (~> it `@is-equal-to-object` value-to-remove), @props.values) ? []
 
@@ -226,20 +280,28 @@ module.exports = create-class do
                                         callback false
 
                                 if !!result
-                                    @highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1
+                                    @highlight-and-scroll-to-selectable-option do 
+                                        @props.first-option-index-to-highlight @props.options
+                                        1
 
-                                # change the anchor iff the consumer removed the requested value & the predicted next-anchor is still present
+                                # change the anchor iff the user removed the requested value 
+                                # and the predicted next-anchor is still present
                                 if !!result and 
-                                    anchor-index == anchor-index-on-remove and 
-                                    ((typeof next-anchor == \undefined) or !!(find (~> it `@is-equal-to-object` next-anchor), @props.values))
-                                        <~ @props.on-anchor-change next-anchor
+                                   anchor-index == anchor-index-on-remove and
+                                   (typeof next-anchor == \undefined or 
+                                    !!(@props.values |> find ~> it `@is-equal-to-object` next-anchor))
+                                   @props.on-anchor-change next-anchor, ~>
 
                             cancel-event e
 
                         # ESCAPE
                         | 27 =>
                             # first hit closes the list of options, second hit will reset the selected values
-                            <~ do ~> if @props.open then (~> @props.on-open-change false, it) else (~> @props.on-values-change [], it)
+                            <~ do ~> 
+                                if @props.open 
+                                    ~> @props.on-open-change false, it
+                                else 
+                                    ~> @props.on-values-change [], it
                             <~ @props.on-search-change ""
                             @focus!
 
@@ -250,13 +312,19 @@ module.exports = create-class do
                             # LEFT ARROW
                             | 37 =>
                                 @props.on-anchor-change do
-                                   if ((anchor-index - 1) < 0 or e.meta-key) then undefined else @props.values[clamp (anchor-index - 1), 0, (@props.values.length - 1)]
+                                   if ((anchor-index - 1) < 0 or e.meta-key) 
+                                       undefined 
+                                   else 
+                                       @props.values[clamp (anchor-index - 1), 0, (@props.values.length - 1)]
                                    (->)
 
                             # RIGHT ARROW
                             | 39 =>
                                 @props.on-anchor-change do
-                                   if e.meta-key then last @props.values else @props.values[clamp (anchor-index + 1), 0, (@props.values.length - 1)]
+                                   if e.meta-key 
+                                       last @props.values 
+                                   else 
+                                       @props.values[clamp (anchor-index + 1), 0, (@props.values.length - 1)]
                                    (->)
 
                         # no need to process or block any keys if we ran out of options
@@ -331,7 +399,7 @@ module.exports = create-class do
                 if @props.open
                     
                     # render-options :: [Item] -> Int -> [ReactEleent]
-                    render-options = (options, index-offset) ~>
+                    render-options = (options) ~>
                         [0 til options.length] |> map (index) ~>
                             option = options[index]
                             uid = @props.uid option
@@ -376,29 +444,34 @@ module.exports = create-class do
                                 groups 
                                     |> filter (.options.length > 0)
                                     |> map ({index, {group-id}:group, options}) ~>
-                                        offset = [0 til index]
-                                            |> map -> groups[it].options.length
-                                            |> sum
+
+                                        # GROUP
                                         div key: group-id,
                                             @props.render-group-title index, group, options
-                                            div class-name: \options,
-                                                render-options options, offset
+                                            div class-name: \options, (render-options options)
 
                         else
-                            render-options @props.options, 0
+                            render-options @props.options
 
     # component-did-mount :: a -> Void
     component-did-mount: !->
         root-node = find-DOM-node @
-        @external-click-listener = ({target}) ~>
-            dom-node-contains = (element) ~>
-                return false if (typeof element == \undefined) or element == null
-                return true if element == root-node
-                dom-node-contains element.parent-element
-            if !(dom-node-contains target) and @props.open
-                @props.on-open-change false
-                @props.on-blur @props.values, \click
-        document.add-event-listener \click, @external-click-listener, true
+
+        # hide the dropdown when the user clicks outside selectize
+        document.add-event-listener do 
+            \click
+            @external-click-listener = ({target}) ~>
+
+                # dom-node-contains :: DOMElement -> Boolean
+                dom-node-contains = (element) ~>
+                    return false if (typeof element == \undefined) or element == null
+                    return true if element == root-node
+                    dom-node-contains element.parent-element
+
+                if @props.open and !(dom-node-contains target)
+                    @props.on-open-change false
+                    @props.on-blur @props.values, \click
+            true
 
     # component-will-unmount :: a -> Void
     component-will-unmount: !->
@@ -431,7 +504,8 @@ module.exports = create-class do
 
     # component-will-receive-props :: Props -> Void
     component-will-receive-props: (props) !->
-        if (typeof @props.disabled == \undefined or @props.disabled == false) and (typeof props.disabled != \undefined and props.disabled == true)
+        if (typeof @props.disabled == \undefined or @props.disabled == false) and 
+           (typeof props.disabled != \undefined and props.disabled == true)
            @props.on-open-change false
 
     # option-index-from-uid :: (Eq e) => e -> Int
@@ -507,7 +581,7 @@ module.exports = create-class do
         value = find (~> it `@is-equal-to-object` option), @props.values
         return if !value
         
-        # if the consumer did what we asked, then clear the search and move the anchor ahead of the selected value
+        # if the user did what we asked, then clear the search and move the anchor ahead of the selected value
         <~ @props.on-search-change ""
         <~ @props.on-anchor-change value
         return if !@props.open

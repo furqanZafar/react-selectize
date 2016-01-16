@@ -107,12 +107,12 @@ module.exports = React.create-class do
             style: @props.style
 
         } 
-        <<< switch
+        <<< (switch
         | typeof @props.restore-on-backspace == \function => restore-on-backspace: @props.restore-on-backspace
-        | _ => {}
-        <<< switch
+        | _ => {})
+        <<< (switch
         | typeof @props.render-no-results-found == \function => render-no-results-found: ~> @props.render-no-results-found values, search
-        | _ => {}
+        | _ => {})
 
 
     # get-computed-state :: a -> UIState

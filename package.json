@@ -1,6 +1,6 @@
 {
   "name": "react-selectize",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "A Stateless & Flexible Select component for React inspired by Selectize",
   "main": "src/index.js",
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "author": "Furqan Zafar",
   "dependencies": {
-    "prelude-extension": "0.0.5",
+    "prelude-extension": "0.0.8",
     "prelude-ls": "^1.1.1"
   },
   "peerDependencies": {

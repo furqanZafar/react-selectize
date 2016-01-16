@@ -7,6 +7,11 @@ Form = React.createClass({
             
             values = {this.state.tags}
             
+            // restoreOnBackspace :: Item -> String
+            restoreOnBackspace = {function(item){
+                return item.label;
+            }}
+
             // onValuesChange :: [Item] -> (a -> Void) -> Void
             onValuesChange = {function(tags, callback){
                 self.setState({tags: tags}, callback);
