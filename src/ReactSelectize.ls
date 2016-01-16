@@ -137,7 +137,8 @@ module.exports = create-class do
         options: [] # [Item]
         
         # render-no-results-found :: a -> ReactElement
-        render-no-results-found: -> div class-name: \no-results-found, "No results found"
+        render-no-results-found: -> 
+            div class-name: \no-results-found, "No results found"
         
         # render-group-title :: Int -> Group -> ReactElement
         render-group-title: (index, {group-id, title}?) ->

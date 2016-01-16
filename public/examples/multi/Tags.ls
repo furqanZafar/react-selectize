@@ -6,6 +6,9 @@ Form = React.create-class do
         
             values: @state.tags
             
+            # restore-on-backspace :: Item -> String
+            restore-on-backspace: (.label)
+
             # on-values-change :: [Item] -> (a -> Void) -> Void
             on-values-change: (tags, callback) !~> @set-state {tags}, callback
             
