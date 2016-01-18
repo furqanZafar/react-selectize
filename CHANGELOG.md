@@ -85,3 +85,6 @@
 
 ## v0.3.9 / 18th January 2016
 * added `on-enter :: Item -> Void` prop, fired (with the `highlighted-option`) when the user hits the enter key (#19)
+
+## v0.3.10 / 19th January 2016
+* fixed a bug where elements behind the dropdown were not clickable even though the dropdown was closed. (#18)
