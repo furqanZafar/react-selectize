@@ -1,5 +1,6 @@
 require! \assert
 {each, map} = require \prelude-ls
+{is-equal-to-object} = require \prelude-extension
 
 # React
 {create-class, create-element, DOM:{div, option, span}} = require \react
@@ -13,6 +14,8 @@ Simulate:{change, click, focus, key-down, mouse-over, mouse-out, mouse-move}}:Te
 {create-select, get-input, set-input-text, get-item-text, click-to-open-select-control, click-on-the-document, find-highlighted-option, 
 component-with-class-must-not-exist, press-backspace, press-escape, press-tab, press-return, press-up-arrow, press-down-arrow, press-left-arrow, 
 press-right-arrow, press-command-left, press-command-right}:utils = require \./utils
+
+
 
 # :: ReactClass -> Void
 module.exports = (select-class) !->
@@ -348,3 +351,22 @@ module.exports = (select-class) !->
         assert.equal (get-item-text find-highlighted-option select), \apple
         [0 til 8] |> each ~> press-up-arrow (get-input select)
         assert.equal (get-item-text find-highlighted-option select), \apple
+
+    specify "must fire props.on-enter with the highlighted option", (done) ->
+        state = []
+        expected-state = 
+            * label: \apple, value: \apple
+            * undefined
+            ...
+        select = create-select do 
+            on-enter: (highlighted-option) ->
+                state.push highlighted-option
+                if state.length == 2
+                    assert state `is-equal-to-object` expected-state
+                    done!
+        click-to-open-select-control select
+        input-element = get-input select
+        set-input-text input-element, \app
+        press-return input-element
+        set-input-text input-element, \apples
+        press-return input-element
