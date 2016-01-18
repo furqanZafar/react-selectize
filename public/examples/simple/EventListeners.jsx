@@ -31,6 +31,12 @@ Form = React.createClass({
                     self.setState({focused: false});
                 }}
                 
+                // onEnter :: Item -> Void
+                onEnter = {function(item){
+                    if (typeof item == "undefined")
+                        alert("you did not select any item");
+                }}
+
                 style = {this.state.focused ? {color: "#0099ff"} : {}}/>
             
             <SimpleSelect
