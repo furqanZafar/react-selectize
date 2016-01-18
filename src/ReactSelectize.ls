@@ -21,7 +21,7 @@ class-name-from-object = ->
     |> map (.0)
     |> Str.join ' '
 
-# wrapper classes are used for optimizing performance 
+# OptionWrapper & ValueWrapper are used for optimizing performance 
 OptionWrapper = create-factory create-class do 
 
     # get-default-porps :: () -> Props
@@ -70,6 +70,37 @@ ValueWrapper = create-factory create-class do
     # should-component-update :: Props -> Boolean
     should-component-update: (next-props) ->
         !(next-props?.uid `is-equal-to-object` @props?.uid)
+
+# used to detect when the dropdown has been added/removed from dom, 
+# so we can adjust the height of the parent element
+DropdownWrapper = create-factory create-class do 
+
+    # get-default-props :: () -> Props
+    get-default-props: ->
+        class-name: ""
+        on-height-change: (!->) # Number -> Void
+
+    # render :: () -> ReactElement
+    render: ->
+        div do 
+            class-name: @props.class-name
+            ref: \dropdown
+            @props.children
+
+    # component-did-mount :: () -> Void
+    component-did-mount: !->
+        @props.on-height-change do 
+            @refs.dropdown .offset-height
+
+    # component-did-update :: () -> Void
+    component-did-update: !->
+        @props.on-height-change do 
+            @refs.dropdown .offset-height
+
+    # component-will-unmount :: () -> Void
+    component-will-unmount: !->
+        @props.on-height-change 0
+
 
 module.exports = create-class do
 
@@ -423,10 +454,12 @@ module.exports = create-class do
                                         on-click: (e) !~> @select-highlighted-uid anchor-index
                                         on-mouse-over: ({current-target}) !~>  @props.on-highlighted-uid-change uid if !@scroll-lock
 
-                    div do 
+                    # just a div with its lifecycle exposed via on-height-change
+                    DropdownWrapper do 
                         class-name: \dropdown
                         key: \dropdown
                         ref: \dropdown
+                        on-height-change: (height) ~> find-DOM-node @refs[\dropdown-transition] .style.height = "#{height}px"
 
                         # NO RESULT FOUND   
                         if @props.options.length == 0
@@ -479,7 +512,7 @@ module.exports = create-class do
         document.remove-event-listener \click, @external-click-listener, true
 
     # component-did-update :: Props -> UIState -> Void
-    component-did-update: (prev-props, prev-state) !->
+    component-did-update: (prev-props) !->
 
         # if the list of options opened then highlight the first option & focus on the search input
         if @props.open and !prev-props.open and @props.highlighted-uid == undefined
@@ -499,9 +532,6 @@ module.exports = create-class do
         if !!@refs.dropdown
             $dropdown-transition.style <<< 
                 bottom: if @props.dropdown-direction == -1 then (find-DOM-node @refs.control).offset-height else ""
-                height: "#{@refs.dropdown.offset-height}px"
-        else 
-            $dropdown-transition.style.height = \0px
 
     # component-will-receive-props :: Props -> Void
     component-will-receive-props: (props) !->
