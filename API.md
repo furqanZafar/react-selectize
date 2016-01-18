@@ -16,6 +16,7 @@
 |    groups                  | [Group]                        | collection of objects where each object must atleast have a groupId property|
 |    groupsAsColumns         | Boolean                        | display option groups in columns|
 |    onBlur                  | Item -> String -> Void         | `function(value, reason){}` reason can be either "click" (loss of focus because the user clicked elsewhere), "tab" or "blur" (invoked refs.simpleSelect.blur())|
+|    onEnter                 | Item -> Void                   | `function(highlightedOption){}` fired with the (highlightedOption or undefined) when the user hits the return key|
 |    onFocus                 | Item -> String -> Void         | `function(value, reason){}` reason can be either "event" (when the control gains focus outside) or "focus" (when the user invokes refs.simpleSelect.focus())|
 |    onSearchChange          | String -> (a -> Void) -> Void  | `function(search, callback){self.setState({search: search}, callback);}` or `function(search,callback){callback();}` i.e. callback MUST always be invoked|
 |    onValueChange           | Item -> (a -> Void) -> Void    | `function(selectedValue, callback){self.setState({selectedValue: selectedValue}, callback)}` or `function(value, callback){callback()}` i.e. callback MUST always be invoked|

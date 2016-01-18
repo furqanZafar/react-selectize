@@ -82,3 +82,6 @@
 
 ## v0.3.8 / 16th January 2016
 * fixed a bug where passing `restore-on-backspace` prop wouldn't work in conjunction with `render-no-results-found` prop (#14)
+
+## v0.3.9 / 18th January 2016
+* added `on-enter :: Item -> Void` prop, fired (with the `highlighted-option`) when the user hits the enter key (#19)
