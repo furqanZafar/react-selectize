@@ -23,6 +23,11 @@ Form = React.create-class do
                 on-blur: (item, reason) !~>
                     @set-state focused:false
                     
+                # on-enter :: Item -> Void
+                on-enter: (item) !~>
+                    if typeof item == \undefined
+                        alert 'you did not select any item'
+
                 style: if @state.focused then color: "#0099ff" else {}
                     
             # MODELS
