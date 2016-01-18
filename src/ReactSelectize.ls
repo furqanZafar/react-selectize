@@ -128,6 +128,7 @@ module.exports = create-class do
         highlighted-uid: undefined
         on-anchor-change: ((anchor) ->) # Item -> Void
         on-blur: ((values, reason) !->) # [Item] -> String -> Void
+        on-enter: ((highlighted-option) !->) # Item -> Void
         on-focus: ((values, reason) !->) # [Item] -> String -> Void
         on-highlighted-uid-change: ((uid, callback) !-> ) # (Eq e) => e -> (a -> Void) -> Void
         on-open-change: ((open, callback) !->) # Boolean -> (a -> Void) -> Void
@@ -305,6 +306,19 @@ module.exports = create-class do
                             <~ @props.on-search-change ""
                             @focus!
 
+                        # ENTER
+                        if e.which == 13 and @props.open
+                            
+                            # find the highlighted option if any and invoke the on-enter prop
+                            highlighted-option = 
+                                | typeof @props.highlighted-uid == \undefined => undefined
+                                | _ => @props.options[@option-index-from-uid @props.highlighted-uid]
+                            @props.on-enter highlighted-option
+
+                            # select the highlighted option (if any)
+                            @select-highlighted-uid anchor-index
+
+                        # move anchor position left / right using arrow keys (only when search field is empty)
                         if @props.search.length == 0
                             
                             switch e.which
@@ -327,15 +341,7 @@ module.exports = create-class do
                                        @props.values[clamp (anchor-index + 1), 0, (@props.values.length - 1)]
                                    (->)
 
-                        # no need to process or block any keys if we ran out of options
-                        return if @props.options.length == 0
-                            
-                        # ENTER
-                        if e.which == 13 and @props.open
-                            @select-highlighted-uid anchor-index
-
-                        else
-                            switch e.which
+                        switch e.which
 
                             # wrap around upon hitting the boundary
                             # UP ARROW
@@ -354,11 +360,6 @@ module.exports = create-class do
                                 if !result
                                     @highlight-and-scroll-to-selectable-option 0, 1
 
-                            # REST (we don't need to process or block rest of the keys)
-                            | _ => return
-
-                        cancel-event e
-                
                 # LIST OF SELECTED VALUES (AFTER THE ANCHOR)
                 render-selected-values [anchor-index + 1 til @props.values.length]
                  

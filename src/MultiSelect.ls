@@ -23,6 +23,7 @@ module.exports = React.create-class do
         # max-values :: Int
         # on-anchor-change :: Item -> (a -> Void) -> Void
         on-blur: ((values, reason) !->) # :: [Item] -> String -> Void
+        on-enter: ((highlighted-option) !->) # :: Item -> Void
         on-focus: ((values, reason) !->) # :: [Item] -> String -> Void
         # on-search-change :: String -> (a -> Void) -> Void
         # on-value-change :: Item -> (a -> Void) -> Void 
@@ -42,8 +43,8 @@ module.exports = React.create-class do
         {anchor, search, values, on-anchor-change, on-search-change, on-values-change, filtered-options, options} = @get-computed-state!
 
         # props
-        {autosize, disabled, dropdown-direction, group-id, groups, groups-as-columns, render-group-title, transition-enter, 
-        transition-leave, transition-enter-timeout, transition-leave-timeout, uid} = @props
+        {autosize, disabled, dropdown-direction, group-id, groups, groups-as-columns, on-enter, render-group-title,
+        transition-enter, transition-leave, transition-enter-timeout, transition-leave-timeout, uid} = @props
 
         ReactSelectize {
             
@@ -54,6 +55,7 @@ module.exports = React.create-class do
             group-id
             groups
             groups-as-columns
+            on-enter
             render-group-title
             transition-enter
             transition-enter-timeout

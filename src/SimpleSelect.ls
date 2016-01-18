@@ -18,6 +18,7 @@ module.exports = React.create-class do
             options
                 |> filter ~> (it.label.to-lower-case!.trim!.index-of search.to-lower-case!.trim!) > -1
         on-blur: ((value, reason) !->) # :: Item -> String -> Void
+        on-enter: ((highlighted-option) !->) # :: Item -> Void
         on-focus: ((value, reason) !->) # :: Item -> String -> Void
         # on-search-change :: String -> (a -> Void) -> Void
         # on-value-change :: Item -> (a -> Void) -> Void 
@@ -38,8 +39,8 @@ module.exports = React.create-class do
         {search, value, values, on-search-change, on-value-change, filtered-options, options} = @get-computed-state!
 
         # props
-        {autosize, disabled, dropdown-direction, group-id, groups, groups-as-columns, render-group-title, transition-enter, 
-        transition-leave, transition-enter-timeout, transition-leave-timeout, uid} = @props
+        {autosize, disabled, dropdown-direction, group-id, groups, groups-as-columns, on-enter, render-group-title,
+        transition-enter, transition-leave, transition-enter-timeout, transition-leave-timeout, uid} = @props
         
         ReactSelectize {
             
@@ -50,6 +51,7 @@ module.exports = React.create-class do
             group-id
             groups
             groups-as-columns
+            on-enter
             render-group-title
             transition-enter
             transition-enter-timeout
