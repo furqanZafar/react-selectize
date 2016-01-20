@@ -14,13 +14,13 @@ Form = React.create-class do
             
             # create-from-search :: [Item] -> [Item] -> String -> Item?
             create-from-search: (options, values, search) -> 
-                return null if search.length == 0 or search in map (.label), values
-                label: search, value: search
+                return null if search.trim!.length == 0 or search.trim! in map (.label), values
+                label: search.trim!, value: search.trim!
                 
             # render-no-results-found :: [Item] -> String -> ReactElement
             render-no-results-found: (values, search) ~> 
                 div class-name: \no-results-found,
-                    if search.length == 0
+                    if search.trim!.length == 0
                         "Type a few characters to create a tag"
                     else if (search in map (.label), values)
                         "Tag already exists"

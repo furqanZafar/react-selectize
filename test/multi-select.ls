@@ -13,8 +13,8 @@ find-rendered-DOM-component-with-tag, Simulate:{change, click, focus, key-down}}
 
 # utils
 {create-select, get-input, set-input-text, get-item-text, click-to-open-select-control, find-highlighted-option, 
-component-with-class-must-not-exist, press-backspace, press-escape, press-tab, press-return, press-up-arrow, press-down-arrow, press-left-arrow, 
-press-right-arrow, press-command-left, press-command-right} = require \./utils
+component-with-class-must-not-exist, press-backspace, press-escape, press-tab, press-return, press-up-arrow, 
+press-down-arrow, press-left-arrow, press-right-arrow, press-command-left, press-command-right} = require \./utils
 
 describe "MultiSelect", ->
     
@@ -151,3 +151,16 @@ describe "MultiSelect", ->
         set-input-text (get-input select), \grapes
         click find-highlighted-option select
         assert.equal select.values!.length, 3
+
+    specify "case senstivity", ->
+        select = create-multi-select do 
+            options:
+                * label: \apple
+                  value: \1
+                * label: \Apple
+                  value: \2
+        click-to-open-select-control select
+        click find-highlighted-option select
+        click-to-open-select-control select
+        find-rendered-DOM-component-with-class select, \simple-option
+
