@@ -18,7 +18,7 @@ module.exports = React.create-class do
         # filter-options :: [Item] -> [Item] -> String -> [Item]
         filter-options: (options, values, search) -->   
             options
-                |> reject ~> it.label.to-lower-case!.trim! in (map (.label.to-lower-case!.trim!), values ? [])
+                |> reject ~> it.label.trim! in (map (.label.trim!), values ? [])
                 |> filter ~> (it.label.to-lower-case!.trim!.index-of search.to-lower-case!.trim!) > -1
         # max-values :: Int
         # on-anchor-change :: Item -> (a -> Void) -> Void
