@@ -19,17 +19,19 @@ Form = React.createClass({
             
             // createFromSearch :: [Item] -> [Item] -> String -> Item?
             createFromSearch = {function(options, values, search){
-                if (search.length == 0 || 
-                    values.map(function(value){ return value.label; }).indexOf(search) != -1) 
+                labels = values.map(function(value){ 
+                    return value.label; 
+                })
+                if (search.trim().length == 0 || labels.indexOf(search.trim()) != -1) 
                     return null;
-                return {label: search, value: search};
+                return {label: search.trim(), value: search.trim()};
             }}
             
             // renderNoResultsFound :: [Item] -> String -> ReactElement
             renderNoResultsFound = {function(values, search) {
                 return <div className = "no-results-found">
                     {(function(){
-                        if (search.length == 0)
+                        if (search.trim().length == 0)
                             return "Type a few characters to create a tag";
                         else if (values.map(function(value){ return value.label; }).indexOf(search) != -1)
                             return "Tag already exists";
