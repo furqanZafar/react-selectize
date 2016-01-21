@@ -52,6 +52,16 @@ Add and remove items in any order without touching your mouse.
 Use your left/right arrow keys to move the cursor between items.
 """          
           languages:
+            jsx: fs.read-file-sync \public/examples/multi/TagsBasic.jsx, \utf8 
+            ls: fs.read-file-sync \public/examples/multi/TagsBasic.ls, \utf8 
+
+
+        * title: "Tags - Advance usage"
+          description: """
+default values, comma to confirm selection, custom error messages (like "Tag already exists")
+convert pasted text into tags, edit existing tags by pressing [backspace]
+"""
+          languages:
             jsx: fs.read-file-sync \public/examples/multi/Tags.jsx, \utf8 
             ls: fs.read-file-sync \public/examples/multi/Tags.ls, \utf8 
 

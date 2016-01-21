@@ -9,7 +9,7 @@ ReactSelectize = require \../src/index.ls
 
 # TestUtils
 {find-rendered-DOM-component-with-class, scry-rendered-DOM-components-with-class, 
-find-rendered-DOM-component-with-tag, Simulate:{change, click, focus, key-down}}:TestUtils = require \react-addons-test-utils
+find-rendered-DOM-component-with-tag, Simulate:{change, click, focus, key-down, paste}}:TestUtils = require \react-addons-test-utils
 
 # utils
 {create-select, get-input, set-input-text, get-item-text, click-to-open-select-control, find-highlighted-option, 
@@ -163,4 +163,13 @@ describe "MultiSelect", ->
         click find-highlighted-option select
         click-to-open-select-control select
         find-rendered-DOM-component-with-class select, \simple-option
+
+    specify "must create values from pasted text & override the on-paste prop", ->
+        select = create-multi-select do 
+            values-from-paste: (, , search) ~> search.split \, |> map ~> label: it, value: it
+            on-paste: (e) ~> true
+        click-to-open-select-control
+        input = get-input select
+        paste input, clipboard-data: get-data: -> "a,b,c"
+        assert select.values!.length == 3
 

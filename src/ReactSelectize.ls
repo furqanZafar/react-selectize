@@ -150,6 +150,7 @@ module.exports = create-class do
                     document.body.remove-child $input
 
         # class-name :: String
+        delimiters: []
         disabled: false
         dropdown-direction: 1
         first-option-index-to-highlight: (options) -> 0
@@ -163,6 +164,7 @@ module.exports = create-class do
         on-focus: ((values, reason) !->) # [Item] -> String -> Void
         on-highlighted-uid-change: ((uid, callback) !-> ) # (Eq e) => e -> (a -> Void) -> Void
         on-open-change: ((open, callback) !->) # Boolean -> (a -> Void) -> Void
+        on-paste: ((e) !-> true) # Event -> Boolean
         on-search-change: ((search, callback) !-> ) # String -> (a -> Void) -> Void
         on-values-change: ((values, callback) !->) # [Item] -> (a -> Void) -> Void
         open: false
@@ -269,6 +271,10 @@ module.exports = create-class do
                                 @props.on-open-change true, -> callback true
                         @props.on-focus @props.values, if !!result then \event else \focus
 
+                    # on-paste :: Event -> Boolean
+                    on-paste: @props.on-paste
+
+                    # on-key-down :: Event -> Boolean
                     on-key-down: (e) ~>
 
                         # always handle the tab, backspace & escape keys
@@ -338,7 +344,7 @@ module.exports = create-class do
                             @focus!
 
                         # ENTER
-                        if e.which == 13 and @props.open
+                        if (e.which in [13] ++ @props.delimiters) and @props.open
                             
                             # find the highlighted option if any and invoke the on-enter prop
                             highlighted-option = 
@@ -348,6 +354,8 @@ module.exports = create-class do
 
                             # select the highlighted option (if any)
                             @select-highlighted-uid anchor-index
+
+                            return cancel-event e
 
                         # move anchor position left / right using arrow keys (only when search field is empty)
                         if @props.search.length == 0

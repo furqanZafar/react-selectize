@@ -7,6 +7,24 @@ Form = React.createClass({
             
             values = {this.state.tags}
             
+            // delimtiers :: [KeyCode]
+            delimiters = {[188]}
+
+            // valuesFromPaste :: [Item] -> [Item] -> String -> [Item]
+            valuesFromPaste = {function(options, values, pastedText){
+                return pastedText
+                    .split(",")
+                    .filter(function(text){
+                        var labels = values.map(function(item){
+                            return item.label;
+                        })
+                        return labels.indexOf(text) == -1;
+                    })
+                    .map(function(text){
+                        return {label: text, value: text};
+                    });
+            }}
+
             // restoreOnBackspace :: Item -> String
             restoreOnBackspace = {function(item){
                 return item.label;
@@ -30,12 +48,12 @@ Form = React.createClass({
             // renderNoResultsFound :: [Item] -> String -> ReactElement
             renderNoResultsFound = {function(values, search) {
                 return <div className = "no-results-found">
-                    {(function(){
+                    {function(){
                         if (search.trim().length == 0)
                             return "Type a few characters to create a tag";
-                        else if (values.map(function(value){ return value.label; }).indexOf(search) != -1)
+                        else if (values.map(function(item){ return item.label; }).indexOf(search.trim()) != -1)
                             return "Tag already exists";
-                    })()}
+                    }()}
                 </div>
             }}
         />;
