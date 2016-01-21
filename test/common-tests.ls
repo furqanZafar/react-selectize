@@ -370,3 +370,12 @@ module.exports = (select-class) !->
         press-return input-element
         set-input-text input-element, \apples
         press-return input-element
+
+    specify "delimiters", ->
+        select = create-select do
+            delimiters: [186, 188]
+        click-to-open-select-control
+        input-element = get-input select
+        set-input-text input-element, \app
+        key-down input-element, which: 188
+        find-rendered-DOM-component-with-class select, \simple-value

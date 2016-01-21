@@ -6,6 +6,17 @@ Form = React.create-class do
         
             values: @state.tags
             
+            # 188 = comma
+            # delimiters :: [KeyCode]
+            delimiters: [188]
+            
+            # values-from-paste :: [Item] -> [Item] -> String -> [Item]
+            values-from-paste: (options, values, pasted-text) ~>
+                pasted-text
+                |> Str.split \,
+                |> reject ~> it in map (.label), values
+                |> map ~> label: it, value: it
+            
             # restore-on-backspace :: Item -> String
             restore-on-backspace: (.label)
 
@@ -22,7 +33,7 @@ Form = React.create-class do
                 div class-name: \no-results-found,
                     if search.trim!.length == 0
                         "Type a few characters to create a tag"
-                    else if (search in map (.label), values)
+                    else if (search.trim! in map (.label), values)
                         "Tag already exists"
     
     # get-initial-state :: a -> UIState

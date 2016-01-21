@@ -1,5 +1,8 @@
 # React Selectize
 
+## v0.4.0 / 21st January 2016
+* Added two new props `delimiters` & `valuesFromPaste` (#21)
+
 ## v0.3.11 / 20th January 2016
 * fixed case sensitivity bug in MultiSelect. (#20)
 

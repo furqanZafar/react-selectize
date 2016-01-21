@@ -11,6 +11,7 @@ module.exports = React.create-class do
     get-default-props: ->
         # class-name :: String
         # disabled :: Boolean
+        delimiters: []
         # create-from-search :: [Item] -> String -> Item?
         # editable :: Item -> String
         # filter-options :: [Item] -> String -> [Item]
@@ -39,13 +40,14 @@ module.exports = React.create-class do
         {search, value, values, on-search-change, on-value-change, filtered-options, options} = @get-computed-state!
 
         # props
-        {autosize, disabled, dropdown-direction, group-id, groups, groups-as-columns, on-enter, render-group-title,
-        transition-enter, transition-leave, transition-enter-timeout, transition-leave-timeout, uid} = @props
+        {autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, on-enter, 
+        render-group-title, transition-enter, transition-leave, transition-enter-timeout, transition-leave-timeout, uid} = @props
         
         ReactSelectize {
             
             autosize
             class-name: "simple-select" + if !!@props.class-name then " #{@props.class-name}" else ""
+            delimiters
             disabled
             dropdown-direction
             group-id

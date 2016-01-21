@@ -12,7 +12,9 @@ module.exports = React.create-class do
         # anchor :: Item
         # class-name :: String
         close-on-select: false
+        # values-from-paste :: String -> [Item]
         default-values: []
+        delimiters: []
         # disabled :: Boolean
         # create-from-search :: [Item] -> [Item] -> String -> Item?
         # filter-options :: [Item] -> [Item] -> String -> [Item]
@@ -25,6 +27,7 @@ module.exports = React.create-class do
         on-blur: ((values, reason) !->) # :: [Item] -> String -> Void
         on-enter: ((highlighted-option) !->) # :: Item -> Void
         on-focus: ((values, reason) !->) # :: [Item] -> String -> Void
+        on-paste: ((e) !-> true) # Event -> Boolean
         # on-search-change :: String -> (a -> Void) -> Void
         # on-value-change :: Item -> (a -> Void) -> Void 
         # options :: [Item]
@@ -40,16 +43,18 @@ module.exports = React.create-class do
     # render :: a -> ReactElement
     render: -> 
         
-        {anchor, search, values, on-anchor-change, on-search-change, on-values-change, filtered-options, options} = @get-computed-state!
+        {anchor, search, values, on-anchor-change, on-search-change, 
+        on-values-change, filtered-options, options} = @get-computed-state!
 
         # props
-        {autosize, disabled, dropdown-direction, group-id, groups, groups-as-columns, on-enter, render-group-title,
+        {autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, on-enter, render-group-title, 
         transition-enter, transition-leave, transition-enter-timeout, transition-leave-timeout, uid} = @props
 
         ReactSelectize {
             
             autosize
             class-name: "multi-select" + if !!@props.class-name then " #{@props.class-name}" else ""
+            delimiters
             disabled
             dropdown-direction
             group-id
@@ -104,6 +109,18 @@ module.exports = React.create-class do
             
             on-focus: (, reason) !~> @props.on-focus values, reason
 
+            # on-paste :: Event -> Boolean
+            on-paste: 
+                | typeof @props?.values-from-paste == \undefined => @props.on-paste
+                | _ => ({clipboard-data}:e) ~>
+                    do ~>
+                        new-values = values ++ (@props.values-from-paste options, values, clipboard-data.get-data \text)
+                        <~ on-values-change new-values 
+                        on-anchor-change last new-values
+
+                    e.prevent-default!
+                    false
+
             # STYLE
             placeholder: @props.placeholder
             style: @props.style
@@ -113,7 +130,8 @@ module.exports = React.create-class do
         | typeof @props.restore-on-backspace == \function => restore-on-backspace: @props.restore-on-backspace
         | _ => {})
         <<< (switch
-        | typeof @props.render-no-results-found == \function => render-no-results-found: ~> @props.render-no-results-found values, search
+        | typeof @props.render-no-results-found == \function => render-no-results-found: ~> 
+            @props.render-no-results-found values, search
         | _ => {})
 
 
@@ -147,7 +165,10 @@ module.exports = React.create-class do
 
         # filter options and create new one from search text
         filtered-options = @props.filter-options unfiltered-options, values, search
-        new-option = if typeof @props.create-from-search == \function then (@props.create-from-search filtered-options, values, search) else null
+        new-option = 
+            | typeof @props.create-from-search == \function => @props.create-from-search filtered-options, values, search
+            | _ => null
+
         options = (if !!new-option then [{} <<< new-option <<< new-option: true] else []) ++ filtered-options
 
         {anchor, search, values, on-anchor-change, on-search-change, on-values-change, filtered-options, options}
