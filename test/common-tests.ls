@@ -374,7 +374,7 @@ module.exports = (select-class) !->
     specify "delimiters", ->
         select = create-select do
             delimiters: [186, 188]
-        click-to-open-select-control
+        click-to-open-select-control select
         input-element = get-input select
         set-input-text input-element, \app
         key-down input-element, which: 188
@@ -382,5 +382,5 @@ module.exports = (select-class) !->
 
     specify "unmount when open", ->
         select = create-select!
-        click-to-open-select-control
+        click-to-open-select-control select
         unmount-component-at-node (find-DOM-node select .parent-element)
