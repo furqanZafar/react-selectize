@@ -467,7 +467,9 @@ module.exports = create-class do
                         class-name: \dropdown
                         key: \dropdown
                         ref: \dropdown
-                        on-height-change: (height) ~> find-DOM-node @refs[\dropdown-transition] .style.height = "#{height}px"
+                        on-height-change: (height) ~> 
+                            if @refs[\dropdown-transition]
+                                find-DOM-node @refs[\dropdown-transition] .style.height = "#{height}px"
 
                         # NO RESULT FOUND   
                         if @props.options.length == 0

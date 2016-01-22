@@ -1,5 +1,8 @@
 # React Selectize
 
+## v0.4.1 / 22nd January 2016
+* merged pull request (fixes an issue when unmounting with dropdown open) (#23), thanks @yuters
+
 ## v0.4.0 / 21st January 2016
 * Added two new props `delimiters` & `valuesFromPaste` (#21)
 
