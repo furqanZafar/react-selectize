@@ -4,7 +4,7 @@ require! \assert
 
 # React
 {create-class, create-element, DOM:{div, option, span}} = require \react
-{find-DOM-node, render} = require \react-dom
+{find-DOM-node, render, unmount-component-at-node} = require \react-dom
 
 # TestUtils
 {find-rendered-DOM-component-with-class, scry-rendered-DOM-components-with-class, 
@@ -379,3 +379,8 @@ module.exports = (select-class) !->
         set-input-text input-element, \app
         key-down input-element, which: 188
         find-rendered-DOM-component-with-class select, \simple-value
+
+    specify "unmount when open", ->
+        select = create-select!
+        click-to-open-select-control
+        unmount-component-at-node (find-DOM-node select .parent-element)
