@@ -31,6 +31,7 @@ module.exports = React.create-class do
         # restore-on-backspace :: Item -> String
         # search :: String
         style: {}
+        tether: false
         # uid :: (Equatable e) => Item -> e
         # value :: Item
 
@@ -40,8 +41,8 @@ module.exports = React.create-class do
         {search, value, values, on-search-change, on-value-change, filtered-options, options} = @get-computed-state!
 
         # props
-        {autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, on-enter, 
-        render-group-title, transition-enter, transition-leave, transition-enter-timeout, transition-leave-timeout, uid} = @props
+        {autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, on-enter, render-group-title, 
+        tether, transition-enter, transition-leave, transition-enter-timeout, transition-leave-timeout, uid} = @props
         
         ReactSelectize {
             
@@ -55,6 +56,7 @@ module.exports = React.create-class do
             groups-as-columns
             on-enter
             render-group-title
+            tether
             transition-enter
             transition-enter-timeout
             transition-leave
@@ -122,7 +124,8 @@ module.exports = React.create-class do
         | typeof @props.restore-on-backspace == \function => restore-on-backspace: @props.restore-on-backspace
         | _ => {})
         <<< (switch
-        | typeof @props.render-no-results-found == \function => render-no-results-found: ~> @props.render-no-results-found value, search
+        | typeof @props.render-no-results-found == \function => 
+            render-no-results-found: ~> @props.render-no-results-found value, search
         | _ => {})
 
     # get-computed-state :: a -> UIState
@@ -156,7 +159,9 @@ module.exports = React.create-class do
 
         # filter options and create new one from search text
         filtered-options = @props.filter-options unfiltered-options, search
-        new-option = if typeof @props.create-from-search == \function then (@props.create-from-search filtered-options, search) else null
+        new-option = 
+            | typeof @props.create-from-search == \function => @props.create-from-search filtered-options, search
+            | _ => null
         options = (if !!new-option then [{} <<< new-option <<< new-option: true] else []) ++ filtered-options
 
         {search, value, values, on-search-change, on-value-change, filtered-options, options}

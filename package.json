@@ -11,7 +11,8 @@
   "author": "Furqan Zafar",
   "dependencies": {
     "prelude-extension": "0.0.8",
-    "prelude-ls": "^1.1.1"
+    "prelude-ls": "^1.1.1",
+    "tether": "^1.1.1"
   },
   "peerDependencies": {
     "react": "^0.14.0",

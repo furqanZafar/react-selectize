@@ -25,6 +25,12 @@ examples =
             jsx: fs.read-file-sync \public/examples/multi/MultiSelect.jsx, \utf8 
             ls: fs.read-file-sync \public/examples/multi/MultiSelect.ls, \utf8 
 
+        * title: "Tether"
+          description: ""
+          languages:
+            jsx: fs.read-file-sync \public/examples/multi/MultiSelect.jsx, \utf8 
+            ls: fs.read-file-sync \public/examples/multi/Tether.ls, \utf8 
+
         * title: "On values change"
           description: ""
           languages:
