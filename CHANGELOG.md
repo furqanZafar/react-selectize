@@ -1,5 +1,23 @@
 # React Selectize
 
+## v0.5.0 / 25th January 2016
+* added `tether` prop
+* added `blur` method
+* close dropdown when nothing is selected on pressing the return key
+* namespaced css classes (*Breaking Change*) :
+
+> `.dropdown-transition` div is only used if any one (or both) of `transition-enter`, `transition-leave` props is / are specified, 
+before the `.dropdown` div was always being wrapped in `.dropdown-transition` even if animation was not required.
+
+| Before | Now |
+|--------|-----|
+| .arrow | .react-selectize-arrow |
+| .control | .react-selectize-control |
+| .dropdown | .react-selectize-dropdown |
+| .dropdown-transition | .react-selectize-dropdown-container |
+| .placeholder | .react-selectize-placeholder |
+| .reset | .react-selectize-reset |
+
 ## v0.4.1 / 22nd January 2016
 * merged pull request (fixes an issue when unmounting with dropdown open) (#23), thanks @yuters
 

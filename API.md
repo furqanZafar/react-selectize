@@ -16,9 +16,9 @@
 |    groupId                 | Item -> b                           | `function(item){return item.groupId}` this function is used to identify which group an option belongs to, it must return a value that matches the groupId property of an object in the groups collection|
 |    groups                  | [Group]                             | collection of objects where each object must atleast have a groupId property|
 |    groupsAsColumns         | Boolean                             | display option groups in columns|
-|    onBlur                  | Item -> String -> Void              | `function(value, reason){}` reason can be either "click" (loss of focus because the user clicked elsewhere), "tab" or "blur" (invoked refs.simpleSelect.blur())|
+|    onBlur                  | Item -> String -> Void              | `function(value, reason){}` reason can be either "click-outside", "arrow-click" (clicking the tiny arrow in the top right corner), "tab", "enter" (hitting enter on an empty list of options) or "function-call" (on calling refs.selectInstance.blur())|
 |    onEnter                 | Item -> Void                        | `function(highlightedOption){}` fired with the (highlightedOption or undefined) when the user hits the return key|
-|    onFocus                 | Item -> String -> Void              | `function(value, reason){}` reason can be either "event" (when the control gains focus outside) or "focus" (when the user invokes refs.simpleSelect.focus())|
+|    onFocus                 | Item -> String -> Void              | `function(value, reason){}` reason can be either "event" (when the control gains focus outside) or "function-call" (when the user invokes refs.selectInstance.focus())|
 |    onSearchChange          | String -> (a -> Void) -> Void       | `function(search, callback){self.setState({search: search}, callback);}` or `function(search,callback){callback();}` i.e. callback MUST always be invoked|
 |    onValueChange           | Item -> (a -> Void) -> Void         | `function(selectedValue, callback){self.setState({selectedValue: selectedValue}, callback)}` or `function(value, callback){callback()}` i.e. callback MUST always be invoked|
 |    options                 | [Item]                              | list of items by default each option object MUST have label & value property, otherwise you must implement the render* & filterOptions methods|
@@ -41,7 +41,8 @@
 
 |    Method                       |    Type                  |    Description                 |
 |---------------------------------|--------------------------|--------------------------------|
-| focus                           | a -> (a -> Void) -> Void | `this.refs.selectInstance.focus(callback)` opens the list of options and positions the cursor in the input control, the callback fired when the options menu becomes visible|
+| focus                           | (a -> Void) -> Void      | `this.refs.selectInstance.focus(callback)` opens the list of options and positions the cursor in the input control, the callback is fired when the dropdown becomes visible|
+| blur                            | a -> Void                | `this.refs.selectInstance.blur()` blurs focus from the input control and closes the dropdown|
 | highlightFirstSelectableOption  | a -> Void                | `this.refs.selectInstance.highlightFirstSelectableOption()`|
 | value                           | a -> Item                | `this.refs.selectInstance.value()` returns the current selected item|
 
