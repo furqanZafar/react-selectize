@@ -7,7 +7,7 @@ module.exports = create-class do
 
     # get-default-props :: () -> Props
     get-default-props: ->
-        # target :: () -> ReactElement (invoked on component-did-mount)
+        # target :: () -> DOMElement (invoked on component-did-mount)
         # options :: object (passed to Tether instance)
         {}
 

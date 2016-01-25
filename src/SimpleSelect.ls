@@ -137,12 +137,17 @@ module.exports = React.create-class do
         show-value = if !!@props.editable then !@state.open else search.length == 0
         values = if !!value and show-value then [value] else []
         [on-search-change, on-value-change] = <[search value]> |> map (p) ~>
-            | @props.has-own-property p and @props.has-own-property camelize "on-#{p}-change" => @props[camelize "on-#{p}-change"]
-            | @props.has-own-property p and !(@props.has-own-property camelize "on-#{p}-change") => (, callback) ~> callback!
+            | @props.has-own-property p and @props.has-own-property camelize "on-#{p}-change" => 
+                @props[camelize "on-#{p}-change"]
+
+            | @props.has-own-property p and !(@props.has-own-property camelize "on-#{p}-change") => 
+                (, callback) ~> callback!
+
             | !(@props.has-own-property p) and @props.has-own-property camelize "on-#{p}-change" => 
                 (o, callback) ~> 
                     <~ @set-state {"#{p}" : o}
                     @props[camelize "on-#{p}-change"] o, callback
+
             | !(@props.has-own-property p) and !(@props.has-own-property camelize "on-#{p}-change") => 
                 (o, callback) ~> @set-state {"#{p}" : o}, callback
 
@@ -188,10 +193,16 @@ module.exports = React.create-class do
                 else
                     1
 
-    # focus :: a -> (a -> Void) -> Void
-    focus: (callback) -> 
-        @refs.select.focus!
+    # fires the on-focus event after moving the cursor to the search input (with the reason = function-call)
+    # fires the callback after the dropdown becomes visible
+    # focus :: (a -> Void) -> Void
+    focus: (callback) !-> 
+        @refs.select.focus-on-input!
         @show-options callback
+
+    # fires the on-blur event after closing the dropdown (with the reason = function-call)
+    # blur :: () -> Void
+    blur: !-> @refs.select.blur!
 
     # highlight-the-first-selectable-option :: (a -> Void) -> Void
     highlight-first-selectable-option: (callback = (->)) !->

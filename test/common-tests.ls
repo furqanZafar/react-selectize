@@ -11,9 +11,10 @@ require! \assert
 Simulate:{change, click, focus, key-down, mouse-over, mouse-out, mouse-move}}:TestUtils = require \react-addons-test-utils
 
 # utils
-{create-select, get-input, set-input-text, get-item-text, click-to-open-select-control, click-on-the-document, find-highlighted-option, 
-component-with-class-must-not-exist, press-backspace, press-escape, press-tab, press-return, press-up-arrow, press-down-arrow, press-left-arrow, 
-press-right-arrow, press-command-left, press-command-right}:utils = require \./utils
+{create-select, get-input, set-input-text, get-item-text, click-to-open-select-control, click-on-the-document, 
+find-highlighted-option, component-with-class-must-not-exist, press-backspace, press-escape, press-tab, 
+press-return, press-up-arrow, press-down-arrow, press-left-arrow, press-right-arrow, press-command-left, 
+press-command-right}:utils = require \./utils
 
 # :: ReactClass -> Void
 module.exports = (select-class) !->
@@ -24,14 +25,14 @@ module.exports = (select-class) !->
 
     specify "empty select must have placeholder", ->
         select = create-select!
-        find-rendered-DOM-component-with-class select, \placeholder
+        find-rendered-DOM-component-with-class select, \react-selectize-placeholder
 
     specify "non empty select must not have placeholder", ->
         {refs}:select = create-select!
         input = find-DOM-node refs.select.refs.search
             ..value = \test
         change input
-        component-with-class-must-not-exist select, \placeholder
+        component-with-class-must-not-exist select, \react-selectize-placeholder
 
     specify "must default the list of options to an empty list", ->
         select = create-select options: undefined
@@ -275,7 +276,7 @@ module.exports = (select-class) !->
         select = create-select!
         click-to-open-select-control select
         click find-highlighted-option select
-        click (find-rendered-DOM-component-with-class select, \reset)
+        click (find-rendered-DOM-component-with-class select, \react-selectize-reset)
         component-with-class-must-not-exist \simple-value
 
     specify "must default to an empty list of options", ->
@@ -336,7 +337,7 @@ module.exports = (select-class) !->
 
     specify "clicking arrow button must toggle the dropdown", ->
         select = create-select!
-        arrow = find-rendered-DOM-component-with-class select, \arrow
+        arrow = find-rendered-DOM-component-with-class select, \react-selectize-arrow
         click arrow
         find-rendered-DOM-component-with-class select, \react-selectize-dropdown
         click arrow

@@ -196,10 +196,13 @@ module.exports = React.create-class do
                 else
                     1
 
-    # focus :: a -> (a -> Void) -> Void
+    # focus :: (a -> Void) -> Void
     focus: (callback) -> 
-        @refs.select.focus!
+        @refs.select.focus-on-input!
         @show-options callback
+
+    # blur :: () -> Void
+    blur: !-> @refs.select.blur!
 
     # highlight-the-first-selectable-option :: a -> Void
     highlight-first-selectable-option: !->
