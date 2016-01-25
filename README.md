@@ -13,7 +13,7 @@ styles & features inspired by [React Select](http://jedwatson.github.io/react-se
 
 [![](http://i.imgsafe.co/rQmogzn.gif)](http://furqanZafar.github.io/react-selectize/)
 
-- [Changelog](CHANGELOG.md) (last updated on 22nd January 2016)
+- [Changelog](CHANGELOG.md) (last updated on 25th January 2016)
 - [API Reference](API.md)
 
 # Motivation
