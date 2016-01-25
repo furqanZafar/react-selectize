@@ -31,6 +31,7 @@ module.exports = React.create-class do
         # restore-on-backspace :: Item -> String
         # search :: String
         style: {}
+        tether: false
         # uid :: (Equatable e) => Item -> e
         # value :: Item
 
@@ -40,8 +41,8 @@ module.exports = React.create-class do
         {search, value, values, on-search-change, on-value-change, filtered-options, options} = @get-computed-state!
 
         # props
-        {autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, on-enter, 
-        render-group-title, transition-enter, transition-leave, transition-enter-timeout, transition-leave-timeout, uid} = @props
+        {autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, on-enter, render-group-title, 
+        tether, transition-enter, transition-leave, transition-enter-timeout, transition-leave-timeout, uid} = @props
         
         ReactSelectize {
             
@@ -55,6 +56,7 @@ module.exports = React.create-class do
             groups-as-columns
             on-enter
             render-group-title
+            tether
             transition-enter
             transition-enter-timeout
             transition-leave
@@ -122,7 +124,8 @@ module.exports = React.create-class do
         | typeof @props.restore-on-backspace == \function => restore-on-backspace: @props.restore-on-backspace
         | _ => {})
         <<< (switch
-        | typeof @props.render-no-results-found == \function => render-no-results-found: ~> @props.render-no-results-found value, search
+        | typeof @props.render-no-results-found == \function => 
+            render-no-results-found: ~> @props.render-no-results-found value, search
         | _ => {})
 
     # get-computed-state :: a -> UIState
@@ -134,12 +137,17 @@ module.exports = React.create-class do
         show-value = if !!@props.editable then !@state.open else search.length == 0
         values = if !!value and show-value then [value] else []
         [on-search-change, on-value-change] = <[search value]> |> map (p) ~>
-            | @props.has-own-property p and @props.has-own-property camelize "on-#{p}-change" => @props[camelize "on-#{p}-change"]
-            | @props.has-own-property p and !(@props.has-own-property camelize "on-#{p}-change") => (, callback) ~> callback!
+            | @props.has-own-property p and @props.has-own-property camelize "on-#{p}-change" => 
+                @props[camelize "on-#{p}-change"]
+
+            | @props.has-own-property p and !(@props.has-own-property camelize "on-#{p}-change") => 
+                (, callback) ~> callback!
+
             | !(@props.has-own-property p) and @props.has-own-property camelize "on-#{p}-change" => 
                 (o, callback) ~> 
                     <~ @set-state {"#{p}" : o}
                     @props[camelize "on-#{p}-change"] o, callback
+
             | !(@props.has-own-property p) and !(@props.has-own-property camelize "on-#{p}-change") => 
                 (o, callback) ~> @set-state {"#{p}" : o}, callback
 
@@ -156,7 +164,9 @@ module.exports = React.create-class do
 
         # filter options and create new one from search text
         filtered-options = @props.filter-options unfiltered-options, search
-        new-option = if typeof @props.create-from-search == \function then (@props.create-from-search filtered-options, search) else null
+        new-option = 
+            | typeof @props.create-from-search == \function => @props.create-from-search filtered-options, search
+            | _ => null
         options = (if !!new-option then [{} <<< new-option <<< new-option: true] else []) ++ filtered-options
 
         {search, value, values, on-search-change, on-value-change, filtered-options, options}
@@ -183,10 +193,16 @@ module.exports = React.create-class do
                 else
                     1
 
-    # focus :: a -> (a -> Void) -> Void
-    focus: (callback) -> 
-        @refs.select.focus!
+    # fires the on-focus event after moving the cursor to the search input (with the reason = function-call)
+    # fires the callback after the dropdown becomes visible
+    # focus :: (a -> Void) -> Void
+    focus: (callback) !-> 
+        @refs.select.focus-on-input!
         @show-options callback
+
+    # fires the on-blur event after closing the dropdown (with the reason = function-call)
+    # blur :: () -> Void
+    blur: !-> @refs.select.blur!
 
     # highlight-the-first-selectable-option :: (a -> Void) -> Void
     highlight-first-selectable-option: (callback = (->)) !->

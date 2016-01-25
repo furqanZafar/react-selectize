@@ -147,6 +147,15 @@ uid = {function(item){
 ```
 the `uid` function is used internally for performance optimization. 
 
+## Deps
+* [tether](https://github.com/HubSpot/tether)
+
+## Peer Deps
+* react
+* react-dom
+* react-addons-css-transition
+* react-addons-shallow-compare
+
 ## Development
 * `npm install`
 * `gulp`

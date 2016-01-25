@@ -1,4 +1,4 @@
-# prelude ls
+# prelude ls 
 {each, filter, find, find-index, id, initial, last, map, obj-to-pairs, 
 partition, reject, reverse, Str, sort-by, sum, values} = require \prelude-ls
 
@@ -6,107 +6,17 @@ partition, reject, reverse, Str, sort-by, sum, values} = require \prelude-ls
 {DOM:{div, input, span}, create-class, create-factory}:React = require \react
 {find-DOM-node} = require \react-dom
 ReactCSSTransitionGroup = create-factory require \react-addons-css-transition-group
-
-# cancel-event :: Event -> Void
-cancel-event = (e) !->
-    e.prevent-default!
-    e.stop-propagation!
-
-# converts {a: 1, b: 1, c: 0, d: 1} to "a b d"
-# class-name-from-object :: Map String, Boolean -> String
-class-name-from-object = ->
-    it 
-    |> obj-to-pairs
-    |> filter -> !!it.1
-    |> map (.0)
-    |> Str.join ' '
-
-# OptionWrapper & ValueWrapper are used for optimizing performance 
-OptionWrapper = create-factory create-class do 
-
-    # get-default-porps :: () -> Props
-    get-default-props: ->
-        # item :: Item
-        # on-click :: Event -> Void
-        # on-mouse-move :: Event -> Void
-        # on-mouse-over :: Event -> Void
-        # render-item :: Item -> ReactElement
-        # highlight :: Boolean
-        # selectable :: Bolean
-        # uid :: a
-        {}
-
-    # render :: a -> ReactElement
-    render: ->
-        div do
-            class-name: "option-wrapper #{if !!@props.highlight then 'highlight' else ''}"
-            on-click: @props.on-click
-            on-mouse-move: @props.on-mouse-move
-            on-mouse-out: @props.on-mouse-out
-            on-mouse-over: @props.on-mouse-over
-            @props.render-item @props.item
-
-    # should-component-update :: Props -> Boolean
-    should-component-update: (next-props) ->
-        (!(next-props?.uid `is-equal-to-object` @props?.uid)) or 
-        (next-props?.highlight != @props?.highlight) or 
-        (next-props?.selectable != @props?.selectable)
-
-ValueWrapper = create-factory create-class do 
-
-    # get-default-porps :: () -> Props
-    get-default-props: ->
-        # item :: Item
-        # render-item :: Item -> ReactElement
-        # uid :: a
-        {}
-
-    # render :: a -> ReactElement
-    render: ->
-        div do 
-            class-name: \value-wrapper
-            @props.render-item @props.item
-
-    # should-component-update :: Props -> Boolean
-    should-component-update: (next-props) ->
-        !(next-props?.uid `is-equal-to-object` @props?.uid)
-
-# used to detect when the dropdown has been added/removed from dom, 
-# so we can adjust the height of the parent element
-DropdownWrapper = create-factory create-class do 
-
-    # get-default-props :: () -> Props
-    get-default-props: ->
-        class-name: ""
-        on-height-change: (!->) # Number -> Void
-
-    # render :: () -> ReactElement
-    render: ->
-        div do 
-            class-name: @props.class-name
-            ref: \dropdown
-            @props.children
-
-    # component-did-mount :: () -> Void
-    component-did-mount: !->
-        @props.on-height-change do 
-            @refs.dropdown .offset-height
-
-    # component-did-update :: () -> Void
-    component-did-update: !->
-        @props.on-height-change do 
-            @refs.dropdown .offset-height
-
-    # component-will-unmount :: () -> Void
-    component-will-unmount: !->
-        @props.on-height-change 0
-
+Tether = create-factory require \./Tether
+Div = create-factory require \./Div
+OptionWrapper = create-factory require \./OptionWrapper
+ValueWrapper = create-factory require \./ValueWrapper
+{cancel-event, class-name-from-object} = require \./utils
 
 module.exports = create-class do
 
     display-name: \ReactSelectize
 
-    # used to figure out if the focus event was triggered by external action or by @focus!
+    # used to figure out if the focus event was triggered by external action or by @focus-on-input!
     focus-lock: false
 
     # used to block default behaviour of option.mouseover when triggered by scrolling using arrow keys
@@ -198,6 +108,7 @@ module.exports = create-class do
 
         search: ""
         style: {}
+        tether: false
         transition-enter: false
         transition-leave: false
         transition-enter-timeout: 200
@@ -209,7 +120,14 @@ module.exports = create-class do
     render: ->
         anchor-index = 
             | (typeof @props.anchor == \undefined) or @props.anchor == null => -1
-            | _ => (find-index (~> it `@is-equal-to-object` @props.anchor), @props.values) ? @props.values.length - 1        
+            | _ => (find-index (~> it `@is-equal-to-object` @props.anchor), @props.values) ? @props.values.length - 1
+
+        dynamic-class-name = class-name-from-object do
+            "#{@props.class-name}" : 1
+            disabled: @props.disabled
+            open: @props.open
+            flipped: @props.dropdown-direction == -1
+            tethered: @props.tether
 
         # render-selected-values :: [Int] -> [ValueWrapper]
         render-selected-values = ~> it |> map (index) ~> 
@@ -224,27 +142,22 @@ module.exports = create-class do
 
         # REACT SELECTIZE
         div do 
-            class-name: class-name-from-object do
-                \react-selectize : 1
-                "#{@props.class-name}" : 1
-                disabled: @props.disabled
-                open: @props.open
-                flipped: @props.dropdown-direction == -1
+            class-name: "react-selectize #{dynamic-class-name}"
             style: @props.style
             
             # CONTROL
             div do 
-                class-name: \control
+                class-name: \react-selectize-control
                 ref: \control
                 on-click: ~>
                     <~ @props.on-anchor-change last @props.values
                     <~ @props.on-open-change true
-                    @focus!
+                    @focus-on-input!
                 
                 # PLACEHOLDER TEXT
                 if @props.search.length == 0 and @props.values.length == 0
                     div do 
-                        class-name: \placeholder
+                        class-name: \react-selectize-placeholder
                         @props.placeholder
 
                 # LIST OF SELECTED VALUES (BEFORE & INCLUDING THE ANCHOR)
@@ -269,7 +182,7 @@ module.exports = create-class do
                                 callback @focus-lock = false 
                             else 
                                 @props.on-open-change true, -> callback true
-                        @props.on-focus @props.values, if !!result then \event else \focus
+                        @props.on-focus @props.values, if !!result then \event else \function-call
 
                     # on-paste :: Event -> Boolean
                     on-paste: @props.on-paste
@@ -281,10 +194,7 @@ module.exports = create-class do
                         switch e.which
 
                         # TAB
-                        | 9 =>
-                            <~ @props.on-open-change false
-                            <~ @props.on-anchor-change last @props.values
-                            @props.on-blur @props.values, \tab
+                        | 9 => @blur \tab
 
                         # BACKSPACE
                         | 8 => 
@@ -341,7 +251,7 @@ module.exports = create-class do
                                 else 
                                     ~> @props.on-values-change [], it
                             <~ @props.on-search-change ""
-                            @focus!
+                            @focus-on-input!
 
                         # ENTER
                         if (e.which in [13] ++ @props.delimiters) and @props.open
@@ -353,7 +263,9 @@ module.exports = create-class do
                             @props.on-enter highlighted-option
 
                             # select the highlighted option (if any)
-                            @select-highlighted-uid anchor-index
+                            @select-highlighted-uid anchor-index, (selected-value) ~>
+                                if !selected-value
+                                    @blur \enter
 
                             return cancel-event e
 
@@ -404,29 +316,49 @@ module.exports = create-class do
                  
                 # RESET BUTTON
                 div do 
-                    class-name: \reset
+                    class-name: \react-selectize-reset
                     on-click: (e) ~>
                         do ~>
                             <~ @props.on-values-change []
                             <~ @props.on-search-change ""
-                            @focus!
+                            @focus-on-input!
                         cancel-event e
                     \×
 
                 # ARROW ICON 
                 div do 
-                    class-name: \arrow
+                    class-name: \react-selectize-arrow
                     on-click: (e) ~>
                         if @props.open 
-                            @props.on-open-change false
-                            @props.on-blur @props.values, \arrow-click
+                            @blur \arrow-click
                         else
                             <~ @props.on-anchor-change last @props.values
                             <~ @props.on-open-change true
-                            @focus!
+                            @focus-on-input!
                         cancel-event e
+            
+            # (TETHERED / ANIMATED / SIMPLE) DROPDOWN
+            @render-tethered-dropdown {anchor-index, dynamic-class-name} 
 
-            # DROPDOWN                            
+    # render-tethered-dropdown :: ComputedState -> ReactElement
+    render-tethered-dropdown: (computed-state) ->
+        if @props.tether 
+            Tether do
+                target: ~> find-DOM-node @refs.control
+                options:
+                    attachment: "top left"
+                    target-attachment: "bottom left"
+                    constraints:
+                        * to: \scrollParent
+                        ...
+                @render-animated-dropdown computed-state
+
+        else
+            @render-animated-dropdown computed-state
+
+    # render-animated-dropdown :: ComputedState -> ReactElement
+    render-animated-dropdown: ({dynamic-class-name}:computed-state) ->
+        if !!@props.transition-enter or !!@props.transition-leave
             ReactCSSTransitionGroup do 
                 component: \div
                 transition-name: \slide 
@@ -434,87 +366,101 @@ module.exports = create-class do
                 transition-leave: @props.transition-leave
                 transition-enter-timeout: @props.transition-enter-timeout
                 transition-leave-timeout: @props.transition-leave-timeout
-                class-name: \dropdown-transition
-                ref: \dropdown-transition
-                if @props.open
-                    
-                    # render-options :: [Item] -> Int -> [ReactEleent]
-                    render-options = (options) ~>
-                        [0 til options.length] |> map (index) ~>
-                            option = options[index]
-                            uid = @props.uid option
+                class-name: "react-selectize-dropdown-container #{dynamic-class-name}"
+                ref: \dropdown-container
+                @render-dropdown computed-state
 
-                            # OPTION WRAPPER 
-                            OptionWrapper do
-                                {
-                                    uid
-                                    ref: "option-#{@uid-to-string uid}"
-                                    key: @uid-to-string uid
-                                    item: option
-                                    highlight: @props.highlighted-uid `is-equal-to-object` uid
-                                    on-mouse-move: ({current-target}) !~> @scroll-lock = false if @scroll-lock
-                                    on-mouse-out: !~> @props.on-highlighted-uid-change undefined if !@scroll-lock
-                                    render-item: @props.render-option
-                                } <<< 
-                                    switch 
-                                    | (typeof option?.selectable == \boolean) and !option.selectable => on-click: cancel-event
-                                    | _ => 
-                                        on-click: (e) !~> @select-highlighted-uid anchor-index
-                                        on-mouse-over: ({current-target}) !~>  @props.on-highlighted-uid-change uid if !@scroll-lock
+        else
+            @render-dropdown computed-state
 
-                    # just a div with its lifecycle exposed via on-height-change
-                    DropdownWrapper do 
-                        class-name: \dropdown
-                        key: \dropdown
-                        ref: \dropdown
-                        on-height-change: (height) ~> 
-                            if @refs[\dropdown-transition]
-                                find-DOM-node @refs[\dropdown-transition] .style.height = "#{height}px"
+    # render-options :: [Item] -> Int -> [ReactEleent]
+    render-options: (options, anchor-index) ->
+        [0 til options.length] |> map (index) ~>
+            option = options[index]
+            uid = @props.uid option
 
-                        # NO RESULT FOUND   
-                        if @props.options.length == 0
-                            @props.render-no-results-found!
-                        
-                        else if @props?.groups?.length > 0
+            # OPTION WRAPPER 
+            OptionWrapper do
+                {
+                    uid
+                    ref: "option-#{@uid-to-string uid}"
+                    key: @uid-to-string uid
+                    item: option
+                    highlight: @props.highlighted-uid `is-equal-to-object` uid
+                    selectable: option?.selectable
+                    on-mouse-move: ({current-target}) !~> @scroll-lock = false if @scroll-lock
+                    on-mouse-out: !~> @props.on-highlighted-uid-change undefined if !@scroll-lock
+                    render-item: @props.render-option
+                } <<< 
+                    switch 
+                    | (typeof option?.selectable == \boolean) and !option.selectable => on-click: cancel-event
+                    | _ => 
+                        on-click: (e) !~> @select-highlighted-uid anchor-index, ~>
+                        on-mouse-over: ({current-target}) !~>  @props.on-highlighted-uid-change uid if !@scroll-lock
 
-                            # convert [Group] to [{index: Int, group: Group, options: [Item]}]
-                            groups = [0 til @props.groups.length] |> map (index) ~>  
-                                {group-id}:group = @props.groups[index]
-                                options = @props.options |> filter ~> (@props.group-id it) == group-id
-                                {index, group, options}
+    # render-dropdown :: ComputedState -> ReactElement
+    render-dropdown: ({anchor-index, dynamic-class-name}) ->
+        if @props.open
+            
+            # DROPDOWN
+            Div do 
+                class-name: "react-selectize-dropdown #{dynamic-class-name}"
+                key: \dropdown
+                ref: \dropdown
 
-                            # GROUPS
-                            div class-name: "groups #{if !!@props.groups-as-columns then 'as-columns' else ''}",
-                                groups 
-                                    |> filter (.options.length > 0)
-                                    |> map ({index, {group-id}:group, options}) ~>
+                # on-height-change :: Number -> Void
+                on-height-change: (height) !~> 
+                    if @refs[\dropdown-container]
+                        find-DOM-node @refs[\dropdown-container] .style.height = "#{height}px"
 
-                                        # GROUP
-                                        div key: group-id,
-                                            @props.render-group-title index, group, options
-                                            div class-name: \options, (render-options options)
+                # NO RESULT FOUND   
+                if @props.options.length == 0
+                    @props.render-no-results-found!
+                
+                else if @props?.groups?.length > 0
 
-                        else
-                            render-options @props.options
+                    # convert [Group] to [{index: Int, group: Group, options: [Item]}]
+                    groups = [0 til @props.groups.length] |> map (index) ~>  
+                        {group-id}:group = @props.groups[index]
+                        options = @props.options |> filter ~> (@props.group-id it) == group-id
+                        {index, group, options}
+
+                    # GROUPS
+                    div class-name: "groups #{if !!@props.groups-as-columns then 'as-columns' else ''}",
+                        groups 
+                            |> filter (.options.length > 0)
+                            |> map ({index, {group-id}:group, options}) ~>
+
+                                # GROUP
+                                div key: group-id,
+                                    @props.render-group-title index, group, options
+                                    div class-name: \options, (@render-options options)
+
+                else
+                    @render-options @props.options, anchor-index
+
+        else
+            null
 
     # component-did-mount :: a -> Void
     component-did-mount: !->
-        root-node = find-DOM-node @
 
         # hide the dropdown when the user clicks outside selectize
         document.add-event-listener do 
             \click
             @external-click-listener = ({target}) ~>
+                nodes = [@, @refs.dropdown]
+                    |> filter -> !!it
+                    |> map find-DOM-node
 
                 # dom-node-contains :: DOMElement -> Boolean
                 dom-node-contains = (element) ~>
                     return false if (typeof element == \undefined) or element == null
-                    return true if element == root-node
+                    return true if element in nodes
                     dom-node-contains element.parent-element
 
                 if @props.open and !(dom-node-contains target)
-                    @props.on-open-change false
-                    @props.on-blur @props.values, \click
+                    @blur \click-outside
             true
 
     # component-will-unmount :: a -> Void
@@ -527,7 +473,7 @@ module.exports = create-class do
         # if the list of options opened then highlight the first option & focus on the search input
         if @props.open and !prev-props.open and @props.highlighted-uid == undefined
             @highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1
-            @focus!
+            @focus-on-input!
 
         # if the list of options was closed then reset highlighted-uid 
         @props.on-highlighted-uid-change undefined if !@props.open and prev-props.open
@@ -537,10 +483,10 @@ module.exports = create-class do
             ..style.width = "0px"
             ..style.width = "#{@props.autosize $search}px"
 
-        $dropdown-transition = find-DOM-node @refs[\dropdown-transition]
-
-        if !!@refs.dropdown
-            $dropdown-transition.style <<< 
+        # flip the dropdown if props.dropdown-direction is -1
+        ref = @refs[if !!@refs[\dropdown-container] then \dropdown-container else \dropdown]
+        if !!ref
+            (find-DOM-node ref).style <<< 
                 bottom: if @props.dropdown-direction == -1 then (find-DOM-node @refs.control).offset-height else ""
 
     # component-will-receive-props :: Props -> Void
@@ -552,17 +498,28 @@ module.exports = create-class do
     # option-index-from-uid :: (Eq e) => e -> Int
     option-index-from-uid: (uid) -> @props.options |> find-index ~> uid `is-equal-to-object` @props.uid it
 
-    # blur :: a -> Void
-    blur: !-> 
-        (find-DOM-node @refs.search).blur!
-        @props.on-blur @props.values, \blur
+    # blur :: String? -> Void (closes the dropdown and moves the anchor to the end)
+    blur: (reason = \function-call) -> 
+        input = find-DOM-node @refs.search
+        if input == document.active-element
+            input.blur!
+        <~ @props.on-open-change false
+        <~ @props.on-anchor-change last @props.values
+        @props.on-blur @props.values, reason
 
-    # focus on search input if it doesn't already have it
-    # focus :: a -> Void
-    focus: !->
-        if (find-DOM-node @refs.search) != document.active-element
+    # focus on search input if it doesn't already have it (does not touch the dropdown)
+    # reset & escape button need to focus the cursor on the input field without opening the dropdown
+    # the reason for inconsistancy in focus and blur is because in blur state the dropdown must alwasy be hidden
+    # but in focus state it may or may not be open
+    # focus-on-input :: a -> Void
+    focus-on-input: !->
+        input = find-DOM-node @refs.search
+        if input != document.active-element
             @focus-lock = true
-            (find-DOM-node @refs.search).focus!
+
+            # this triggers the DOM focus event on the input control, where we use @focus-lock to determine
+            # if the event was triggered by external action or by invoking @focus-on-input method.
+            input.focus!
 
     # highlight-and-scroll-to-option :: Int, (a -> Void)? -> Void
     highlight-and-scroll-to-option: (index, callback = (->)) !->
@@ -605,11 +562,11 @@ module.exports = create-class do
     is-equal-to-object: --> (@props.uid &0) `is-equal-to-object` @props.uid &1
 
     # select-highlighted-uid :: Int -> Void
-    select-highlighted-uid: (anchor-index) !->
-        return if @props.highlighted-uid == undefined
+    select-highlighted-uid: (anchor-index, callback) !->
+        return callback! if @props.highlighted-uid == undefined
         
         index = @option-index-from-uid @props.highlighted-uid
-        return if typeof index != \number
+        return callback! if typeof index != \number
 
         option = @props.options[index]
 
@@ -620,20 +577,24 @@ module.exports = create-class do
             (map (~> @props.values[it]), [anchor-index + 1 til @props.values.length])
 
         value = find (~> it `@is-equal-to-object` option), @props.values
-        return if !value
+        return callback! if !value
         
         # if the user did what we asked, then clear the search and move the anchor ahead of the selected value
         <~ @props.on-search-change ""
         <~ @props.on-anchor-change value
-        return if !@props.open
+        return callback value if !@props.open
         
         # highlight the next selectable option
         result <~ @highlight-and-scroll-to-selectable-option index, 1
-        return if !!result
+        return callback value if !!result
         
         # if there are no highlightable/selectable options left (then close the dropdown)
         result <~ @highlight-and-scroll-to-selectable-option (@props.first-option-index-to-highlight @props.options), 1
-        (@props.on-open-change false, ~>) if !result
+        if !result 
+            <~ @props.on-open-change false
+            callback value
+        else
+            callback value
 
     # uid-to-string :: a -> String
     uid-to-string: (uid) -> (if typeof uid == \object then JSON.stringify else id) uid

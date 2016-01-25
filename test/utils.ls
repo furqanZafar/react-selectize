@@ -29,7 +29,7 @@ export get-item-text = (item) ->
 
 # click-to-open-select-control :: Select -> Void
 export click-to-open-select-control = (select) !->
-    click find-rendered-DOM-component-with-class select, \control
+    click find-rendered-DOM-component-with-class select, \react-selectize-control
 
 # find-highlighted-option :: Select -> ReactElement
 export find-highlighted-option = (select) ->
