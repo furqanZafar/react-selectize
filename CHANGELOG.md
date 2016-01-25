@@ -1,5 +1,8 @@
 # React Selectize
 
+## v0.5.1 / 25th January 2016
+* fixed tabbing (broken in v0.5.0, caused by refactoring related to blur method) (#25)
+
 ## v0.5.0 / 25th January 2016
 * added `tether` prop
 * added `blur` method
