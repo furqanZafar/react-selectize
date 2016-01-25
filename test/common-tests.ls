@@ -3,12 +3,18 @@ require! \assert
 {is-equal-to-object} = require \prelude-extension
 
 # React
-{create-class, create-element, DOM:{div, option, span}} = require \react
+{create-class, create-element, DOM:{div, input, option, span}} = require \react
 {find-DOM-node, render, unmount-component-at-node} = require \react-dom
 
 # TestUtils
-{find-rendered-DOM-component-with-class, scry-rendered-DOM-components-with-class, 
-Simulate:{change, click, focus, key-down, mouse-over, mouse-out, mouse-move}}:TestUtils = require \react-addons-test-utils
+{
+    find-rendered-DOM-component-with-class
+    find-rendered-DOM-component-with-tag
+    scry-rendered-DOM-components-with-class
+    scry-rendered-DOM-components-with-tag
+    key-down
+    Simulate:{change, click, focus, key-down, mouse-over, mouse-out, mouse-move}
+}:TestUtils = require \react-addons-test-utils
 
 # utils
 {create-select, get-input, set-input-text, get-item-text, click-to-open-select-control, click-on-the-document, 
@@ -383,3 +389,18 @@ module.exports = (select-class) !->
         select = create-select!
         click-to-open-select-control select
         unmount-component-at-node (find-DOM-node select .parent-element)
+
+    specify "must blur on pressing return key on an empty list of options", (done) ->
+        state = on-enter-invoked: false
+        select = create-select do 
+            on-enter: -> state.on-enter-invoked = true
+        click-to-open-select-control select
+        input = get-input select
+        assert document.active-element == input
+        set-input-text input, "some random text"
+        press-return input
+        <~ set-timeout _, 250
+        assert input != document.active-element
+        assert state.on-enter-invoked == true
+        component-with-class-must-not-exist \react-selectize-dropdown
+        done!

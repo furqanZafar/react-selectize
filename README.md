@@ -13,7 +13,7 @@ styles & features inspired by [React Select](http://jedwatson.github.io/react-se
 
 [![](http://i.imgsafe.co/rQmogzn.gif)](http://furqanZafar.github.io/react-selectize/)
 
-- [Changelog](CHANGELOG.md) (last updated on 22nd January 2016)
+- [Changelog](CHANGELOG.md) (last updated on 25th January 2016)
 - [API Reference](API.md)
 
 # Motivation
@@ -39,6 +39,7 @@ styles & features inspired by [React Select](http://jedwatson.github.io/react-se
 * [Customizable dropdown direction](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=dropdown-direction)
 * [Mark options as unselectable](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=selectability)
 * [Disable selected values](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=disable-selected)
+* [Absolute positioned overlay, "Tether"ed to the search field](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=tether)
 * Customizable styles, comes with Stylus files
 
 ## Install
