@@ -15,7 +15,7 @@ Form = React.create-class do
             # MULTISELECT
             React.create-element MultiSelect,
                 tether: true
-                options: <[apple mango grapes melon strawberry]> |> map ~> label: it, value: it
+                options: <[apple mango grapes melon strawberry cherry banana kiwi]> |> map ~> label: it, value: it
                 placeholder: "Select fruits"
 
             # RANDOM TEXT

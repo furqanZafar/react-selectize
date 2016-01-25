@@ -25,12 +25,6 @@ examples =
             jsx: fs.read-file-sync \public/examples/multi/MultiSelect.jsx, \utf8 
             ls: fs.read-file-sync \public/examples/multi/MultiSelect.ls, \utf8 
 
-        * title: "Tether"
-          description: ""
-          languages:
-            jsx: fs.read-file-sync \public/examples/multi/MultiSelect.jsx, \utf8 
-            ls: fs.read-file-sync \public/examples/multi/Tether.ls, \utf8 
-
         * title: "On values change"
           description: ""
           languages:
@@ -113,6 +107,17 @@ This demonstrates two main things:
           languages:
             jsx: fs.read-file-sync \public/examples/multi/CustomRendering.jsx, \utf8 
             ls: fs.read-file-sync \public/examples/multi/CustomRendering.ls, \utf8 
+
+        * title: "Tether"
+          description: """
+Setting props.tether to true makes the dropdown an absolutely positioned overlay and uses HubSpot's Tether
+to keep the dropdown tethered to the input control when you scroll the parent element.
+
+This can be useful when you are using the select control inside a parent element with its overflow auto or scroll.
+"""          
+          languages:
+            jsx: fs.read-file-sync \public/examples/multi/Tether.jsx, \utf8 
+            ls: fs.read-file-sync \public/examples/multi/Tether.ls, \utf8 
         ...
 
     simple:
