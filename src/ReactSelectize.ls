@@ -194,7 +194,7 @@ module.exports = create-class do
                         switch e.which
 
                         # TAB
-                        | 9 => @blur \tab
+                        | 9 => @close-dropdown ~> @props.on-blur @props.values, \tab
 
                         # BACKSPACE
                         | 8 => 
@@ -498,14 +498,19 @@ module.exports = create-class do
     # option-index-from-uid :: (Eq e) => e -> Int
     option-index-from-uid: (uid) -> @props.options |> find-index ~> uid `is-equal-to-object` @props.uid it
 
+    # close-dropdown :: (a -> Void) -> Void
+    close-dropdown: (callback) !->
+        <~ @props.on-open-change false
+        @props.on-anchor-change do 
+            last @props.values
+            callback
+
     # blur :: String? -> Void (closes the dropdown and moves the anchor to the end)
     blur: (reason = \function-call) -> 
         input = find-DOM-node @refs.search
         if input == document.active-element
             input.blur!
-        <~ @props.on-open-change false
-        <~ @props.on-anchor-change last @props.values
-        @props.on-blur @props.values, reason
+        @close-dropdown ~> @props.on-blur @props.values, reason
 
     # focus on search input if it doesn't already have it (does not touch the dropdown)
     # reset & escape button need to focus the cursor on the input field without opening the dropdown
