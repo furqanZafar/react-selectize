@@ -2,14 +2,19 @@
 {map} = require \prelude-ls
 {create-element} = require \react
 {find-DOM-node} = require \react-dom
-{find-rendered-DOM-component-with-class, find-rendered-DOM-component-with-tag, Simulate:{change, click, key-down}}:TestUtils = require \react-addons-test-utils
+{
+    find-rendered-DOM-component-with-class
+    find-rendered-DOM-component-with-tag
+    Simulate:{change, click, key-down}
+}:TestUtils = require \react-addons-test-utils
 
 # create-select :: Select -> Props -> Select
 export create-select = (select-class, props, children) -->
     TestUtils.render-into-document create-element do 
         select-class
         {
-            options: <[apple mango orange grapes banana melon pineapple dates]> |> map ~> label: it, value: it
+            options: <[apple mango orange grapes banana melon pineapple dates]> 
+                |> map ~> label: it, value: it
             placeholder: 'Select a fruit'
         } <<< props
         children
