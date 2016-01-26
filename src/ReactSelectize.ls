@@ -434,7 +434,7 @@ module.exports = create-class do
                                 # GROUP
                                 div key: group-id,
                                     @props.render-group-title index, group, options
-                                    div class-name: \options, (@render-options options)
+                                    div class-name: \options, (@render-options options, anchor-index)
 
                 else
                     @render-options @props.options, anchor-index
