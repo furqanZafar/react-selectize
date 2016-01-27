@@ -1,5 +1,8 @@
 # React Selectize
 
+## v0.5.3 / 27th January 2016
+* introduced `name` & `serialize` props for form serialization
+
 ## v0.5.2 / 26th January 2016
 * fixed option groups related bug
 

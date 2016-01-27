@@ -224,7 +224,6 @@ App = React.create-class do
                     Link do
                         key: category
                         class-name: if category == selected-category then \selected else ''
-                        on-click: ~> console.log \apple
                         to: "?category=#{category}"
                         category
                 div class-name: \line
@@ -270,8 +269,6 @@ App = React.create-class do
     # changing the query string manually, or clicking on a different example
     # component-did-update :: Props -> Void
     component-did-update: (prev-props) !-> @scroll-to-example!
-
-console.log \ref, document.referrer
 
 render do 
     Router do 

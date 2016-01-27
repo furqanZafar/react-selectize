@@ -16,6 +16,7 @@
 |    groupId                 | Item -> b                           | `function(item){return item.groupId}` this function is used to identify which group an option belongs to, it must return a value that matches the groupId property of an object in the groups collection|
 |    groups                  | [Group]                             | collection of objects where each object must atleast have a groupId property|
 |    groupsAsColumns         | Boolean                             | display option groups in columns|
+|    name                    | String                              | defaults to undefined, provide a name property to create an hidden input element for html form serialization |
 |    onBlur                  | Item -> String -> Void              | `function(value, reason){}` reason can be either "click-outside", "arrow-click" (clicking the tiny arrow in the top right corner), "tab", "enter" (hitting enter on an empty list of options) or "function-call" (on calling refs.selectInstance.blur())|
 |    onEnter                 | Item -> Void                        | `function(highlightedOption){}` fired with the (highlightedOption or undefined) when the user hits the return key|
 |    onFocus                 | Item -> String -> Void              | `function(value, reason){}` reason can be either "event" (when the control gains focus outside) or "function-call" (when the user invokes refs.selectInstance.focus())|
@@ -29,6 +30,7 @@
 |    renderValue             | Item -> ReactElement                | `function(item){return React.DOM.div(null);}` returns a custom way for rendering the selected value|
 |    restoreOnBackspace      | Item -> String                      | `function(item){return item.label;}` implement this method if you want to go back to editing the item when the user hits the [backspace] key instead of getting removed|
 |    search                  | String                              | the text displayed in the search box|
+|    serialize               | Item -> String                      | `function(item){ return !!item ? item.value : undefined; }` the value of the hidden input element for form serialization |
 |    style                   | Object                              | the CSS styles for the outer element|
 |    transitionEnter         | Boolean                             | defaults to false, setting this to true animates the opening of the dropdown using the `slide-*` css classes|
 |    transitionEnterTimeout  | Number                              | duration specified in milliseconds, it must match the transition duration specified under the CSS class `.slide-enter-active` |

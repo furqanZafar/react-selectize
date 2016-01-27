@@ -26,7 +26,7 @@ module.exports = create-class do
     get-default-props: ->
         anchor: null # :: Item
         
-        # autosize :: InputElement -> Voud
+        # autosize :: InputElement -> Void
         autosize: ($search) !-> 
 
             if $search.value.length == 0
@@ -68,6 +68,7 @@ module.exports = create-class do
         # groups :: [Group]
         groups-as-columns: false
         highlighted-uid: undefined
+        # name :: String, used for creating hidden input element
         on-anchor-change: ((anchor) ->) # Item -> Void
         on-blur: ((values, reason) !->) # [Item] -> String -> Void
         on-enter: ((highlighted-option) !->) # Item -> Void
@@ -105,7 +106,7 @@ module.exports = create-class do
                 span null, label
         
         # restore-on-backspace: ((value) -> ) # Item -> String
-
+        # serialize :: [Item] -> String, used for form serialization
         search: ""
         style: {}
         tether: false
@@ -144,7 +145,15 @@ module.exports = create-class do
         div do 
             class-name: "react-selectize #{dynamic-class-name}"
             style: @props.style
-            
+    
+            if !!@props.name
+
+                # HIDDEN INPUT (for form submission)
+                input do 
+                    type: \hidden
+                    name: @props.name
+                    value: @props.serialize @props.values 
+
             # CONTROL
             div do 
                 class-name: \react-selectize-control

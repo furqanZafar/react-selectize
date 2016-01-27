@@ -404,3 +404,9 @@ module.exports = (select-class) !->
         assert state.on-enter-invoked == true
         component-with-class-must-not-exist \react-selectize-dropdown
         done!
+
+    specify "must blur on calling the blur method", ->
+        select = create-select!
+        click-to-open-select-control select
+        select.blur!
+        component-with-class-must-not-exist \react-selectize-dropdown
