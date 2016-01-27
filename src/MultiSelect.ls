@@ -37,6 +37,7 @@ module.exports = React.create-class do
         # render-value :: Int -> Item -> ReactElement
         # restore-on-backspace :: Item -> String
         # search :: String
+        serialize: map (?.value) # [Item] -> String
         # style :: CSS
         tether: false
         # values :: [Item]
@@ -48,8 +49,11 @@ module.exports = React.create-class do
         on-values-change, filtered-options, options} = @get-computed-state!
 
         # props
-        {autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, on-enter, render-group-title, 
-        tether, transition-enter, transition-leave, transition-enter-timeout, transition-leave-timeout, uid} = @props
+        {
+            autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, name, on-enter, 
+            render-group-title, serialize, tether, transition-enter, transition-leave, transition-enter-timeout, 
+            transition-leave-timeout, uid
+        }? = @props
 
         ReactSelectize {
             
@@ -61,6 +65,7 @@ module.exports = React.create-class do
             group-id
             groups
             groups-as-columns
+            name
             on-enter
             render-group-title
             tether
@@ -102,6 +107,9 @@ module.exports = React.create-class do
                 else 
                     @focus callback
             render-value: @props.render-value
+
+            # FORM SERIALIZATION
+            serialize: serialize
 
             # on blur move the anchor to the end, and reset the search text
             on-blur: (, reason) !~> 

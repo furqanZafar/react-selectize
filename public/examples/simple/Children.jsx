@@ -8,11 +8,22 @@ Form = React.createClass({
             <SimpleSelect 
                 placeholder = "Select a fruit" 
                 ref = "select"
+
+                // default value support
                 defaultValue = {{label: "melon", value: "melon"}}
+
+                // on change callback
                 onValueChange = {function(value, callback){
-                    alert("you selected: " + JSON.stringify(value, null, 4));
+                    console.log("you selected: " + JSON.stringify(value, null, 4));
                     callback();
-                }}>
+                }}
+
+                // form serialization
+                name = "fruit"
+                serialize = {function(item){
+                    return !!item ? item.value : undefined
+                }} // <- optional in this case, default implementation
+            >
                 <option key = "apple" value = "apple">apple</option>
                 <option key = "mango" value = "mango">mango</option>
                 <option key = "grapes" value = "grapes">grapes</option>
@@ -20,7 +31,8 @@ Form = React.createClass({
                 <option key = "strawberry" value = "strawberry">strawberry</option>
             </SimpleSelect>
 
-            <button 
+            <input 
+                type = "submit"
                 onClick = {function(){
                     alert ("you selected: " + JSON.stringify(self.refs.select.value(), null, 4));
                 }}
@@ -28,9 +40,8 @@ Form = React.createClass({
                     cursor: "pointer",
                     height: 24,
                     marginTop: 10
-                }}>
-                Get current value
-            </button>
+                }}
+            />
 
         </div>
 

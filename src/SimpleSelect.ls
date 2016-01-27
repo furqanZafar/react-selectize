@@ -18,6 +18,7 @@ module.exports = React.create-class do
         filter-options: (options, search) -->  
             options
                 |> filter ~> (it.label.to-lower-case!.trim!.index-of search.to-lower-case!.trim!) > -1
+        # name :: String
         on-blur: ((value, reason) !->) # :: Item -> String -> Void
         on-enter: ((highlighted-option) !->) # :: Item -> Void
         on-focus: ((value, reason) !->) # :: Item -> String -> Void
@@ -30,6 +31,7 @@ module.exports = React.create-class do
         # render-value :: Int -> Item -> ReactElement
         # restore-on-backspace :: Item -> String
         # search :: String
+        serialize: (?.value)
         style: {}
         tether: false
         # uid :: (Equatable e) => Item -> e
@@ -41,8 +43,11 @@ module.exports = React.create-class do
         {search, value, values, on-search-change, on-value-change, filtered-options, options} = @get-computed-state!
 
         # props
-        {autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, on-enter, render-group-title, 
-        tether, transition-enter, transition-leave, transition-enter-timeout, transition-leave-timeout, uid} = @props
+        {
+            autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, name, on-enter, 
+            render-group-title, serialize, tether, transition-enter, transition-leave, transition-enter-timeout, 
+            transition-leave-timeout, uid
+        }? = @props
         
         ReactSelectize {
             
@@ -54,6 +59,7 @@ module.exports = React.create-class do
             group-id
             groups
             groups-as-columns
+            name
             on-enter
             render-group-title
             tether
@@ -107,6 +113,9 @@ module.exports = React.create-class do
                     @refs.select.blur!
                     callback!
             render-value: @props.render-value
+
+            # FORM SERIALIZATION
+            serialize: (items) ~> serialize items.0
 
             # on blur clear out the search text
             on-blur: (, reason) !~> 

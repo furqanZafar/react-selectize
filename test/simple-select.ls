@@ -1,6 +1,6 @@
 require! \assert
 require! \./common-tests
-{each, map} = require \prelude-ls
+{each, find, map} = require \prelude-ls
 ReactSelectize = require \../src/index.ls
 
 # React
@@ -8,8 +8,13 @@ ReactSelectize = require \../src/index.ls
 {find-DOM-node} = require \react-dom
 
 # TestUtils
-{find-rendered-DOM-component-with-class, scry-rendered-DOM-components-with-class, 
-find-rendered-DOM-component-with-tag, Simulate:{change, click, focus}}:TestUtils = require \react-addons-test-utils
+{
+    find-rendered-DOM-component-with-class
+    find-rendered-DOM-component-with-tag
+    scry-rendered-DOM-components-with-class
+    scry-rendered-DOM-components-with-tag
+    Simulate:{change, click, focus}
+}:TestUtils = require \react-addons-test-utils
 
 # utils
 {create-select, get-input, set-input-text, get-item-text, click-to-open-select-control, find-highlighted-option, 
@@ -136,3 +141,12 @@ describe "SimpleSelect", ->
         set-input-text (get-input select), \apple
         click find-highlighted-option select
         assert.equal select.value!.label. \apple
+
+    specify "form serialization", ->
+        select = create-simple-select do 
+            name: \test
+        click-to-open-select-control select
+        click find-highlighted-option select
+        {value} = scry-rendered-DOM-components-with-tag select, \input
+            |> find (.type == \hidden)
+        assert \apple == value
