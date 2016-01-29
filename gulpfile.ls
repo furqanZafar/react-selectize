@@ -37,7 +37,7 @@ bundle = (bundler, {file, directory}:output) ->
 ##
 gulp.task \build:examples:styles, ->
     gulp.src <[./public/components/App.styl]>
-    .pipe gulp-stylus use: nib!, import: <[nib]>, compress: config.minify
+    .pipe gulp-stylus {use: nib!, import: <[nib]>, compress: config.minify, "include css": true}
     .pipe gulp.dest './public/components'
     .pipe gulp-connect.reload!
 

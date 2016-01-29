@@ -3,7 +3,7 @@
     background-color white
     border-radius 4px
     font-family Helvetica Neue, Helvetica, Arial, sans-serif
-    -webkit-user-select none
+    user-select none
     position relative
 
     &.disabled
@@ -22,7 +22,7 @@
         .react-selectize-placeholder
             color #aaaaaa
             padding 8px 0px 8px 10px
-            max-width -webkit-calc(100% - 52px)
+            max-width calc(100% - 52px)
             overflow hidden
             text-overflow ellipsis
             white-space nowrap
@@ -145,7 +145,6 @@
 .react-selectize-dropdown
     background white
     border 1px solid #ccc
-    box-sizing border-box
     font-family Helvetica Neue, Helvetica, Arial, sans-serif
     max-height 200px
     overflow auto
