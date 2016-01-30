@@ -52,7 +52,7 @@ gulp.task \build:examples:scripts, ->
 
 gulp.task \watch:examples:scripts, ->
     examples-bundler.on \update, -> bundle-examples!
-    examples-bundler.on \time, (time) -> gulp-util.log "App.js built in #{time} seconds"
+    examples-bundler.on \time, (time) -> gulp-util.log "App.js built in #{time} ms"
 
 ##
 # Source

@@ -8,7 +8,7 @@ module.exports = React.create-class do
 
     display-name: \MultiSelect
 
-    # get-default-props :: a -> Props
+    # get-default-props :: () -> Props
     get-default-props: ->
         # autofocus :: Boolean
         # anchor :: Item
@@ -25,13 +25,13 @@ module.exports = React.create-class do
                 |> reject ~> it.label.trim! in (map (.label.trim!), values ? [])
                 |> filter ~> (it.label.to-lower-case!.trim!.index-of search.to-lower-case!.trim!) > -1
         # max-values :: Int
-        # on-anchor-change :: Item -> (a -> Void) -> Void
-        on-blur: ((values, reason) !->) # :: [Item] -> String -> Void
-        on-focus: ((values, reason) !->) # :: [Item] -> String -> Void
+        # on-anchor-change :: Item -> ()
+        on-blur: ((e) !->) # :: # Event -> ()
+        on-focus: ((e) !->) # :: Event -> ()
         # on-keyboard-selection-failed :: Int -> ()
         on-paste: ((e) !-> true) # Event -> Boolean
-        # on-search-change :: String -> Void
-        # on-value-change :: Item -> Void 
+        # on-search-change :: String -> ()
+        # on-value-change :: Item -> () 
         # options :: [Item]
         # placeholder :: String
         # render-no-results-found :: [Item] -> String -> ReactElement
@@ -44,7 +44,7 @@ module.exports = React.create-class do
         tether: false
         # values :: [Item]
 
-    # render :: a -> ReactElement
+    # render :: () -> ReactElement
     render: -> 
         
         # computed state
@@ -124,11 +124,10 @@ module.exports = React.create-class do
             serialize: serialize
 
             # BLUR & FOCUS
-            on-blur: (, reason) !~> 
+            on-blur: (e) !~> 
                 <~ on-search-change ""
-                @props.on-blur values, reason
-            
-            on-focus: (, reason) !~> @props.on-focus values, reason
+                @props.on-blur {open, values, original-event: e}
+            on-focus: (e) !~> @props.on-focus {open, values, original-event: e}
 
             # on-paste :: Event -> Boolean
             on-paste: 
@@ -164,7 +163,7 @@ module.exports = React.create-class do
         | _ => {})
 
 
-    # get-computed-state :: a -> UIState
+    # get-computed-state :: () -> UIState
     get-computed-state: ->
 
         # decide whether to use state or props
@@ -242,7 +241,7 @@ module.exports = React.create-class do
             options
         }
         
-    # get-initial-state :: a -> UIState
+    # get-initial-state :: () -> UIState
     get-initial-state: ->
         anchor: if !!@props.values then last @props.values else undefined
         highlighted-uid: undefined
@@ -282,14 +281,14 @@ module.exports = React.create-class do
     # blur :: () -> ()
     blur: !-> @refs.select.blur!
 
-    # highlight-the-first-selectable-option :: a -> Void
+    # highlight-the-first-selectable-option :: () -> ()
     highlight-first-selectable-option: !->
         if @state.open
             @refs.select.highlight-and-scroll-to-selectable-option do 
                 @first-option-index-to-highlight @get-computed-state!.options
                 1
 
-    # value :: a -> Item
+    # value :: () -> Item
     values: -> if @props.has-own-property \values then @props.values else @state.values
 
     # is-open :: () -> Boolean

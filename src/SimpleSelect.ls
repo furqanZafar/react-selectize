@@ -22,6 +22,7 @@ module.exports = React.create-class do
         # name :: String
         on-blur: ((e) !->) # :: # Event -> ()
         on-focus: ((e) !->) # :: Event -> ()
+        on-keyboard-selection-failed: ((which) !-> ) # :: Int -> ()
         # on-search-change :: String -> ()
         # on-value-change :: Item -> () 
         # open :: Boolean
@@ -60,11 +61,7 @@ module.exports = React.create-class do
         }? = @props
             
         # if the user hits the return key on an empty dropdown, then hide the dropdown and clear the search text
-        # on-keyboard-selection-failed :: Item -> ()
-        on-keyboard-selection-failed = @props.on-keyboard-selection-failed ? ~>
-            <~ on-search-change ""
-            <~ on-open-change false
-
+        
         ReactSelectize {
             
             autofocus
@@ -77,7 +74,6 @@ module.exports = React.create-class do
             groups
             groups-as-columns
             name
-            on-keyboard-selection-failed
             render-group-title
             tether
             transition-enter
@@ -141,6 +137,10 @@ module.exports = React.create-class do
                 # always show the selected value when the dropdown is closed 
                 else
                     @props.render-value item
+            on-keyboard-selection-failed: (which) ~>
+                <~ on-search-change ""
+                <~ on-open-change false
+                @props.on-keyboard-selection-failed which
 
             # TODO: distinguish between uid for selected value & option, this will improve performance
             #  by not having to compare against additional open & search properties added to uid below
@@ -167,7 +167,6 @@ module.exports = React.create-class do
 
                 # fire on-blur event
                 @props.on-blur {value, open, original-event: e}
-
             on-focus: (e) !~> @props.on-focus {value, open, original-event: e}
 
             # STYLE
