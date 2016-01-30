@@ -478,10 +478,6 @@ module.exports = create-class do
         if @props.autofocus
             @focus!
 
-    # component-will-unmount :: () -> ()
-    component-will-unmount: !->
-        document.remove-event-listener \click, @external-click-listener, true
-
     # component-did-update :: Props -> UIState -> ()
     component-did-update: (prev-props) !->
 
@@ -636,6 +632,6 @@ module.exports = create-class do
             callback value
         else
             callback value
-
-    # uid-to-string :: () -> String, used for the key prop (required by react render, & refs)
+    
+    # uid-to-string :: () -> String, only used for the key prop (required by react render), & for refs
     uid-to-string: (uid) -> (if typeof uid == \object then JSON.stringify else id) uid
