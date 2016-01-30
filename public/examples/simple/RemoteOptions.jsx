@@ -10,19 +10,24 @@ Form = React.createClass({
             search = {this.state.search}
             
             // onSearchChange :: String -> (a -> Void) -> Void
-            onSearchChange={function(search, callback){
-                self.setState({search: search}, callback);
-                if (search.length == 0)
-                    return;
-                if (!!self.req)
-                    self.req.abort();
-                url = "http://api.cdnjs.com/libraries?fields=version,homepage&search=" + search;
-                self.req = $.getJSON(url).done(function(result){
-                    self.setState({libraries: take(50, result.results)}, function(){
-                        self.refs.select.highlightFirstSelectableOption();
-                    })
-                    delete self.req;
-                });
+            onSearchChange={function(search){
+                self.setState({search: search});
+
+                if (search.length > 0) {
+
+                    if (!!self.req)
+                        self.req.abort();
+
+                    self.req = $.getJSON("http://api.cdnjs.com/libraries?fields=version,homepage&search=" + search)
+                        .done(function(result){
+                            self.setState({libraries: take(50, result.results)}, function(){
+                                self.refs.select.highlightFirstSelectableOption();
+                            })
+                            delete self.req;
+                        });
+
+                }
+
             }}
                 
             // disable client side filtering

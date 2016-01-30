@@ -11,9 +11,8 @@ Form = React.create-class do
                 value: @state.make
                 
                 # on-value-change :: Item -> (a -> Void) -> Void
-                on-value-change: (make, callback) !~> 
-                    <~ @set-state {make, model: undefined}
-                    @refs.models.focus callback
+                on-value-change: (make) !~> 
+                    @set-state {make, model: undefined}, ~> @refs.models.focus!
                 
                 # on-focus :: Item -> String -> Void
                 on-focus: (item, reason) ~>
@@ -40,7 +39,7 @@ Form = React.create-class do
                 # disabled :: Boolean
                 disabled: typeof @state.make == \undefined
                 
-                on-value-change: (model, callback) ~> @set-state {model}, callback
+                on-value-change: (model) ~> @set-state {model}
                 style: margin-top: 20, opacity: if !!@state.make then 1 else 0.5
                     
     # get-initial-state :: a -> UIState

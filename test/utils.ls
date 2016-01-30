@@ -5,7 +5,7 @@
 {
     find-rendered-DOM-component-with-class
     find-rendered-DOM-component-with-tag
-    Simulate:{change, click, key-down}
+    Simulate:{change, click, key-down, mouse-down}
 }:TestUtils = require \react-addons-test-utils
 
 # create-select :: Select -> Props -> Select
@@ -23,22 +23,25 @@ export create-select = (select-class, props, children) -->
 export get-input = (select) -> 
     find-DOM-node find-rendered-DOM-component-with-tag select, \input
 
-# set-input-text :: DOMInput -> String -> Void
-export set-input-text = (input, text) !-->
-    input.value = text
-    change input
-
 # get-item-text :: Item -> String
 export get-item-text = (item) ->
     (item.get-elements-by-tag-name \span).0.innerHTML
 
+export click-option = (option-element, callback) ->
+    mouse-down option-element
+    event = document.create-event 'MouseEvents'
+        ..init-mouse-event \mouseup
+    window.dispatch-event event
+
 # click-to-open-select-control :: Select -> Void
 export click-to-open-select-control = (select) !->
-    click find-rendered-DOM-component-with-class select, \react-selectize-control
+    mouse-down find-rendered-DOM-component-with-class select, \react-selectize-control
 
-# find-highlighted-option :: Select -> ReactElement
-export find-highlighted-option = (select) ->
-    find-rendered-DOM-component-with-class select, \highlight
+# click-on-the-document :: a -> Void
+export click-on-the-document = ->
+    click-event = document.create-event \MouseEvents
+        ..init-event \click, false, true
+    document.body.dispatch-event click-event
 
 # component-with-class-must-not-exist :: ReactElement -> String -> p String
 export component-with-class-must-not-exist = (tree, class-name) ->
@@ -49,11 +52,9 @@ export component-with-class-must-not-exist = (tree, class-name) ->
         res true
     rej "component with class-name: (#{class-name}) must not exist"
 
-# click-on-the-document :: a -> Void
-export click-on-the-document = ->
-    click-event = document.create-event \MouseEvents
-        ..init-event \click, true, true
-    document.dispatch-event click-event
+# find-highlighted-option :: Select -> ReactElement
+export find-highlighted-option = (select) ->
+    find-rendered-DOM-component-with-class select, \highlight
 
 # press-backspace :: ReactElement -> Void
 export press-backspace = !-> key-down it, which: 8
@@ -84,3 +85,8 @@ export press-command-left = !-> key-down it, which: 37, meta-key: true
 
 # press-command-right :: ReactElement -> Void
 export press-command-right = !-> key-down it, which: 39, meta-key: true
+
+# set-input-text :: DOMInput -> String -> Void
+export set-input-text = (input, text) !-->
+    input.value = text
+    change input

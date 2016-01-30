@@ -15,10 +15,10 @@ Form = React.createClass({
             }}
             
             // onValuesChange :: [Item] -> (a -> Void) -> Void
-            onValuesChange = {function(selectedEmojis, callback){
+            onValuesChange = {function(selectedEmojis){
                 self.setState({
                     selectedEmojis: selectedEmojis
-                }, callback);
+                });
             }}
             
             // filterOptions :: [Item] -> [Item] -> String -> [Item]

@@ -4,6 +4,7 @@
 export cancel-event = (e) !->
     e.prevent-default!
     e.stop-propagation!
+    false
 
 # converts {a: 1, b: 1, c: 0, d: 1} to "a b d"
 # class-name-from-object :: Map String, Boolean -> String

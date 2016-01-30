@@ -1,18 +1,20 @@
 Form = React.create-class do 
     
-    # render :: a -> ReactElement
+    # render :: () -> ReactElement
     render: ->
         React.create-element SimpleSelect,
             options: @state.options
             placeholder: "Select a color"
+
             create-from-search: (options, search) ~> 
-                return null if search.length == 0 or search in map (.label), options
-                label: search, value: search
-            on-value-change: ({label, value, new-option}?, callback) !~>
-                if !!new-option
-                    @set-state options: [{label, value}] ++ @state.options, callback 
+                if search.length == 0 or search in (map (.label), options)
+                    null
                 else
-                    callback!
+                    label: search, value: search
+
+            on-value-change: ({label, value, new-option}?) !~>
+                if !!new-option
+                    @set-state options: [{label, value}] ++ @state.options
 
             # render-option :: Int -> Item -> ReactElement
             render-option: ({label, new-option}?) ~>
@@ -32,9 +34,10 @@ Form = React.create-class do
                         vertical-align: \middle, width: 24, height: 24
                     span style: margin-left: 10, vertical-align: \middle, label
                 
+    # get-initial-state :: () -> UIState
     get-initial-state: ->
         
-        # random-color :: a -> String
+        # random-color :: () -> String
         random-color = -> 
             [0 to 2] 
             |> map -> Math.floor Math.random! * 255

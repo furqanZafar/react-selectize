@@ -14,14 +14,12 @@ Form = React.create-class do
                 label: search, value: search
             
             # on-value-change :: Item -> (a -> Void) -> Void
-            on-value-change: ({label, value, new-option}?, callback) !~>
+            on-value-change: ({label, value, new-option}?) !~>
                 # here, we add the selected item to the options array, the "new-option"
                 # property, added to items created by the "create-from-search" function above, 
                 # helps us ensure that the item doesn't already exist in the options array
                 if !!new-option
-                    @set-state options: [{label, value}] ++ @state.options, callback 
-                else
-                    callback!
+                    @set-state options: [{label, value}] ++ @state.options
                 
     get-initial-state: ->
         options: <[apple mango grapes melon strawberry]> |> map ~> label: it, value: it

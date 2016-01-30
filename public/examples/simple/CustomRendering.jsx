@@ -14,12 +14,11 @@ Form = React.createClass({
                 else
                     return {label: search, value: search};
             }}
-            onValueChange={function(item, callback){
+            onValueChange={function(item){
                 if (!!item && !!item.newOption) {
                     self.state.options.unshift({label: item.label, value: item.value});
-                    self.setState({options: self.state.options}, callback);
-                } else
-                    callback();
+                    self.setState({options: self.state.options});
+                }
             }}
         
             // renderOption :: Int -> Item -> ReactElement

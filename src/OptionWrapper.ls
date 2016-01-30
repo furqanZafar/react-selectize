@@ -1,5 +1,6 @@
 {create-class, DOM:{div}} = require \react
 {is-equal-to-object} = require \prelude-extension
+{cancel-event} = require \./utils
 
 # OptionWrapper & ValueWrapper are used for optimizing performance 
 module.exports = create-class do 
@@ -20,7 +21,19 @@ module.exports = create-class do
     render: ->
         div do
             class-name: "option-wrapper #{if !!@props.highlight then 'highlight' else ''}"
-            on-click: @props.on-click
+
+            # mimic the same behaviour is that of an html select element
+            # on-mouse-down :: Event -> ()
+            on-mouse-down: (e) ~>
+                
+                # listener :: Event -> ()
+                listener = (e) ~>
+                    @props.on-click e
+                    window.remove-event-listener \mouseup, listener
+
+                window.add-event-listener \mouseup, listener
+                cancel-event e
+
             on-mouse-move: @props.on-mouse-move
             on-mouse-out: @props.on-mouse-out
             on-mouse-over: @props.on-mouse-over

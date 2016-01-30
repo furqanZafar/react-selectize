@@ -9,7 +9,7 @@ Form = React.create-class do
             
             # we use state for search, so we can access it inside the options map function below
             search: @state.search
-            on-search-change: (search, callback) ~> @set-state {search}, callback
+            on-search-change: (search) ~> @set-state {search}
             
             # the partition-string method from prelude-extension library has the following signature:
             # paritition-string :: String -> String -> [[Int, Int, Boolean]]

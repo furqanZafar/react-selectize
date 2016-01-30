@@ -1,6 +1,6 @@
 Form = React.createClass({
     
-    // render :: a -> ReactElement
+    // render :: () -> ReactElement
     render: function(){
         self = this;
         return <MultiSelect
@@ -12,17 +12,19 @@ Form = React.createClass({
 
             options = {this.state.channels}
             values = {this.state.selectedChannels}
-            onValuesChange = {function(selectedChannels, callback){
+            onValuesChange = {function(selectedChannels){
+
                 // lock the cursor at the end
                 self.setState({
                     anchor: _.last(selectedChannels), 
                     selectedChannels: selectedChannels
-                }, callback);
+                });
+
             }}
         />;
     },
     
-    //getInitialState :: a -> UIState
+    //getInitialState :: () -> UIState
     getInitialState: function(){
         channels = [
             "Dude perfect", 

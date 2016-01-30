@@ -12,7 +12,7 @@ Form = React.create-class do
             values: @state.selected-emojis
             
             # on-values-change :: [Item] -> (a -> Void) -> Void
-            on-values-change: (selected-emojis, callback) !~> @set-state {selected-emojis}, callback
+            on-values-change: (selected-emojis) !~> @set-state {selected-emojis}
             
             # filter-options :: [Item] -> [Item] -> String -> [Item]
             filter-options: (options, values, search) ~>

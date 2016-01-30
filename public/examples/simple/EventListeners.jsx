@@ -13,25 +13,24 @@ Form = React.createClass({
                 })}
                 value = {this.state.make}
                 
-                // onValueChange :: Item -> (a -> Void) -> Void
-                onValueChange = {function(make, callback) {
+                // onValueChange :: Item -> ()
+                onValueChange = {function(make) {
                     self.setState ({make: make, model: undefined}, function(){
                         self.refs.models.focus();
-                        callback();
                     });
                 }}
                 
-                // onFocus :: Item -> String -> Void
+                // onFocus :: Item -> String -> ()
                 onFocus = {function(item, reason){
                     self.setState({focused: true});
                 }}
                 
-                // onBlur :: Item -> String -> Void
+                // onBlur :: Item -> String -> ()
                 onBlur = {function(item, reason){
                     self.setState({focused: false});
                 }}
                 
-                // onEnter :: Item -> Void
+                // onEnter :: Item -> ()
                 onEnter = {function(item){
                     if (typeof item == "undefined")
                         alert("you did not select any item");
@@ -50,8 +49,8 @@ Form = React.createClass({
                 // disabled :: Boolean
                 disabled = {typeof this.state.make == "undefined"}
                 
-                onValueChange = {function(model, callback) {
-                    self.setState({model: model}, callback);
+                onValueChange = {function(model) {
+                    self.setState({model: model});
                 }}
                 style = {{
                     marginTop: 20,

@@ -20,15 +20,15 @@ Form = React.createClass({
             }}
                              
             // on-value-change :: Item -> (a -> Void) -> Void
-            onValueChange={function(item, callback){
+            onValueChange={function(item){
                 // here, we add the selected item to the options array, the "new-option"
                 // property, added to items created by the "create-from-search" function above, 
                 // helps us ensure that the item doesn't already exist in the options array
                 if (!!item && !!item.newOption) {
                     self.state.options.unshift({label: item.label, value: item.value});
-                    self.setState({options: self.state.options}, callback);
-                } else 
-                    callback();
+                    self.setState({options: self.state.options});
+                }
+                    
             }}>
         </SimpleSelect>
     },
