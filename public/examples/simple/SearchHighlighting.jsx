@@ -13,8 +13,8 @@ Form = React.createClass({
 
             // we use state for search, so we can access it inside the options map function below
             search = {this.state.search}
-            onSearchChange = {function(search, callback){
-                self.setState({search: search}, callback);
+            onSearchChange = {function(search){
+                self.setState({search: search});
             }}
 
             // the partitionString method from prelude-extension library has the following signature:

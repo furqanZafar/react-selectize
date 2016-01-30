@@ -1,6 +1,6 @@
 Form = React.create-class do 
     
-    # render :: a -> ReactElement
+    # render :: () -> ReactElement
     render: ->
         React.create-element MultiSelect,
             placeholder: "Select youtube channels"
@@ -11,11 +11,14 @@ Form = React.create-class do
 
             options: @state.channels
             values: @state.selected-channels
-            on-values-change: (selected-channels, callback) !~> 
+            on-values-change: (selected-channels) !~> 
+                
                 # lock the cursor at the end
-                @set-state {anchor: (last selected-channels), selected-channels}, callback
+                @set-state do 
+                    anchor: last selected-channels
+                    selected-channels: selected-channels
 
-    # get-initial-state :: a -> UIState
+    # get-initial-state :: () -> UIState
     get-initial-state: ->
         channels = ["Dude perfect", "In a nutshell", "Smarter everyday", "Vsauce", "Veratasium"]
             |> map ~> label: it, value: it

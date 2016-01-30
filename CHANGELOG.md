@@ -1,5 +1,11 @@
 # React Selectize
 
+## v0.6.0 / 30th January 2016
+* added `autofocus` prop, that will automatically toggle the dropdown on load
+* removed the requirement for passing callback as the last argument to on-*-change props
+* fixed many `focus` & `blur` related issues
+* **Breaking Change** replaced `on-enter` prop with `on-keyboard-selection-failed` 
+
 ## v0.5.3 / 27th January 2016
 * introduced `name` & `serialize` props for form serialization
 

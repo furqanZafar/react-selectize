@@ -13,9 +13,8 @@ Form = React.createClass({
                 defaultValue = {{label: "melon", value: "melon"}}
 
                 // on change callback
-                onValueChange = {function(value, callback){
+                onValueChange = {function(value){
                     console.log("you selected: " + JSON.stringify(value, null, 4));
-                    callback();
                 }}
 
                 // form serialization

@@ -21,7 +21,7 @@ Form = React.create-class do
             restore-on-backspace: (.label)
 
             # on-values-change :: [Item] -> (a -> Void) -> Void
-            on-values-change: (tags, callback) !~> @set-state {tags}, callback
+            on-values-change: (tags) !~> @set-state {tags}
             
             # create-from-search :: [Item] -> [Item] -> String -> Item?
             create-from-search: (options, values, search) -> 

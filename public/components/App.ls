@@ -243,15 +243,15 @@ App = React.create-class do
                         initial-language: \livescript
                         languages: 
                             * id: \livescript
-                              name: "Livescript"
+                              name: \Livescript
                               initial-content: ls
                               on-execute: (content, mount-node) -> eval compile content, {bare: true}
                             * id: \jsx
-                              name: "JSX"
+                              name: \JSX
                               initial-content: jsx
                               on-execute: (content, mount-node) -> eval react-tools.transform content
                             * id: \javascript
-                              name: "JS"
+                              name: \JS
                               initial-content: react-tools.transform jsx
                               on-execute: (content, mount-node) -> eval content
     

@@ -11,8 +11,8 @@ Form = React.createClass({
                 value = {this.state.country}
 
                 // onValueChange :: Item -> (a -> Void) -> void
-                onValueChange = {function(country, callback){
-                    self.setState({country: country}, callback);
+                onValueChange = {function(country){
+                    self.setState({country: country});
                 }}
 
                 // renderNoResultsFound :: a -> ReactElement

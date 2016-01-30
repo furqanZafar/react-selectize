@@ -31,8 +31,8 @@ Form = React.createClass({
             }}
 
             // onValuesChange :: [Item] -> (a -> Void) -> Void
-            onValuesChange = {function(tags, callback){
-                self.setState({tags: tags}, callback);
+            onValuesChange = {function(tags){
+                self.setState({tags: tags});
             }}
             
             // createFromSearch :: [Item] -> [Item] -> String -> Item?

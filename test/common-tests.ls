@@ -13,14 +13,14 @@ require! \assert
     scry-rendered-DOM-components-with-class
     scry-rendered-DOM-components-with-tag
     key-down
-    Simulate:{change, click, focus, key-down, mouse-over, mouse-out, mouse-move}
+    Simulate:{blur, change, click, focus, key-down, mouse-down, mouse-over, mouse-out, mouse-move}
 }:TestUtils = require \react-addons-test-utils
 
 # utils
-{create-select, get-input, set-input-text, get-item-text, click-to-open-select-control, click-on-the-document, 
-find-highlighted-option, component-with-class-must-not-exist, press-backspace, press-escape, press-tab, 
-press-return, press-up-arrow, press-down-arrow, press-left-arrow, press-right-arrow, press-command-left, 
-press-command-right}:utils = require \./utils
+{create-select, get-input, set-input-text, get-item-text, click-option, click-to-open-select-control, 
+click-on-the-document, find-highlighted-option, component-with-class-must-not-exist, press-backspace, 
+press-escape, press-tab, press-return, press-up-arrow, press-down-arrow, press-left-arrow, press-right-arrow, 
+press-command-left}:utils = require \./utils
 
 # :: ReactClass -> Void
 module.exports = (select-class) !->
@@ -97,7 +97,7 @@ module.exports = (select-class) !->
     specify "must select option on click", ->
         select = create-select!
         click-to-open-select-control select
-        click find-highlighted-option select
+        click-option find-highlighted-option select
         assert.equal (get-item-text find-rendered-DOM-component-with-class select, \simple-value), \apple
 
     specify "must use search from props instead of state when available", ->
@@ -109,8 +109,7 @@ module.exports = (select-class) !->
 
     specify "must invoke on-search-change when the search (state) is changed", (done) ->
         select = create-select do 
-            on-search-change: (search, callback) ->
-                callback!
+            on-search-change: (search) ->
                 assert.equal search, \test
                 done!
         set-input-text (get-input select), \test
@@ -118,8 +117,7 @@ module.exports = (select-class) !->
     specify "must invoke on-search-change when the search (prop) is changed", (done) ->
         select = create-select do 
             search: ""
-            on-search-change: (search, callback) ->
-                callback!
+            on-search-change: (search) ->
                 assert.equal search, \test
                 done!
         set-input-text (get-input select), \test
@@ -128,7 +126,7 @@ module.exports = (select-class) !->
         select = create-select do 
             restore-on-backspace: -> it.label.substr 0, it.label.length - 1
         click-to-open-select-control select
-        click find-highlighted-option select
+        click-option find-highlighted-option select
         click-to-open-select-control select
         press-backspace (get-input select)
         assert.equal (get-input select).value, \appl
@@ -159,7 +157,7 @@ module.exports = (select-class) !->
                 div class-name: \custom-value,
                     span null, label
         click-to-open-select-control select
-        click find-highlighted-option select
+        click-option find-highlighted-option select
         find-rendered-DOM-component-with-class select, \custom-value
 
     specify "must be able to create option groups", ->
@@ -193,7 +191,7 @@ module.exports = (select-class) !->
     specify "must deselect current value on pressing escape key", ->
         select = create-select!
         click-to-open-select-control select
-        click find-highlighted-option select
+        click-option find-highlighted-option select
         press-escape (get-input select)
         component-with-class-must-not-exist select, \simple-option
 
@@ -213,8 +211,9 @@ module.exports = (select-class) !->
     specify "must clear search text on blur", ->
         select = create-select!
         click-to-open-select-control select
-        set-input-text (get-input select), \test 
-        press-tab (get-input select)
+        input = get-input select
+        set-input-text input, \test 
+        blur input
         assert.equal select.state.search, ""
 
     specify "on-focus must default to noop", ->
@@ -275,13 +274,13 @@ module.exports = (select-class) !->
     specify "must hide dropdown on clicking outside the component area", ->
         select = create-select!
         click-to-open-select-control select
-        click-on-the-document!
+        blur get-input select
         component-with-class-must-not-exist select, \react-selectize-dropdown
 
     specify "must deselect on clicking reset button", ->
         select = create-select!
         click-to-open-select-control select
-        click find-highlighted-option select
+        click-option find-highlighted-option select
         click (find-rendered-DOM-component-with-class select, \react-selectize-reset)
         component-with-class-must-not-exist \simple-value
 
@@ -344,9 +343,9 @@ module.exports = (select-class) !->
     specify "clicking arrow button must toggle the dropdown", ->
         select = create-select!
         arrow = find-rendered-DOM-component-with-class select, \react-selectize-arrow
-        click arrow
+        mouse-down arrow
         find-rendered-DOM-component-with-class select, \react-selectize-dropdown
-        click arrow
+        mouse-down arrow
         component-with-class-must-not-exist select, \react-selectize-dropdown
 
     specify "must wrap around on hitting the boundary", ->
@@ -356,25 +355,6 @@ module.exports = (select-class) !->
         assert.equal (get-item-text find-highlighted-option select), \apple
         [0 til 8] |> each ~> press-up-arrow (get-input select)
         assert.equal (get-item-text find-highlighted-option select), \apple
-
-    specify "must fire props.on-enter with the highlighted option", (done) ->
-        state = []
-        expected-state = 
-            * label: \apple, value: \apple
-            * undefined
-            ...
-        select = create-select do 
-            on-enter: (highlighted-option) ->
-                state.push highlighted-option
-                if state.length == 2
-                    assert state `is-equal-to-object` expected-state
-                    done!
-        click-to-open-select-control select
-        input-element = get-input select
-        set-input-text input-element, \app
-        press-return input-element
-        set-input-text input-element, \apples
-        press-return input-element
 
     specify "delimiters", ->
         select = create-select do
@@ -390,23 +370,20 @@ module.exports = (select-class) !->
         click-to-open-select-control select
         unmount-component-at-node (find-DOM-node select .parent-element)
 
-    specify "must blur on pressing return key on an empty list of options", (done) ->
-        state = on-enter-invoked: false
-        select = create-select do 
-            on-enter: -> state.on-enter-invoked = true
-        click-to-open-select-control select
-        input = get-input select
-        assert document.active-element == input
-        set-input-text input, "some random text"
-        press-return input
-        <~ set-timeout _, 250
-        assert input != document.active-element
-        assert state.on-enter-invoked == true
-        component-with-class-must-not-exist \react-selectize-dropdown
-        done!
-
     specify "must blur on calling the blur method", ->
         select = create-select!
         click-to-open-select-control select
         select.blur!
         component-with-class-must-not-exist \react-selectize-dropdown
+
+    specify "pressing down arrow key on a closed select must open and select the first option", ->
+        select = create-select!
+        press-down-arrow get-input select
+        find-rendered-DOM-component-with-class select, \react-selectize-dropdown
+        assert \apple == get-item-text (find-rendered-DOM-component-with-class select, \highlight)
+
+    specify "pressing up arrow key on a closed select must open and select the first option", ->
+        select = create-select!
+        press-up-arrow get-input select
+        find-rendered-DOM-component-with-class select, \react-selectize-dropdown
+        assert \apple == get-item-text (find-rendered-DOM-component-with-class select, \highlight)

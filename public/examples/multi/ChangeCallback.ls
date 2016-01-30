@@ -24,7 +24,7 @@ Form = React.create-class do
                 value: @state.selected-countries
 
                 # on-value-change :: Item -> (a -> Void) -> void
-                on-values-change: (selected-countries, callback) ~> @set-state {selected-countries}, callback
+                on-values-change: (selected-countries) ~> @set-state {selected-countries}
                 
                 # render-no-results-found :: a -> ReactElement
                 render-no-results-found: ~>

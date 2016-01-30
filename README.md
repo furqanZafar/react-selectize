@@ -13,7 +13,7 @@ styles & features inspired by [React Select](http://jedwatson.github.io/react-se
 
 [![](http://i.imgsafe.co/rQmogzn.gif)](http://furqanZafar.github.io/react-selectize/)
 
-- [Changelog](CHANGELOG.md) (last updated on 27th January 2016)
+- [Changelog](CHANGELOG.md) (last updated on 30th January 2016)
 - [API Reference](API.md)
 
 # Motivation
@@ -57,18 +57,16 @@ MultiSelect = create-factory MultiSelect
 SimpleSelect do     
     placeholder: 'Select a fruit'
     options: <[apple mango orange banana]> |> map ~> label: it, value: it
-    on-value-change: (value, callback) ~>
+    on-value-change: (value) ~>
         alert value
-        callback!
 .
 .
 .
 MultiSelect do
     placeholder: 'Select fruits'
     options: <[apple mango orange banana]> |> map ~> label: it, value: it
-    on-values-change: (values, callback) ~>
+    on-values-change: (values) ~>
         alert values
-        callback!
 ```
 
 ## Usage (jsx)
@@ -101,9 +99,8 @@ MultiSelect = ReactSelectize.MultiSelect;
     options = ["apple", "mango", "orange", "banana"].map(function(fruit){
         return {label: fruit, value: fruit};
     });
-    onValuesChange = {function(values, callback){
+    onValuesChange = {function(values){
         alert(values);
-        callback();
     }}
 />
 ```
@@ -119,22 +116,20 @@ to include the default styles add the following import statement to your stylus 
 
 * SimpleSelect notifies change via `onValueChange` prop whereas MultiSelect notifies change via `onValuesChange` prop
 
-* the onValueChange callback for SimpleSelect is passed 2 parameters. the `selected option object` (instead of the value property of the option object) and a `callback`
+* the onValueChange callback for SimpleSelect is passed 1 parameter. the `selected option object` (instead of the value property of the option object)
 
-* the onValuesChange callback for MultiSelect is passed 2 parameters an Array  of selected option objects (instead of a collection of the value properties or a comma separated string of value properties) and a `callback`
+* the onValuesChange callback for MultiSelect is passed 1 parameter an Array  of selected option objects (instead of a collection of the value properties or a comma separated string of value properties)
 
-* all the `on*Change` functions receive a callback as the final parameter, which MUST always be invoked, for example when using state for the `value` prop of `SimpleSelect` the `onValueChange` callback implementation would look like this:
+* both the SimpleSelect & MultiSelect will manage the `open`, `search`, `value` & `anchor` props using internal state, if they are not provided via props:
+when passing `open`, `search`, `value` or `anchor` via props, you must update them on*Change (just like in the case of standard react html input components)
 ``` jsx
-value = {{label: "apple", value: "apple"}}
-onValueChange = {function(value, callback){
-    self.setState(value, callback);
+value = {state.selectedValue}
+onValueChange = {function(value){
+    self.setState({selectedValue: value});
 }}
-```
-when relying on the components internal state for managing the value:
-``` jsx
-onValueChange = {function(value, callback){
-    console.log(value);
-    callback(); // must invoke callback    
+search = {state.search}
+onSearchChange = {function(value){    
+    self.setState({search: value});
 }}
 ```
 

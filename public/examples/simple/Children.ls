@@ -15,9 +15,8 @@ Form = React.create-class do
                 default-value: label: \apple, value: \apple
 
                 # on change callback
-                on-value-change: (selected-fruit, callback) ~> 
+                on-value-change: (selected-fruit) ~> 
                     console.log "selected value: #{JSON.stringify selected-fruit, null, 4}"
-                    callback!
 
                 # form serialization
                 name: \fruit

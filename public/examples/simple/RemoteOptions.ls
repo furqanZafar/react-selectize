@@ -9,16 +9,20 @@ Form = React.create-class do
             search: @state.search
             
             # on-search-change :: String -> (a -> Void) -> Void
-            on-search-change: (search, callback) !~>
-                @set-state {search}, callback
-                return if search.length == 0
-                @req.abort if !!@req
-                @req = $.getJSON "http://api.cdnjs.com/libraries?fields=version,homepage&search=#{search}"
-                    ..done ({results}) ~>
-                        @set-state do 
-                            libraries: take 50, (results ? [])
-                            ~> @refs.select.highlight-first-selectable-option!
-                        delete @req
+            on-search-change: (search) !~>
+                @set-state {search}
+                
+                if search.length > 0
+
+                    if !!@req
+                        @req.abort
+
+                    @req = $.getJSON "http://api.cdnjs.com/libraries?fields=version,homepage&search=#{search}"
+                        ..done ({results}) ~>
+                            @set-state do 
+                                libraries: take 50, (results ? [])
+                                ~> @refs.select.highlight-first-selectable-option!
+                            delete @req
             
             # disable client side filtering
             # filter-options :: [Item]  -> String -> [Item]
