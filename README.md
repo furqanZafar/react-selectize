@@ -80,9 +80,8 @@ MultiSelect = ReactSelectize.MultiSelect;
 .
 <SimpleSelect
     placeholder = "Select a fruit"
-    onValueChange = {function(value, callback){
-        alert(value);
-        callback();
+    onValueChange = {function(value){
+        alert(value);        
     }}
 >
     <option value = "apple">apple</option>
