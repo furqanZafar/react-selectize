@@ -6,6 +6,9 @@
     user-select none
     position relative
 
+    &:not(.tethered)
+        width 300px
+
     &.disabled
         pointer-events none
 
@@ -148,9 +151,12 @@
     font-family Helvetica Neue, Helvetica, Arial, sans-serif
     max-height 200px
     overflow auto
-    position absolute
-    width 300px
+    position relative
     z-index 10
+
+    &.tethered
+        position absolute
+        min-width 300px
 
     &.open
         &.flipped

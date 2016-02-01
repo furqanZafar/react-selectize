@@ -282,7 +282,10 @@ module.exports = create-class do
                             @focus-on-input!
 
                         # ENTER
-                        if (e.which in [13] ++ @props.delimiters) and @props.open
+                        if @props.open and 
+                           e.which in [13] ++ @props.delimiters and
+                           # do not interfere with hotkeys like control + enter or command + enter
+                           !(e?.meta-key or e?.ctrl-key)
                             
                             # select the highlighted option (if any)
                             @select-highlighted-uid anchor-index, (selected-value) ~>
@@ -478,10 +481,6 @@ module.exports = create-class do
         if @props.autofocus
             @focus!
 
-    # component-will-unmount :: () -> ()
-    component-will-unmount: !->
-        document.remove-event-listener \click, @external-click-listener, true
-
     # component-did-update :: Props -> UIState -> ()
     component-did-update: (prev-props) !->
 
@@ -636,6 +635,6 @@ module.exports = create-class do
             callback value
         else
             callback value
-
-    # uid-to-string :: () -> String, used for the key prop (required by react render, & refs)
+    
+    # uid-to-string :: () -> String, only used for the key prop (required by react render), & for refs
     uid-to-string: (uid) -> (if typeof uid == \object then JSON.stringify else id) uid

@@ -1,5 +1,9 @@
 # React Selectize
 
+## v0.6.1 / 1st February 2016
+* disable keyboard selection when control or command keys are pressed
+* minor css improvements
+
 ## v0.6.0 / 30th January 2016
 * added `autofocus` prop, that will automatically toggle the dropdown on load
 * removed the requirement for passing callback as the last argument to on-*-change props
