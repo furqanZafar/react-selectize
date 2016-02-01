@@ -314,20 +314,6 @@ module.exports = (select-class) !->
                 select-class
                 null
 
-    specify "unmounting the component must remove the click listener", (done) ->
-        container = document.create-element \div
-        original-remove-event-listener-function = document.remove-event-listener
-        document.remove-event-listener = ->
-            original-remove-event-listener-function ...
-            done!
-        render do 
-            create-element do 
-                select-class
-                options: []
-            container
-        render (div null), container
-        document.remove-event-listener = original-remove-event-listener-function
-
     specify "mouseover on an option must highlight it", ->
         select = create-select!
         click-to-open-select-control select
@@ -387,3 +373,9 @@ module.exports = (select-class) !->
         press-up-arrow get-input select
         find-rendered-DOM-component-with-class select, \react-selectize-dropdown
         assert \apple == get-item-text (find-rendered-DOM-component-with-class select, \highlight)
+
+    specify "must not interfere with command + enter or control + enter", ->
+        select = create-select!
+        click-to-open-select-control select
+        key-down (get-input select), which: 13, meta-key: true
+        find-rendered-DOM-component-with-class select, \react-selectize-dropdown

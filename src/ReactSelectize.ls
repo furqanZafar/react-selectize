@@ -282,7 +282,10 @@ module.exports = create-class do
                             @focus-on-input!
 
                         # ENTER
-                        if (e.which in [13] ++ @props.delimiters) and @props.open
+                        if @props.open and 
+                           e.which in [13] ++ @props.delimiters and
+                           # do not interfere with hotkeys like control + enter or command + enter
+                           !(e?.meta-key or e?.ctrl-key)
                             
                             # select the highlighted option (if any)
                             @select-highlighted-uid anchor-index, (selected-value) ~>
