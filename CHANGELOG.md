@@ -1,5 +1,9 @@
 # React Selectize
 
+## v0.6.2 / 2nd February 2016
+* hide the reset button if the select is empty
+* minor css improvements
+
 ## v0.6.1 / 1st February 2016
 * disable keyboard selection when control or command keys are pressed
 * minor css improvements

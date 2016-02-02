@@ -147,16 +147,19 @@
 
 .react-selectize-dropdown
     background white
+    box-sizing border-box
     border 1px solid #ccc
     font-family Helvetica Neue, Helvetica, Arial, sans-serif
     max-height 200px
     overflow auto
-    position relative
+    position absolute
     z-index 10
 
     &.tethered
-        position absolute
         min-width 300px
+
+    &:not(.tethered)
+        width 100%
 
     &.open
         &.flipped

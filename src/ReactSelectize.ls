@@ -342,17 +342,19 @@ module.exports = create-class do
 
                 # LIST OF SELECTED VALUES (AFTER THE ANCHOR)
                 render-selected-values [anchor-index + 1 til @props.values.length]
-                 
-                # RESET BUTTON
-                div do 
-                    class-name: \react-selectize-reset
-                    on-click: (e) ~>
-                        do ~>
-                            <~ @props.on-values-change []
-                            <~ @props.on-search-change ""
-                            @focus-on-input!
-                        cancel-event e
-                    \×
+             
+                if @props.values.length > 0
+
+                    # RESET BUTTON
+                    div do 
+                        class-name: \react-selectize-reset
+                        on-click: (e) ~>
+                            do ~>
+                                <~ @props.on-values-change []
+                                <~ @props.on-search-change ""
+                                @focus-on-input!
+                            cancel-event e
+                        \×
 
                 # ARROW ICON 
                 div do 
@@ -364,7 +366,7 @@ module.exports = create-class do
                             <~ @props.on-anchor-change last @props.values
                             <~ @on-open-change true
                         cancel-event e
-            
+        
             # (TETHERED / ANIMATED / SIMPLE) DROPDOWN
             @render-tethered-dropdown {anchor-index, dynamic-class-name} 
 
