@@ -50,13 +50,6 @@ module.exports = (select-class) !->
         click-to-open-select-control select
         find-rendered-DOM-component-with-class select, \react-selectize-dropdown
 
-    specify "input must autosize to fit its contents", ->
-        {refs}:select = create-select do 
-            autosize: -> 100
-        input = get-input select
-        set-input-text input, \text
-        assert.equal input.style.width, \100px
-
     specify "must open options dropdown on search change", ->
         select = create-select!
         set-input-text (get-input select), \text

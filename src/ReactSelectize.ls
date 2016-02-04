@@ -10,6 +10,7 @@ Tether = create-factory require \./Tether
 Div = create-factory require \./Div
 OptionWrapper = create-factory require \./OptionWrapper
 ValueWrapper = create-factory require \./ValueWrapper
+ResizableInput = create-factory require \./ResizableInput
 {cancel-event, class-name-from-object} = require \./utils
 
 module.exports = create-class do
@@ -26,41 +27,6 @@ module.exports = create-class do
     get-default-props: ->
         anchor: null # :: Item
         autofocus: false
-        # autosize :: InputElement -> ()
-        autosize: ($search) !-> 
-
-            if $search.value.length == 0
-                $search.style.width = if !!$search?.current-style then \4px else \2px
-
-            else
-
-                # modern browsers
-                if $search.scroll-width > 0
-                    $search.style.width = "#{2 + $search.scroll-width}px"
-
-                # IE / Edge
-                else
-
-                    # create a dummy input
-                    $input = document.create-element \div
-                        ..innerHTML = $search.value
-
-                    # copy all the styles from search field to dummy input
-                    (
-                        if !!$search.current-style 
-                            $search.current-style 
-                        else 
-                            document.default-view ? window .get-computed-style $search
-                    )
-                        |> obj-to-pairs
-                        |> each ([key, value]) -> $input.style[key] = value
-                        |> -> $input.style <<< display: \inline-block, width: ""
-
-                    # add the dummy input element to document.body and measure the text width
-                    document.body.append-child $input
-                    $search.style.width = "#{4 + $input.client-width}px"
-                    document.body.remove-child $input
-
         # class-name :: String
         delimiters: []
         disabled: false
@@ -177,7 +143,7 @@ module.exports = create-class do
                 render-selected-values [0 to anchor-index]
                 
                 # SEARCH INPUT BOX
-                input do
+                ResizableInput do
                     disabled: @props.disabled
                     ref: \search
                     type: \text
@@ -493,11 +459,6 @@ module.exports = create-class do
 
         # if the list of options was closed then reset highlighted-uid 
         @props.on-highlighted-uid-change undefined if !@props.open and prev-props.open
-
-        # autosize the search input to its contents
-        $search = (find-DOM-node @refs.search)
-            ..style.width = "0px"
-            ..style.width = "#{@props.autosize $search}px"
 
         # flip the dropdown if props.dropdown-direction is -1
         ref = @refs[if !!@refs[\dropdown-container] then \dropdown-container else \dropdown]
