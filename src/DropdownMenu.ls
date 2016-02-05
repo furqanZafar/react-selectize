@@ -1,15 +1,13 @@
 # prelude ls 
-{each, filter, find, find-index, id, initial, last, map, obj-to-pairs, 
-partition, reject, reverse, Str, sort-by, sum, values} = require \prelude-ls
+{filter, id, map} = require \prelude-ls
 
-{clamp, is-equal-to-object} = require \prelude-extension
+{is-equal-to-object} = require \prelude-extension
 {DOM:{div, input, span}, create-class, create-factory}:React = require \react
 {find-DOM-node} = require \react-dom
 ReactCSSTransitionGroup = create-factory require \react-addons-css-transition-group
 Tether = create-factory require \./Tether
 Div = create-factory require \./Div
 OptionWrapper = create-factory require \./OptionWrapper
-ValueWrapper = create-factory require \./ValueWrapper
 {cancel-event, class-name-from-object} = require \./utils
 
 module.exports = create-class do
@@ -18,7 +16,7 @@ module.exports = create-class do
 
     # get-default-props :: () -> Props
     get-default-props: ->
-        # class-name :: String
+        class-name: ""
         dropdown-direction: 1
         group-id: (.group-id) # Item -> a
         # groups :: [Group]
@@ -52,6 +50,7 @@ module.exports = create-class do
         style: {}
         tether: false
         # tether-target :: () -> ReactElement
+        theme: \default
         transition-enter: false
         transition-leave: false
         transition-enter-timeout: 200
@@ -62,6 +61,8 @@ module.exports = create-class do
     render: ->
 
         dynamic-class-name = class-name-from-object do
+            "#{@props.theme}" : 1
+            "#{@props.class-name}" : 1
             flipped: @props.dropdown-direction == -1
             tethered: @props.tether
 
@@ -122,10 +123,10 @@ module.exports = create-class do
                             @props.on-highlighted-uid-change undefined
 
                     render-item: @props.render-option
-                } <<< 
-                    switch 
+                } <<<
+                    switch
                     | (typeof option?.selectable == \boolean) and !option.selectable => on-click: cancel-event
-                    | _ => 
+                    | _ =>
                         on-click: !~> @props.on-option-click @props.highlighted-uid
                         on-mouse-over: ({current-target}) !~>  
                             if !@props.scroll-lock
@@ -179,15 +180,6 @@ module.exports = create-class do
 
         else
             null
-
-    # component-did-update :: Props -> UIState -> ()
-    component-did-update: (prev-props) !->
-
-        # flip the dropdown if props.dropdown-direction is -1
-        ref = @refs[if !!@refs.dropdown-menu-container then \dropdownMenuContainer else \dropdownMenu]
-        if !!ref
-            (find-DOM-node ref).style <<< 
-                bottom: if @props.dropdown-direction == -1 then (find-DOM-node @refs.control).offset-height else ""
 
     # highlight-and-scroll-to-option :: Int, (() -> ())? -> ()
     highlight-and-scroll-to-option: (index, callback = (->)) !->

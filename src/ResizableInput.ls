@@ -10,10 +10,10 @@ module.exports = create-class do
     render: ->
         input {} <<< @props <<< 
             type: \input
-            class-name: "resizable-input #{@props?.class-name ? ''}"
+            class-name: \resizable-input
 
-    # component-did-update :: Props -> UIState -> ()
-    component-did-update: (prev-props) !->
+    # autosize :: () -> ()
+    autosize: ->
 
         # reset the width
         input-element = (find-DOM-node @)
@@ -52,6 +52,12 @@ module.exports = create-class do
                 document.body.append-child dummpy-input
                 input-element.style.width = "#{4 + dummpy-input.client-width}px"
                 document.body.remove-child dummpy-input
+
+    # component-did-mount :: () -> ()
+    component-did-mount: !-> @autosize!
+
+    # component-did-update :: Props -> UIState -> ()
+    component-did-update: !-> @autosize!
 
     # blur :: () -> ()
     blur: -> find-DOM-node @ .blur!

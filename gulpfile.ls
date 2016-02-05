@@ -42,7 +42,7 @@ gulp.task \build:examples:styles, ->
     .pipe gulp-connect.reload!
 
 gulp.task \watch:examples:styles, -> 
-    gulp.watch <[./public/components/*.styl ./src/*.styl]>, <[build:examples:styles]>
+    gulp.watch <[./public/components/*.styl ./themes/*.styl]>, <[build:examples:styles]>
 
 examples-bundler = create-bundler \./public/components/App.ls
 bundle-examples = -> bundle examples-bundler, {file: "App.js", directory: "./public/components/"}
@@ -57,13 +57,13 @@ gulp.task \watch:examples:scripts, ->
 ##
 # Source
 ##
-gulp.task \build:src:styles, ->
-    gulp.src <[./src/*.styl]>
+gulp.task \build:themes, ->
+    gulp.src <[./themes/*.styl]>
     .pipe gulp-stylus use: nib!, import: <[nib]>, compress: config.minify
-    .pipe gulp.dest './src'
+    .pipe gulp.dest './themes'
 
-gulp.task \watch:src:styles, -> 
-    gulp.watch <[./src/*.styl]>, <[build:src:styles]>    
+gulp.task \watch:themes, -> 
+    gulp.watch <[./themes/*.styl]>, <[build:themes]>
 
 gulp.task \build:src:scripts, ->
     gulp.src <[./src/*.ls]>
@@ -79,8 +79,8 @@ gulp.task \dev:server, ->
         port: 8000
         root: \./public/
 
-gulp.task \build:src, <[build:src:styles build:src:scripts]>
-gulp.task \watch:src, <[watch:src:styles watch:src:scripts]>
+gulp.task \build:src, <[build:themes build:src:scripts]>
+gulp.task \watch:src, <[watch:themes watch:src:scripts]>
 gulp.task \build:examples, <[build:examples:styles build:examples:scripts]>
 gulp.task \watch:examples, <[watch:examples:styles watch:examples:scripts]>
 gulp.task \default, <[dev:server build:src watch:src build:examples watch:examples]>
