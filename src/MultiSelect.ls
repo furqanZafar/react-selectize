@@ -74,6 +74,8 @@ module.exports = React.create-class do
             name
             on-keyboard-selection-failed
             render-group-title
+            scroll-lock: @state.scroll-lock
+            on-scroll-lock-change: (scroll-lock) ~> @set-state {scroll-lock}
             tether
             transition-enter
             transition-enter-timeout
@@ -246,6 +248,7 @@ module.exports = React.create-class do
         anchor: if !!@props.values then last @props.values else undefined
         highlighted-uid: undefined
         open: false
+        scroll-lock: false
         search: ""
         values: @props.default-values
 

@@ -75,6 +75,8 @@ module.exports = React.create-class do
             groups-as-columns
             name
             render-group-title
+            scroll-lock: @state.scroll-lock
+            on-scroll-lock-change: (scroll-lock) ~> @set-state {scroll-lock}
             tether
             transition-enter
             transition-enter-timeout
@@ -271,6 +273,7 @@ module.exports = React.create-class do
     get-initial-state: ->
         highlighted-uid: undefined
         open: false
+        scroll-lock: false
         search: ""
         value: @props?.default-value
 

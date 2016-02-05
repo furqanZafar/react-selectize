@@ -8,6 +8,7 @@ partition, reject, reverse, Str, sort-by, sum, values} = require \prelude-ls
 ReactCSSTransitionGroup = create-factory require \react-addons-css-transition-group
 Tether = create-factory require \./Tether
 Div = create-factory require \./Div
+DropdownMenu = create-factory require \./DropdownMenu
 OptionWrapper = create-factory require \./OptionWrapper
 ValueWrapper = create-factory require \./ValueWrapper
 ResizableInput = create-factory require \./ResizableInput
@@ -19,9 +20,6 @@ module.exports = create-class do
 
     # used to figure out if the focus event was triggered by external action or by @focus-on-input!
     focus-lock: false
-
-    # used to block default behaviour of option.mouseover when triggered by scrolling using arrow keys
-    scroll-lock: false
 
     # get-default-props :: () -> Props
     get-default-props: ->
@@ -45,44 +43,34 @@ module.exports = create-class do
         on-keyboard-selection-failed: ((keycode) !-> ) # Int -> ()
         on-open-change: ((open, callback) !->) # Boolean -> (() -> ()) -> ()
         on-paste: ((e) !-> true) # Event -> Boolean
+        on-scroll-lock-change: ((scroll-lock) !->) # Boolean -> ()
         on-search-change: ((search, callback) !-> ) # String -> (() -> ()) -> ()
         on-values-change: ((values, callback) !->) # [Item] -> (() -> ()) -> ()
         open: false
-        options: [] # [Item]
-        
+        # options :: [Item]
         # render-no-results-found :: () -> ReactElement
-        render-no-results-found: -> 
-            div class-name: \no-results-found, "No results found"
-        
         # render-group-title :: Int -> Group -> ReactElement
-        render-group-title: (index, {group-id, title}?) ->
-            div do 
-                class-name: \simple-group-title
-                key: group-id
-                title
-        
         # render-option :: Int -> Item -> ReactElement
-        render-option: ({label, new-option, selectable}?) ->
-            is-selectable = (typeof selectable == \undefined) or selectable
-            div do 
-                class-name: "simple-option #{if is-selectable then '' else 'not-selectable'}"
-                span null, if !!new-option then "Add #{label} ..." else label
-        
-        # render-value :: Int -> Item -> ReactElement        
+
+        # render-value :: Int -> Item -> ReactElement
         render-value: ({label}) ->
             div do 
                 class-name: \simple-value
                 span null, label
-        
+
         # restore-on-backspace: ((value) -> ) # Item -> String
+        
+        # used to block default behaviour of option.mouseover when triggered by scrolling using arrow keys
+        scroll-lock: false
+
         # serialize :: [Item] -> String, used for form serialization
         search: ""
         style: {}
-        tether: false
-        transition-enter: false
-        transition-leave: false
-        transition-enter-timeout: 200
-        transition-leave-timeout: 200
+        # tether :: Boolean
+        # transition-enter :: Boolean
+        # transition-leave :: Boolean
+        # transition-enter-timeout :: Int
+        # transition-leave-timeout :: Int
         uid: id # (Eq e) => Item -> e
         values: [] # [Item]
 
@@ -91,13 +79,6 @@ module.exports = create-class do
         anchor-index = 
             | (typeof @props.anchor == \undefined) or @props.anchor == null => -1
             | _ => (find-index (~> it `@is-equal-to-object` @props.anchor), @props.values) ? @props.values.length - 1
-
-        dynamic-class-name = class-name-from-object do
-            "#{@props.class-name}" : 1
-            disabled: @props.disabled
-            open: @props.open
-            flipped: @props.dropdown-direction == -1
-            tethered: @props.tether
 
         # render-selected-values :: [Int] -> [ValueWrapper]
         render-selected-values = (selected-values) ~> 
@@ -112,9 +93,16 @@ module.exports = create-class do
 
         # REACT SELECTIZE
         div do 
-            class-name: "react-selectize #{dynamic-class-name}"
+            class-name: class-name-from-object do
+                \react-selectize : 1
+                "#{@props.class-name}" : 1
+                disabled: @props.disabled
+                open: @props.open
+                flipped: @props.dropdown-direction == -1
+                tethered: @props.tether
+
             style: @props.style
-    
+            
             if !!@props.name
 
                 # HIDDEN INPUT (for form submission)
@@ -288,7 +276,7 @@ module.exports = create-class do
                             # wrap around upon hitting the boundary
                             # UP ARROW
                             | 38 => 
-                                @scroll-lock = true
+                                @props.on-scroll-lock-change true
                                 index = 
                                     | typeof @props.highlighted-uid == \undefined => 0
                                     | _ => -1 + @option-index-from-uid @props.highlighted-uid
@@ -298,7 +286,7 @@ module.exports = create-class do
 
                             # DOWN ARROW
                             | 40 => 
-                                @scroll-lock = true
+                                @props.on-scroll-lock-change true
                                 index = 
                                     | typeof @props.highlighted-uid == \undefined => 0
                                     | _ => 1 + @option-index-from-uid @props.highlighted-uid
@@ -334,115 +322,21 @@ module.exports = create-class do
                         cancel-event e
         
             # (TETHERED / ANIMATED / SIMPLE) DROPDOWN
-            @render-tethered-dropdown {anchor-index, dynamic-class-name} 
+            DropdownMenu {} <<< @props <<< 
 
-    # render-tethered-dropdown :: ComputedState -> ReactElement
-    render-tethered-dropdown: (computed-state) ->
-        if @props.tether 
-            Tether do
-                target: ~> find-DOM-node @refs.control
-                options:
-                    attachment: "top left"
-                    target-attachment: "bottom left"
-                    constraints:
-                        * to: \scrollParent
-                        ...
-                @render-animated-dropdown computed-state
+                ref: \dropdownMenu
 
-        else
-            @render-animated-dropdown computed-state
+                # on-option-click :: (Eq e) => e -> ()
+                on-option-click: (highlighted-uid) !~>
+                    <~ @select-highlighted-uid anchor-index
 
-    # render-animated-dropdown :: ComputedState -> ReactElement
-    render-animated-dropdown: ({dynamic-class-name}:computed-state) ->
-        if !!@props.transition-enter or !!@props.transition-leave
-            ReactCSSTransitionGroup do 
-                component: \div
-                transition-name: \slide 
-                transition-enter: @props.transition-enter
-                transition-leave: @props.transition-leave
-                transition-enter-timeout: @props.transition-enter-timeout
-                transition-leave-timeout: @props.transition-leave-timeout
-                class-name: "react-selectize-dropdown-container #{dynamic-class-name}"
-                ref: \dropdown-container
-                @render-dropdown computed-state
+                scroll-lock: @props.scroll-lock
+                on-scroll-change: @props.on-scroll-change
 
-        else
-            @render-dropdown computed-state
+                # used when @props.tether is true
+                # tether-target :: () -> ReactElement
+                tether-target: ~> find-DOM-node @refs.control
 
-    # render-options :: [Item] -> Int -> [ReactEleent]
-    render-options: (options, anchor-index) ->
-        [0 til options.length] |> map (index) ~>
-            option = options[index]
-            uid = @props.uid option
-
-            # OPTION WRAPPER 
-            OptionWrapper do
-                {
-                    uid
-                    ref: "option-#{@uid-to-string uid}"
-                    key: @uid-to-string uid
-                    item: option
-                    highlight: @props.highlighted-uid `is-equal-to-object` uid
-                    selectable: option?.selectable
-                    on-mouse-move: ({current-target}) !~> @scroll-lock = false if @scroll-lock
-                    on-mouse-out: !~> @props.on-highlighted-uid-change undefined if !@scroll-lock
-                    render-item: @props.render-option
-                } <<< 
-                    switch 
-                    | (typeof option?.selectable == \boolean) and !option.selectable => on-click: cancel-event
-                    | _ => 
-                        on-click: !~> @select-highlighted-uid anchor-index, ~>
-                        on-mouse-over: ({current-target}) !~>  @props.on-highlighted-uid-change uid if !@scroll-lock
-
-    # render-dropdown :: ComputedState -> ReactElement
-    render-dropdown: ({anchor-index, dynamic-class-name}) ->
-        if @props.open
-            
-            # DROPDOWN
-            Div do 
-                class-name: "react-selectize-dropdown #{dynamic-class-name}"
-                key: \dropdown
-                ref: \dropdown
-
-                # on-height-change :: Number -> ()
-                on-height-change: (height) !~> 
-                    if @refs[\dropdown-container]
-                        find-DOM-node @refs[\dropdown-container] .style.height = "#{height}px"
-
-                # NO RESULT FOUND   
-                if @props.options.length == 0
-                    @props.render-no-results-found!
-                
-                else if @props?.groups?.length > 0
-
-                    # convert [Group] to [{index: Int, group: Group, options: [Item]}]
-                    groups = [0 til @props.groups.length] |> map (index) ~>  
-                        {group-id}:group = @props.groups[index]
-                        options = @props.options |> filter ~> (@props.group-id it) == group-id
-                        {index, group, options}
-
-                    # GROUPS
-                    div class-name: "groups #{if !!@props.groups-as-columns then 'as-columns' else ''}",
-                        groups 
-                        |> filter (.options.length > 0)
-                        |> map ({index, {group-id}:group, options}) ~>
-
-                            # GROUP
-                            div key: group-id,
-                                @props.render-group-title index, group, options
-
-                                # OPTIONS
-                                div do 
-                                    class-name: \options
-                                    @render-options options, anchor-index
-
-                else
-
-                    # OPTIONS
-                    @render-options @props.options, anchor-index
-
-        else
-            null
 
     # component-did-mount :: () -> ()
     component-did-mount: !->
@@ -458,13 +352,8 @@ module.exports = create-class do
             @focus-on-input!
 
         # if the list of options was closed then reset highlighted-uid 
-        @props.on-highlighted-uid-change undefined if !@props.open and prev-props.open
-
-        # flip the dropdown if props.dropdown-direction is -1
-        ref = @refs[if !!@refs[\dropdown-container] then \dropdown-container else \dropdown]
-        if !!ref
-            (find-DOM-node ref).style <<< 
-                bottom: if @props.dropdown-direction == -1 then (find-DOM-node @refs.control).offset-height else ""
+        if !@props.open and prev-props.open
+            @props.on-highlighted-uid-change undefined
 
     # component-will-receive-props :: Props -> ()
     component-will-receive-props: (props) !->
@@ -501,55 +390,15 @@ module.exports = create-class do
 
     # highlight-and-scroll-to-option :: Int, (() -> ())? -> ()
     highlight-and-scroll-to-option: (index, callback = (->)) !->
-
-        # update the focused option
-        uid = @props.uid @props.options[index]
-        <~ @props.on-highlighted-uid-change uid
-
-        option-element? = find-DOM-node @refs?["option-#{@uid-to-string uid}"]
-
-        if !!option-element
-            parent-element = find-DOM-node @refs.dropdown
-            option-height = option-element.offset-height - 1
-
-            # in other words, if the option element is below the visible region
-            if (option-element.offset-top - parent-element.scroll-top) >= parent-element.offset-height
-
-                # scroll the option element into view, by scrolling the parent element downward by an amount equal to the
-                # distance between the bottom-edge of the parent-element and the bottom-edge of the option element
-                parent-element.scroll-top = option-element.offset-top - parent-element.offset-height + option-height
-
-            # in other words, if the option element is above the visible region
-            else if (option-element.offset-top - parent-element.scroll-top + option-height) <= 0
-
-                # scroll the option element into view, by scrolling the parent element upward by an amount equal to the
-                # distance between the top-edge of the option element and the top-edge of the parent element
-                parent-element.scroll-top = option-element.offset-top
-
-        callback!
+        @refs.dropdown-menu.highlight-and-scroll-to-option index, callback
 
     # highlight-and-scroll-to-selectable-option :: Int, Int, (Boolean -> ())? -> ()
     highlight-and-scroll-to-selectable-option: (index, direction, callback = (->)) !->
 
-        # open the list of items
+        # open dropdown menu
         <~ do ~> if !@props.open then (~> @on-open-change true, it) else (-> it!)
 
-        # end recursion if the index violates the bounds
-        if index < 0 or index >= @props.options.length
-            <~ @props.on-highlighted-uid-change undefined
-            callback false
-
-        else
-
-            # recurse until a selectable option is found while moving in the given direction
-            option = @props?.options?[index]
-            if typeof option?.selectable == \boolean and !option.selectable
-                @highlight-and-scroll-to-selectable-option index + direction, direction, callback
-
-            # highlight the option found & end the recursion
-            else
-                <~ @highlight-and-scroll-to-option index
-                callback true
+        @refs.dropdown-menu.highlight-and-scroll-to-selectable-option index, direction, callback
 
     # is-equal-to-object :: Item -> Item -> Boolean
     is-equal-to-object: --> (@props.uid &0) `is-equal-to-object` @props.uid &1
