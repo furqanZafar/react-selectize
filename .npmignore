@@ -8,5 +8,10 @@ rough
 *.sublime-project
 *.sublime-workspace
 coverage/
+dist/*.*
+!dist/*.js
+!dist/*.css
+!dist/*.min.js
+!dist/*.min.css
 public/
 src/*.css
