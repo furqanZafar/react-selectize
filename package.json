@@ -20,6 +20,14 @@
     "react-addons-shallow-compare": "^0.14.6",
     "react-dom": "^0.14.0"
   },
+  "browserify-shim": {
+    "prelude-extension": "global:preludeExtension",
+    "react": "global:React",
+    "react-addons-css-transition-group": "global:React.addons.CSSTransitionGroup",
+    "react-addons-shallow-compare": "global:React.addons.shallowCompare",
+    "react-dom": "global:ReactDOM",
+    "tether": "global:Tether"
+  },
   "devDependencies": {
     "async-ls": "0.0.3",
     "brace": "git+https://github.com/furqanZafar/brace.git",
@@ -51,6 +59,7 @@
     "react-dom": "^0.14.0",
     "react-router": "^1.0.0-rc1",
     "react-tools": "^0.13.3",
+    "run-sequence": "^1.1.5",
     "should": "^7.1.0",
     "underscore": "^1.8.3",
     "vinyl-source-stream": "^1.0.0",
