@@ -226,25 +226,28 @@ module.exports = create-class do
         
             # (TETHERED / ANIMATED / SIMPLE) DROPDOWN
             DropdownMenu {} <<< @props <<< 
-
                 ref: \dropdownMenu
-
                 class-name: class-name-from-object do
                     \react-selectize : 1
                     "#{@props.class-name}" : 1
-
                 theme: @props.theme
 
-                # on-option-click :: (Eq e) => e -> ()
-                on-option-click: (highlighted-uid) !~>
-                    <~ @select-highlighted-uid anchor-index
-
+                # scroll-lock is used for blocking mouse interference with highlighted uid when using the arrow keys
+                # to scroll through the options list
                 scroll-lock: @props.scroll-lock
                 on-scroll-change: @props.on-scroll-change
+
+                # used when dropdown-direction is -1
+                # bottom-anchor :: () -> ReactElement
+                bottom-anchor: ~> find-DOM-node @refs.control
 
                 # used when @props.tether is true
                 # tether-target :: () -> ReactElement
                 tether-target: ~> find-DOM-node @refs.control
+
+                # on-option-click :: (Eq e) => e -> ()
+                on-option-click: (highlighted-uid) !~>
+                    <~ @select-highlighted-uid anchor-index
 
 
     # handle-keydown :: ComputedState -> Event -> Boolean
@@ -392,11 +395,6 @@ module.exports = create-class do
         # if the list of options was closed then reset highlighted-uid 
         if !@props.open and prev-props.open
             @props.on-highlighted-uid-change undefined
-
-        # flip the dropdown if props.dropdown-direction is -1
-        if @refs.dropdown-menu
-            (find-DOM-node @refs.dropdown-menu)?.style <<< 
-                bottom: if @props.dropdown-direction == -1 then (find-DOM-node @refs.control).offset-height else ""
 
     # component-will-receive-props :: Props -> ()
     component-will-receive-props: (props) !->

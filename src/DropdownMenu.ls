@@ -16,6 +16,7 @@ module.exports = create-class do
 
     # get-default-props :: () -> Props
     get-default-props: ->
+        # bottom-anchor :: () -> ReactElement
         class-name: ""
         dropdown-direction: 1
         group-id: (.group-id) # Item -> a
@@ -86,7 +87,7 @@ module.exports = create-class do
         if !!@props.transition-enter or !!@props.transition-leave
             ReactCSSTransitionGroup do 
                 component: \div
-                transition-name: \slide 
+                transition-name: \custom 
                 transition-enter: @props.transition-enter
                 transition-leave: @props.transition-leave
                 transition-enter-timeout: @props.transition-enter-timeout
@@ -180,6 +181,13 @@ module.exports = create-class do
 
         else
             null
+
+    # component-did-update :: () -> ()
+    component-did-update: !->
+        dropdown-menu = find-DOM-node @refs.dropdown-menu-container ? @refs.dropdown-menu
+            ..?style.bottom = switch 
+                | @props.dropdown-direction == -1 => @props.bottom-anchor!.offset-height + dropdown-menu.style.margin-bottom
+                | _ => ""
 
     # highlight-and-scroll-to-option :: Int, (() -> ())? -> ()
     highlight-and-scroll-to-option: (index, callback = (->)) !->
