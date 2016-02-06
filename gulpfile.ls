@@ -5,6 +5,7 @@ require! \gulp
 require! \gulp-connect
 require! \gulp-if
 require! \gulp-livescript
+require! \gulp-rename
 require! \gulp-streamify
 require! \gulp-stylus
 require! \gulp-uglify
@@ -18,10 +19,17 @@ require! \watchify
 config = 
     minify: process.env.MINIFY == \true
 
+# stylus-config :: Boolean -> object
+stylus-config = (minify) -> 
+    use: nib!
+    import: <[nib]>
+    compress: minify
+    "include css": true
+
 # build public/components/App.styl which requires other styl files
 gulp.task \build:examples:styles, ->
     gulp.src <[./public/components/App.styl]>
-    .pipe gulp-stylus {use: nib!, import: <[nib]>, compress: config.minify, "include css": true}
+    .pipe gulp-stylus (stylus-config config.minify)
     .pipe gulp.dest './public/components'
     .pipe gulp-connect.reload!
 
@@ -74,9 +82,8 @@ gulp.task \build-and-watch:examples:scripts, (done) ->
 
 gulp.task \build:themes, ->
     gulp.src <[./themes/*.styl]>
-    .pipe gulp-stylus {use: nib!, import: <[nib]>, compress: config.minify, "include css": true}
+    .pipe gulp-stylus (stylus-config config.minify)
     .pipe gulp.dest \./themes
-    .pipe gulp-connect.reload!
 
 gulp.task \watch:themes, -> 
     gulp.watch <[./themes/*.styl]>, <[build:themes]>
@@ -108,8 +115,22 @@ create-standalone-build = (minify, {file, directory}) ->
         .pipe gulp.dest directory
 
 gulp.task \dist, <[build:src:scripts]>, ->
-    create-standalone-build false, {file: \index.js, directory: \./dist} .on \finish, ->
-        create-standalone-build true, {file: \index.min.js, directory: \./dist}
+    # create dist/index.js
+    <- create-standalone-build false, {file: \index.js, directory: \./dist} .on \finish
+
+    # create dist/index.min.js
+    <- create-standalone-build true, {file: \index.min.js, directory: \./dist} .on \finish
+
+    # create dist/index.css
+    gulp.src <[./themes/index.styl]>
+        .pipe gulp-stylus (stylus-config false)
+        .pipe gulp.dest \./dist
+
+    # create dist/index.min.css
+    gulp.src <[./themes/index.styl]>
+        .pipe gulp-stylus (stylus-config true)
+        .pipe gulp-rename (path) -> path.extname = \.min.css
+        .pipe gulp.dest \./dist
 
 gulp.task \dev:server, ->
     gulp-connect.server do
