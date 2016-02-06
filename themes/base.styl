@@ -68,7 +68,14 @@
 .react-selectize.dropdown-menu
     overflow auto
     position absolute
+    max-height 200px
     z-index 10
+
+    &.tethered
+        min-width 300px
+
+    &:not(.tethered)
+        width 100%
 
     .groups.as-columns
         display flex
