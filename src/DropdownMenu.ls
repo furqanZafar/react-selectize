@@ -5,7 +5,7 @@
 {DOM:{div, input, span}, create-class, create-factory}:React = require \react
 {find-DOM-node} = require \react-dom
 ReactCSSTransitionGroup = create-factory require \react-addons-css-transition-group
-Tether = create-factory require \./Tether
+ReactTether = create-factory require \./ReactTether
 Div = create-factory require \./Div
 OptionWrapper = create-factory require \./OptionWrapper
 {cancel-event, class-name-from-object} = require \./utils
@@ -68,7 +68,7 @@ module.exports = create-class do
 
         # (TETHERED / ANIMATED / SIMPLE) DROPDOWN
         if @props.tether 
-            Tether do
+            ReactTether do
                 target: @props.tether-target
                 options:
                     attachment: "top left"
