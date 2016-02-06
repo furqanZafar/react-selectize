@@ -60,7 +60,6 @@ module.exports = create-class do
 
     # render :: () -> ReactElement
     render: ->
-
         dynamic-class-name = class-name-from-object do
             "#{@props.theme}" : 1
             "#{@props.class-name}" : 1
