@@ -1,15 +1,12 @@
+@require 'base'
+
 .react-selectize.bootstrap3
     color black
     background-color white
     font-family Helvetica Neue, Helvetica, Arial, sans-serif
-    user-select none
-    position relative
 
     &:not(.tethered)
         width 300px
-
-    &.disabled
-        pointer-events none
 
     &.open .react-selectize-control
         border 1px solid #66afe9
@@ -19,11 +16,7 @@
         border 1px solid
         border-color #d9d9d9 #cccccc #b3b3b3
         border-radius 4px
-        cursor pointer
         font-size 1em
-        display flex
-        align-items flex-start
-        position relative
 
         // this controls the height of the select 
         > div
@@ -31,82 +24,43 @@
 
         .react-selectize-placeholder
             color #aaa
-            display flex
-            align-items center
-            overflow hidden
             text-indent 8px
-            text-overflow ellipsis
-            white-space nowrap
-            position absolute
 
         .react-selectize-selected-values
-            display flex
-            flex-grow 1
-            flex-wrap wrap
             padding-left 5px
-
-            .resizable-input
-                background none
-                border none
-                outline none 
-                font-size 1em
-                margin 2px
-                padding 4px 0px
-                vertical-align middle
-                width 0px
-
-            .value-wrapper
-                display flex
-                align-items center
-
-        .react-selectize-arrow-container, .react-selectize-reset-container
-            flex-grow 0
-            flex-shrink 0
-            display flex
-            align-items center
-            justify-content center
-
-        .react-selectize-arrow-container
-            width 32px
-
-        .react-selectize-reset-container
-            width 16px
 
         .react-selectize-reset-container:hover .react-selectize-reset path
             stroke #c0392b
 
-        .react-selectize-arrow path
-            fill #999
-            
         .react-selectize-reset path
-            transition all 0.5s 0s ease
-            stroke #999
-            stroke-linecap square
-            stroke-linejoin mitter
-            stroke-width 1px
-        
+            transition stroke 0.5s 0s ease
 
 // DROPDOWN MENU (in document.body when @props.tether is true)
 .react-selectize.dropdown-menu-container.bootstrap3
     font-family Helvetica Neue, Helvetica, Arial, sans-serif
-    position absolute
     width 300px
 
+    &.flipped
+        margin-bottom 5px
+
+    &:not(.flipped)
+        margin-top 5px
+    
     .dropdown-menu
         
-        &.slide-enter-active, &.slide-leave-active
+        &.custom-enter-active, &.custom-leave-active
             transition opacity 0.2s 0s ease
 
-        &.slide-enter
+        &.custom-enter
             opacity 0
         
-        &.slide-enter-active
+        &.custom-enter-active
             opacity 1
         
-        &.slide-leave
+        &.custom-leave
             opacity 1
 
-        &.slide-leave-active
+        &.custom-leave-active
             opacity 0
 
 .react-selectize.dropdown-menu.bootstrap3
@@ -117,9 +71,6 @@
     box-shadow 0 6px 12px rgba(0, 0, 0, 0.175)
     font-family Helvetica Neue, Helvetica, Arial, sans-serif
     max-height 200px
-    overflow auto
-    position absolute
-    z-index 10
 
     &.tethered
         min-width 300px
@@ -139,12 +90,6 @@
         padding 8px 10px
         &.red
             color red !important
-
-    .groups.as-columns
-        display flex
-
-        > div 
-            flex 1
 
     .simple-group-title
         background-color #fafafa
@@ -201,4 +146,3 @@
             cursor default
             display inline-block
             vertical-align top
-

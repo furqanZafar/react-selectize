@@ -1,25 +1,18 @@
+@require 'base'
+
 .react-selectize.default
     color black
     background-color white
     font-family Helvetica Neue, Helvetica, Arial, sans-serif
-    user-select none
-    position relative
 
     &:not(.tethered)
         width 300px
-
-    &.disabled
-        pointer-events none
 
     .react-selectize-control
         border 1px solid
         border-color #d9d9d9 #cccccc #b3b3b3
         border-radius 4px
-        cursor pointer
         font-size 1em
-        display flex
-        align-items flex-start
-        position relative
 
         // this controls the height of the select 
         > div
@@ -27,59 +20,16 @@
 
         .react-selectize-placeholder
             color #aaa
-            display flex
-            align-items center
-            overflow hidden
             text-indent 8px
-            text-overflow ellipsis
-            white-space nowrap
-            position absolute
 
         .react-selectize-selected-values
-            display flex
-            flex-grow 1
-            flex-wrap wrap
             padding-left 5px
-
-            .resizable-input
-                background none
-                border none
-                outline none 
-                font-size 1em
-                margin 2px
-                padding 4px 0px
-                vertical-align middle
-                width 0px
-
-            .value-wrapper
-                display flex
-                align-items center
-
-        .react-selectize-arrow-container, .react-selectize-reset-container
-            flex-grow 0
-            flex-shrink 0
-            display flex
-            align-items center
-            justify-content center
-
-        .react-selectize-arrow-container
-            width 32px
-
-        .react-selectize-reset-container
-            width 16px
 
         .react-selectize-reset-container:hover .react-selectize-reset path
             stroke #c0392b
 
-        .react-selectize-arrow path
-            fill #999
-            
         .react-selectize-reset path
-            transition all 0.5s 0s ease
-            stroke #999
-            stroke-linecap square
-            stroke-linejoin mitter
-            stroke-width 1px
+            transition stroke 0.5s 0s ease
         
     &.open
 
@@ -105,40 +55,39 @@
 .react-selectize.dropdown-menu-container.default
     font-family Helvetica Neue, Helvetica, Arial, sans-serif
     overflow hidden
-    position absolute
     width 300px
 
     .dropdown-menu
         
-        &.slide-enter-active, &.slide-leave-active
+        &.custom-enter-active, &.custom-leave-active
             transition transform 0.2s 0s ease
 
         &.flipped
         
-            &.slide-enter
+            &.custom-enter
                 transform translateY(100%)
             
-            &.slide-enter-active
+            &.custom-enter-active
                 transform translateY(0%)
             
-            &.slide-leave
+            &.custom-leave
                 transform translateY(0%)
 
-            &.slide-leave-active
+            &.custom-leave-active
                 transform translateY(100%)
 
         &:not(.flipped)
 
-            &.slide-enter
+            &.custom-enter
                 transform translateY(-100%)
             
-            &.slide-enter-active
+            &.custom-enter-active
                 transform translateY(0%)
             
-            &.slide-leave
+            &.custom-leave
                 transform translateY(0%)
 
-            &.slide-leave-active
+            &.custom-leave-active
                 transform translateY(-100%)
 
 .react-selectize.dropdown-menu.default
@@ -147,9 +96,6 @@
     border 1px solid #ccc
     font-family Helvetica Neue, Helvetica, Arial, sans-serif
     max-height 200px
-    overflow auto
-    position absolute
-    z-index 10
 
     &.tethered
         min-width 300px
@@ -173,19 +119,11 @@
         &.red
             color red !important
 
-    .groups.as-columns
-        display flex
-
-        > div 
-            flex 1
-
     .simple-group-title
         background-color #fafafa
         padding 8px 8px
 
     .option-wrapper
-        cursor pointer
-        outline none
         &.highlight
             background #f2f9fc
             color #333
@@ -229,12 +167,4 @@
         background-image linear-gradient(to bottom, #fefefe, #f2f2f2)
 
     .simple-value
-        display inline-block
         margin 2px
-        vertical-align middle
-
-        span
-            cursor default
-            display inline-block
-            vertical-align top
-

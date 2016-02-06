@@ -1,0 +1,80 @@
+// component skeleton, extended & decorated by themes
+.react-selectize
+    user-select none
+    position relative
+
+    &.disabled
+        pointer-events none
+
+    .react-selectize-control
+        cursor pointer
+        display flex
+        align-items flex-start
+        position relative
+
+        .react-selectize-placeholder
+            display flex
+            align-items center
+            overflow hidden
+            text-overflow ellipsis
+            white-space nowrap
+            position absolute
+
+        .react-selectize-selected-values
+            display flex
+            flex-grow 1
+            flex-wrap wrap
+
+            .resizable-input
+                background none
+                border none
+                outline none 
+                font-size 1em
+                margin 2px
+                padding 4px 0px
+                vertical-align middle
+                width 0px
+
+            .value-wrapper
+                display flex
+                align-items center
+
+        .react-selectize-arrow-container, .react-selectize-reset-container
+            flex-grow 0
+            flex-shrink 0
+            cursor pointer
+            display flex
+            align-items center
+            justify-content center
+
+        .react-selectize-arrow-container
+            width 32px
+
+        .react-selectize-reset-container
+            width 16px
+
+        .react-selectize-arrow path
+            fill #999
+            
+        .react-selectize-reset path
+            stroke #999
+            stroke-linecap square
+            stroke-linejoin mitter
+
+// dropdown-menu-container is present for tethered & animated dropdowns only
+.react-selectize.dropdown-menu-container
+    position absolute
+
+.react-selectize.dropdown-menu
+    overflow auto
+    position absolute
+    z-index 10
+
+    .groups.as-columns
+        display flex
+        > div
+            flex 1
+
+    .option-wrapper
+        cursor pointer
+        outline none
