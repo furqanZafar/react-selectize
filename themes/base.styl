@@ -1,7 +1,13 @@
 // component skeleton, extended & decorated by themes
 .react-selectize
+    color black
+
+.react-selectize.control-wrapper
     user-select none
     position relative
+
+    &:not(.tethered)
+        width 300px
 
     &.disabled
         pointer-events none
@@ -11,7 +17,14 @@
         display flex
         align-items flex-start
         position relative
+        
+        // this controls the height of the select 
+        padding 2px
 
+        // this controls the height of the select 
+        > div
+            min-height 30px
+        
         .react-selectize-placeholder
             display flex
             align-items center
@@ -53,29 +66,44 @@
         .react-selectize-reset-container
             width 16px
 
+        .react-selectize-reset-container:hover .react-selectize-reset path
+            stroke #c0392b
+
         .react-selectize-arrow path
             fill #999
             
         .react-selectize-reset path
+            transition stroke 0.5s 0s ease
             stroke #999
             stroke-linecap square
             stroke-linejoin mitter
 
-// dropdown-menu-container is present for tethered & animated dropdowns only
-.react-selectize.dropdown-menu-container
+    // by default the dropdown-menu is present inside the control-wrapper 
+    .dropdown-menu
+        
+        &.tethered
+            min-width 298px
+
+        &:not(.tethered)
+            width calc(100% - 2px)
+
+// wraps the dropdown-menu div, exists only when props.transition-enter or props.transition-leave or both are true
+// present inside document.body if props.tether is true, otherwise its present inside the control-wrapper div (above)
+.react-selectize.dropdown-menu-wrapper
     position absolute
 
+    &.tethered
+        min-width 298px
+
+    &:not(.tethered)
+        width calc(100% - 2px)
+
+// dropdown-menu present in document.body when props.tether is true
 .react-selectize.dropdown-menu
     overflow auto
     position absolute
     max-height 200px
     z-index 10
-
-    &.tethered
-        min-width 300px
-
-    &:not(.tethered)
-        width 100%
 
     .groups.as-columns
         display flex
@@ -85,3 +113,26 @@
     .option-wrapper
         cursor pointer
         outline none
+
+// MULTI SELECT
+.multi-select.react-selectize.control-wrapper
+    
+    .simple-value
+        display inline-block
+        margin 2px
+        vertical-align middle
+
+        span
+            display inline-block
+            padding 2px 5px 4px
+            vertical-align center
+
+// SIMPLE SELECT
+.simple-select.react-selectize.control-wrapper
+    
+    .simple-value
+        margin 2px
+
+        span
+            display inline-block
+            vertical-align center

@@ -127,6 +127,13 @@ This can be useful when you are using the select control inside a parent element
             jsx: fs.read-file-sync \public/examples/simple/SimpleSelect.jsx, \utf8 
             ls: fs.read-file-sync \public/examples/simple/SimpleSelect.ls, \utf8 
 
+        * title: "Themes"
+          description: ""
+          languages:
+            jsx: fs.read-file-sync \public/examples/simple/Themes.jsx, \utf8 
+            ls: fs.read-file-sync \public/examples/simple/Themes.ls, \utf8 
+
+
         * title: "On value change"
           description: ""
           languages:
