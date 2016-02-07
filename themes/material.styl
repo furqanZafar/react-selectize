@@ -1,7 +1,10 @@
+@require 'base'
+
 .react-selectize.material
-    color black
     font-family Roboto, sans-serif
 
+.react-selectize.material.control-wrapper
+    
     &.open .react-selectize-control:after
         transform scaleX(1)
 
@@ -19,17 +22,13 @@
             width 100%
             height 2px
 
-        > div
-            min-height 30px
-
         .react-selectize-placeholder
             color rgba(0, 0, 0, 0.3)
             text-indent 4px
 
-.react-selectize.dropdown-menu-container.material
-    font-family Roboto, sans-serif
-    width 300px
-
+// wraps the dropdown-menu div, exists only when props.transition-enter or props.transition-leave or both are true
+// present inside document.body if props.tether is true, otherwise its present inside the control-wrapper div (above)
+.react-selectize.material.dropdown-menu-wrapper
     &.flipped
         margin-bottom 8px
 
@@ -62,11 +61,12 @@
         &.custom-leave-active
             opacity 0
 
-.react-selectize.dropdown-menu.material
+// dropdown-menu present in document.body when props.tether is true
+.react-selectize.material.dropdown-menu
     background-color white
     border-radius 2px
     box-shadow rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px
-    font-family Roboto, sans-serif
+    max-height 250px
     padding 8px 0px
 
     &.flipped
@@ -82,6 +82,17 @@
         padding 0px 16px
         display flex
         align-items center
+
+    .groups:not(.as-columns) > div:not(:last-child)
+        border-bottom 1px solid #e5e5e5
+
+    .simple-group-title
+        color #8f8f8f
+        display flex
+        align-items center
+        font-size 14px
+        height 48px
+        padding 0px 10px
 
     .option-wrapper
 
@@ -105,17 +116,13 @@
                 text-shadow 0px 1px 0px white
 
 // MULTI SELECT
-.react-selectize.multi-select.material
-
-    .simple-value
-        padding 0px 4px
-        
+.multi-select.react-selectize.material.control-wrapper .simple-value
+    span
+        padding 0px
         &:after
             content ","
 
 // SIMPLE SELECT
-.react-selectize.simple-select.material
-    
-    .simple-value
-        margin 4px 3px 3px 2px
+.simple-select.react-selectize.material.control-wrapper .simple-value
+    margin 4px 3px 3px 2px
 

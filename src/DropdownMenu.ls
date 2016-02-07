@@ -91,8 +91,8 @@ module.exports = create-class do
                 transition-leave: @props.transition-leave
                 transition-enter-timeout: @props.transition-enter-timeout
                 transition-leave-timeout: @props.transition-leave-timeout
-                class-name: "dropdown-menu-container #{dynamic-class-name}"
-                ref: \dropdownMenuContainer
+                class-name: "dropdown-menu-wrapper #{dynamic-class-name}"
+                ref: \dropdownMenuWrapper
                 @render-dropdown computed-state
 
         else
@@ -143,8 +143,8 @@ module.exports = create-class do
 
                 # on-height-change :: Number -> ()
                 on-height-change: (height) !~> 
-                    if @refs.dropdown-menu-container
-                        find-DOM-node @refs.dropdown-menu-container .style.height = "#{height}px"
+                    if @refs.dropdown-menu-wrapper
+                        find-DOM-node @refs.dropdown-menu-wrapper .style.height = "#{height}px"
 
                 # NO RESULT FOUND   
                 if @props.options.length == 0
@@ -183,7 +183,7 @@ module.exports = create-class do
 
     # component-did-update :: () -> ()
     component-did-update: !->
-        dropdown-menu = find-DOM-node @refs.dropdown-menu-container ? @refs.dropdown-menu
+        dropdown-menu = find-DOM-node @refs.dropdown-menu-wrapper ? @refs.dropdown-menu
             ..?style.bottom = switch 
                 | @props.dropdown-direction == -1 => @props.bottom-anchor!.offset-height + dropdown-menu.style.margin-bottom
                 | _ => ""

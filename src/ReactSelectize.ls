@@ -98,6 +98,7 @@ module.exports = create-class do
             class-name: class-name-from-object do
                 \react-selectize : 1
                 "#{@props.theme}" : 1
+                \control-wrapper : 1
                 "#{@props.class-name}" : 1
                 disabled: @props.disabled
                 open: @props.open

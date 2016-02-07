@@ -13,7 +13,7 @@ styles & features inspired by [React Select](http://jedwatson.github.io/react-se
 
 [![](http://i.imgsafe.co/rQmogzn.gif)](http://furqanZafar.github.io/react-selectize/)
 
-- [Changelog](CHANGELOG.md) (last updated on 2nd February 2016)
+- [Changelog](CHANGELOG.md) (last updated on 7th February 2016)
 - [API Reference](API.md)
 
 # Motivation
@@ -23,6 +23,7 @@ styles & features inspired by [React Select](http://jedwatson.github.io/react-se
 
 ## Features
 * [Drop in replacement for React.DOM.Select](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=drop-in-replacement-for-react.dom.select)
+* [Customizable themes](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=themes)
 * Stateless, therefore extremely flexible & extensible
 * Clean and compact API fully documented on GitHub
 * [Multiselect support](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=multi-select)
@@ -40,37 +41,37 @@ styles & features inspired by [React Select](http://jedwatson.github.io/react-se
 * [Mark options as unselectable](http://furqanzafar.github.io/react-selectize/#/?category=simple&example=selectability)
 * [Disable selected values](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=disable-selected)
 * [Absolute positioned overlay, "Tether"ed to the search field](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=tether)
-* Customizable styles, comes with Stylus files
 
 ## Install
+
+* **npm:**
 `npm install react-selectize`
 
-## Usage (livescript)
-```
-{create-factory}:React = require \react
-{SimpleSelect, MultiSelect, ReactSelectize} = require \react-selectize
-SimpleSelect = create-factory SimpleSelect
-MultiSelect = create-factory MultiSelect
-.
-.
-.
-SimpleSelect do     
-    placeholder: 'Select a fruit'
-    options: <[apple mango orange banana]> |> map ~> label: it, value: it
-    on-value-change: (value) ~>
-        alert value
-.
-.
-.
-MultiSelect do
-    placeholder: 'Select fruits'
-    options: <[apple mango orange banana]> |> map ~> label: it, value: it
-    on-values-change: (values) ~>
-        alert values
+to include the default styles add the following import statement to your stylus file:
+`@import 'node_modules/react-selectize/themes/index.css'`
+
+* **1998 script tag:**
+```html
+<html>
+ <head>
+  <script src="http://www.preludels.com/prelude-browser-min.js" type="text/javascript" ></script>
+  <script src="https://npmcdn.com/prelude-extension@0.0.11/dist/index.min.js" type="text/javascript" ></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-with-addons.min.js" type="text/javascript" ></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.min.js" type="text/javascript" ></script>
+
+  <!-- optional dependency (only required with using the tether prop) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.1.1/js/tether.min.js" type="text/javascript" ></script>
+
+  <script src="https://npmcdn.com/react-selectize@0.7.0/dist/index.min.js" type="text/javascript" ></script>
+
+  <!-- built in themes (default, bootstrap3, material) -->
+  <link rel="stylesheet" href="https://npmcdn.com/react-selectize@0.7.0/dist/index.min.css"/>
+ </head>
+</html>
 ```
 
 ## Usage (jsx)
-```
+```javascript
 React = require("react");
 ReactSelectize = require("react-selectize");
 SimpleSelect = ReactSelectize.SimpleSelect;
@@ -104,11 +105,29 @@ MultiSelect = ReactSelectize.MultiSelect;
 />
 ```
 
-## Usage (stylus)
-to include the default styles add the following import statement to your stylus file:
-
-`@import 'node_modules/react-selectize/src/index.css'`
-
+## Usage (livescript)
+```LiveScript
+{create-factory}:React = require \react
+{SimpleSelect, MultiSelect, ReactSelectize} = require \react-selectize
+SimpleSelect = create-factory SimpleSelect
+MultiSelect = create-factory MultiSelect
+.
+.
+.
+SimpleSelect do     
+    placeholder: 'Select a fruit'
+    options: <[apple mango orange banana]> |> map ~> label: it, value: it
+    on-value-change: (value) ~>
+        alert value
+.
+.
+.
+MultiSelect do
+    placeholder: 'Select fruits'
+    options: <[apple mango orange banana]> |> map ~> label: it, value: it
+    on-values-change: (values) ~>
+        alert values
+```
 
 ## Gotchas
 * the default structure of an option object is `{label: String, value :: a}` where `a` implies that `value` property can be of any equatable type

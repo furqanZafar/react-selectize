@@ -1,22 +1,16 @@
 @require 'base'
 
 .react-selectize.default
-    color black
-    background-color white
     font-family Helvetica Neue, Helvetica, Arial, sans-serif
 
-    &:not(.tethered)
-        width 300px
-
+.react-selectize.default.control-wrapper
+    
     .react-selectize-control
+        background-color white
         border 1px solid
         border-color #d9d9d9 #cccccc #b3b3b3
         border-radius 4px
         font-size 1em
-
-        // this controls the height of the select 
-        > div
-            min-height 30px
 
         .react-selectize-placeholder
             color #aaa
@@ -24,12 +18,6 @@
 
         .react-selectize-selected-values
             padding-left 5px
-
-        .react-selectize-reset-container:hover .react-selectize-reset path
-            stroke #c0392b
-
-        .react-selectize-reset path
-            transition stroke 0.5s 0s ease
         
     &.open
 
@@ -51,11 +39,10 @@
                 border-top-left-radius 4px
                 border-top-right-radius 4px
 
-// DROPDOWN MENU (in document.body when @props.tether is true)
-.react-selectize.dropdown-menu-container.default
-    font-family Helvetica Neue, Helvetica, Arial, sans-serif
+// wraps the dropdown-menu div, exists only when props.transition-enter or props.transition-leave or both are true
+// present inside document.body if props.tether is true, otherwise its present inside the control-wrapper div (above)
+.react-selectize.dropdown-menu-wrapper.default
     overflow hidden
-    width 300px
 
     .dropdown-menu
         
@@ -90,11 +77,10 @@
             &.custom-leave-active
                 transform translateY(-100%)
 
+// dropdown-menu present in document.body when props.tether is true
 .react-selectize.dropdown-menu.default
     background white
-    box-sizing border-box
     border 1px solid #ccc
-    font-family Helvetica Neue, Helvetica, Arial, sans-serif
 
     &.flipped
         border-top-left-radius 4px
@@ -104,13 +90,11 @@
         border-color #b3b3b3 #cccccc #d9d9d9
         border-bottom-left-radius 4px
         border-bottom-right-radius 4px
-
+    
     .no-results-found
         color #aaa !important
         font-style oblique
         padding 8px 10px
-        &.red
-            color red !important
 
     .simple-group-title
         background-color #fafafa
@@ -136,29 +120,18 @@
 
 
 // MULTI SELECT
-.react-selectize.multi-select.default 
-    
-    .simple-value
-        background #f2f9fc
-        border 1px solid #c9e6f2
-        border-radius 2px
-        color #0088cc
-        display inline-block
-        margin 2px
-        vertical-align middle
-
-        span
-            cursor pointer
-            display inline-block
-            padding 2px 5px 4px
-            vertical-align top
+.multi-select.react-selectize.default.control-wrapper .simple-value
+    background #f2f9fc
+    border 1px solid #c9e6f2
+    border-radius 2px
+    color #0088cc
 
 // SIMPLE SELECT
-.react-selectize.simple-select.default
+.simple-select.react-selectize.default.control-wrapper
+    
+    &.open .react-selectize-control
+        background-color white
     
     &:not(.open) .react-selectize-control
         background-color #f9f9f9
         background-image linear-gradient(to bottom, #fefefe, #f2f2f2)
-
-    .simple-value
-        margin 2px

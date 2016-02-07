@@ -1,14 +1,12 @@
 @require 'base'
 
 .react-selectize.bootstrap3
-    color black
-    background-color white
     font-family Helvetica Neue, Helvetica, Arial, sans-serif
 
-    &:not(.tethered)
-        width 300px
+.react-selectize.bootstrap3.control-wrapper
 
     &.open .react-selectize-control
+        background-color white
         border 1px solid #66afe9
         box-shadow inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6)
 
@@ -18,10 +16,6 @@
         border-radius 4px
         font-size 1em
 
-        // this controls the height of the select 
-        > div
-            min-height 30px
-
         .react-selectize-placeholder
             color #aaa
             text-indent 8px
@@ -29,16 +23,9 @@
         .react-selectize-selected-values
             padding-left 5px
 
-        .react-selectize-reset-container:hover .react-selectize-reset path
-            stroke #c0392b
-
-        .react-selectize-reset path
-            transition stroke 0.5s 0s ease
-
-// DROPDOWN MENU (in document.body when @props.tether is true)
-.react-selectize.dropdown-menu-container.bootstrap3
-    font-family Helvetica Neue, Helvetica, Arial, sans-serif
-    width 300px
+// wraps the dropdown-menu div, exists only when props.transition-enter or props.transition-leave or both are true
+// present inside document.body if props.tether is true, otherwise its present inside the control-wrapper div (above)
+.react-selectize.bootstrap3.dropdown-menu-wrapper
 
     &.flipped
         margin-bottom 5px
@@ -63,13 +50,12 @@
         &.custom-leave-active
             opacity 0
 
-.react-selectize.dropdown-menu.bootstrap3
+// dropdown-menu present in document.body when props.tether is true
+.react-selectize.bootstrap3.dropdown-menu
     background white
-    box-sizing border-box
     border 1px solid #ccc
     border-radius 4px
     box-shadow 0 6px 12px rgba(0, 0, 0, 0.175)
-    font-family Helvetica Neue, Helvetica, Arial, sans-serif
 
     &.flipped
         margin-bottom 5px
@@ -81,12 +67,16 @@
         color #aaa !important
         font-style oblique
         padding 8px 10px
-        &.red
-            color red !important
+
+    .groups:not(.as-columns) > div:not(:first-child)
+        border-top 1px solid #e5e5e5
+        margin 12px 0px 0px 0px
 
     .simple-group-title
-        background-color #fafafa
+        background-color white
+        color #999999
         padding 8px 8px
+        text-shadow 0px 1px 0px rgba(0,0,0,0.05)
 
     .option-wrapper
 
@@ -110,31 +100,7 @@
 
 
 // MULTI SELECT
-.react-selectize.multi-select.bootstrap3 
-
-    .simple-value
-        background #efefef
-        border-radius 4px
-        color #333
-        display inline-block
-        margin 2px
-        vertical-align middle
-
-        span
-            cursor pointer
-            display inline-block
-            padding 2px 5px 4px
-            vertical-align top
-
-// SIMPLE SELECT
-.react-selectize.simple-select.bootstrap3
-    
-    .simple-value
-        display inline-block
-        margin 2px
-        vertical-align middle
-
-        span
-            cursor default
-            display inline-block
-            vertical-align top
+.multi-select.react-selectize.bootstrap3.control-wrapper .simple-value
+    background #efefef
+    border-radius 4px
+    color #333
