@@ -1,5 +1,12 @@
 # React Selectize
 
+## v0.7.0 / 7th February 2016
+* umd build 
+*  added `theme` prop, 3 built-in themes (default, bootstrap3 & material)
+* **Breaking Change**: moved index.css from `src/` directory to `themes` & `dist` directory
+* fixed issues with `search` & `open` props
+* **Breaking Change**: removed `autosize` prop
+
 ## v0.6.2 / 2nd February 2016
 * hide the reset button if the select is empty
 * minor css improvements

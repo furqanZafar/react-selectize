@@ -1,0 +1,106 @@
+@require 'base'
+
+.react-selectize.bootstrap3
+    font-family Helvetica Neue, Helvetica, Arial, sans-serif
+
+.react-selectize.bootstrap3.control-wrapper
+
+    &.open .react-selectize-control
+        background-color white
+        border 1px solid #66afe9
+        box-shadow inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6)
+
+    .react-selectize-control
+        border 1px solid
+        border-color #d9d9d9 #cccccc #b3b3b3
+        border-radius 4px
+        font-size 1em
+
+        .react-selectize-placeholder
+            color #aaa
+            text-indent 8px
+
+        .react-selectize-selected-values
+            padding-left 5px
+
+// wraps the dropdown-menu div, exists only when props.transition-enter or props.transition-leave or both are true
+// present inside document.body if props.tether is true, otherwise its present inside the control-wrapper div (above)
+.react-selectize.bootstrap3.dropdown-menu-wrapper
+
+    &.flipped
+        margin-bottom 5px
+
+    &:not(.flipped)
+        margin-top 5px
+    
+    .dropdown-menu
+        
+        &.custom-enter-active, &.custom-leave-active
+            transition opacity 0.2s 0s ease
+
+        &.custom-enter
+            opacity 0
+        
+        &.custom-enter-active
+            opacity 1
+        
+        &.custom-leave
+            opacity 1
+
+        &.custom-leave-active
+            opacity 0
+
+// dropdown-menu present in document.body when props.tether is true
+.react-selectize.bootstrap3.dropdown-menu
+    background white
+    border 1px solid #ccc
+    border-radius 4px
+    box-shadow 0 6px 12px rgba(0, 0, 0, 0.175)
+
+    &.flipped
+        margin-bottom 5px
+
+    &:not(.flipped)
+        margin-top 5px
+
+    .no-results-found
+        color #aaa !important
+        font-style oblique
+        padding 8px 10px
+
+    .groups:not(.as-columns) > div:not(:first-child)
+        border-top 1px solid #e5e5e5
+        margin 12px 0px 0px 0px
+
+    .simple-group-title
+        background-color white
+        color #999999
+        padding 8px 8px
+        text-shadow 0px 1px 0px rgba(0,0,0,0.05)
+
+    .option-wrapper
+
+        &.highlight
+            background #428bca
+
+            .simple-option
+                color #fff
+
+        .simple-option
+            color #333
+            cursor pointer
+            padding 8px 10px
+
+            &.not-selectable
+                background-color #f8f8f8
+                color #999
+                cursor default
+                font-style oblique
+                text-shadow 0px 1px 0px white
+
+
+// MULTI SELECT
+.multi-select.react-selectize.bootstrap3.control-wrapper .simple-value
+    background #efefef
+    border-radius 4px
+    color #333

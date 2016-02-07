@@ -52,7 +52,7 @@ describe "SimpleSelect", ->
                 done!
         click-to-open-select-control select
         click-option find-highlighted-option select
-
+        
     specify "must invoke on-value-change when the value (prop) is changed", (done) ->
         select = create-simple-select do 
             value: label: \apple, value: \apple
@@ -157,6 +157,6 @@ describe "SimpleSelect", ->
         set-input-text input, "some random text"
         press-return input
         <~ set-timeout _, 25
-        component-with-class-must-not-exist \react-selectize-dropdown
+        component-with-class-must-not-exist \dropdown-menu
         assert select.state.search == ""
         done!

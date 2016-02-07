@@ -12,7 +12,7 @@ module.exports = React.create-class do
     get-default-props: ->
         # autofocus :: Boolean
         # anchor :: Item
-        # class-name :: String
+        class-name: ""
         close-on-select: false
         # values-from-paste :: String -> [Item]
         default-values: []
@@ -42,6 +42,7 @@ module.exports = React.create-class do
         serialize: map (?.value) # [Item] -> String
         # style :: CSS
         tether: false
+        # theme :: String
         # values :: [Item]
 
     # render :: () -> ReactElement
@@ -56,7 +57,7 @@ module.exports = React.create-class do
         # props
         {
             autofocus, autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, 
-            name, on-keyboard-selection-failed, render-group-title, serialize, tether, transition-enter, 
+            name, on-keyboard-selection-failed, render-group-title, serialize, tether, theme, transition-enter, 
             transition-leave, transition-enter-timeout, transition-leave-timeout, uid
         }? = @props
 
@@ -64,7 +65,7 @@ module.exports = React.create-class do
             
             autofocus
             autosize
-            class-name: "multi-select" + if !!@props.class-name then " #{@props.class-name}" else ""
+            class-name: "multi-select #{@props.class-name}"
             delimiters
             disabled
             dropdown-direction
@@ -74,7 +75,10 @@ module.exports = React.create-class do
             name
             on-keyboard-selection-failed
             render-group-title
+            scroll-lock: @state.scroll-lock
+            on-scroll-lock-change: (scroll-lock) ~> @set-state {scroll-lock}
             tether
+            theme
             transition-enter
             transition-enter-timeout
             transition-leave
@@ -83,11 +87,11 @@ module.exports = React.create-class do
             ref: \select
 
             # ANCHOR
-            anchor: anchor
-            on-anchor-change: on-anchor-change
+            anchor
+            on-anchor-change
 
             # OPEN
-            open: @state.open
+            open
             on-open-change
 
             # HIGHLIGHTED OPTION
@@ -226,7 +230,8 @@ module.exports = React.create-class do
             search
             values
             on-anchor-change
-
+            open
+            
             # on-open-change :: Boolean -> (() -> ()) -> ()
             on-open-change: (open, callback) !~>
                 on-open-change do 
@@ -234,7 +239,7 @@ module.exports = React.create-class do
                     | typeof @props.max-values != \undefined and @values!.length >= @props.max-values => false
                     | _ => open
                     callback
-
+                    
             on-search-change
             on-values-change
             filtered-options
@@ -246,6 +251,7 @@ module.exports = React.create-class do
         anchor: if !!@props.values then last @props.values else undefined
         highlighted-uid: undefined
         open: false
+        scroll-lock: false
         search: ""
         values: @props.default-values
 

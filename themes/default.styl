@@ -1,0 +1,137 @@
+@require 'base'
+
+.react-selectize.default
+    font-family Helvetica Neue, Helvetica, Arial, sans-serif
+
+.react-selectize.default.control-wrapper
+    
+    .react-selectize-control
+        background-color white
+        border 1px solid
+        border-color #d9d9d9 #cccccc #b3b3b3
+        border-radius 4px
+        font-size 1em
+
+        .react-selectize-placeholder
+            color #aaa
+            text-indent 8px
+
+        .react-selectize-selected-values
+            padding-left 5px
+        
+    &.open
+
+        &.flipped
+
+            .react-selectize-control
+                border-top none
+                border-bottom-left-radius 4px
+                border-bottom-right-radius 4px
+                border-top-left-radius 0px
+                border-top-right-radius 0px
+
+        &:not(.flipped)
+            
+            .react-selectize-control
+                border-bottom none
+                border-bottom-left-radius 0px
+                border-bottom-right-radius 0px
+                border-top-left-radius 4px
+                border-top-right-radius 4px
+
+// wraps the dropdown-menu div, exists only when props.transition-enter or props.transition-leave or both are true
+// present inside document.body if props.tether is true, otherwise its present inside the control-wrapper div (above)
+.react-selectize.dropdown-menu-wrapper.default
+    overflow hidden
+
+    .dropdown-menu
+        
+        &.custom-enter-active, &.custom-leave-active
+            transition transform 0.2s 0s ease
+
+        &.flipped
+        
+            &.custom-enter
+                transform translateY(100%)
+            
+            &.custom-enter-active
+                transform translateY(0%)
+            
+            &.custom-leave
+                transform translateY(0%)
+
+            &.custom-leave-active
+                transform translateY(100%)
+
+        &:not(.flipped)
+
+            &.custom-enter
+                transform translateY(-100%)
+            
+            &.custom-enter-active
+                transform translateY(0%)
+            
+            &.custom-leave
+                transform translateY(0%)
+
+            &.custom-leave-active
+                transform translateY(-100%)
+
+// dropdown-menu present in document.body when props.tether is true
+.react-selectize.dropdown-menu.default
+    background white
+    border 1px solid #ccc
+
+    &.flipped
+        border-top-left-radius 4px
+        border-top-right-radius 4px
+
+    &:not(.flipped)
+        border-color #b3b3b3 #cccccc #d9d9d9
+        border-bottom-left-radius 4px
+        border-bottom-right-radius 4px
+    
+    .no-results-found
+        color #aaa !important
+        font-style oblique
+        padding 8px 10px
+
+    .simple-group-title
+        background-color #fafafa
+        padding 8px 8px
+
+    .option-wrapper
+        
+        &.highlight
+            background #f2f9fc
+            color #333
+
+        .simple-option
+            color #666
+            cursor pointer
+            padding 8px 10px
+
+            &.not-selectable
+                background-color #f8f8f8
+                color #999
+                cursor default
+                font-style oblique
+                text-shadow 0px 1px 0px white
+
+
+// MULTI SELECT
+.multi-select.react-selectize.default.control-wrapper .simple-value
+    background #f2f9fc
+    border 1px solid #c9e6f2
+    border-radius 2px
+    color #0088cc
+
+// SIMPLE SELECT
+.simple-select.react-selectize.default.control-wrapper
+    
+    &.open .react-selectize-control
+        background-color white
+    
+    &:not(.open) .react-selectize-control
+        background-color #f9f9f9
+        background-image linear-gradient(to bottom, #fefefe, #f2f2f2)

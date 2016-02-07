@@ -42,6 +42,7 @@ module.exports = React.create-class do
         serialize: (?.value)
         style: {}
         tether: false
+        # theme :: String
         uid: id # uid :: (Equatable e) => Item -> e
         # value :: Item
 
@@ -56,8 +57,8 @@ module.exports = React.create-class do
         # props
         {
             autofocus, autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, 
-            name, render-group-title, serialize, tether, transition-enter, transition-leave, transition-enter-timeout, 
-            transition-leave-timeout, uid
+            name, render-group-title, serialize, tether, theme, transition-enter, transition-leave, 
+            transition-enter-timeout, transition-leave-timeout, uid
         }? = @props
             
         # if the user hits the return key on an empty dropdown, then hide the dropdown and clear the search text
@@ -75,7 +76,10 @@ module.exports = React.create-class do
             groups-as-columns
             name
             render-group-title
+            scroll-lock: @state.scroll-lock
+            on-scroll-lock-change: (scroll-lock) ~> @set-state {scroll-lock}
             tether
+            theme
             transition-enter
             transition-enter-timeout
             transition-leave
@@ -271,6 +275,7 @@ module.exports = React.create-class do
     get-initial-state: ->
         highlighted-uid: undefined
         open: false
+        scroll-lock: false
         search: ""
         value: @props?.default-value
 

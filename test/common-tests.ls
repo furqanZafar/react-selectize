@@ -43,24 +43,17 @@ module.exports = (select-class) !->
     specify "must default the list of options to an empty list", ->
         select = create-select options: undefined
         click-to-open-select-control select
-        find-rendered-DOM-component-with-class select, \react-selectize-dropdown
+        find-rendered-DOM-component-with-class select, \dropdown-menu
 
     specify "must show the list of options on click", ->
         select = create-select!
         click-to-open-select-control select
-        find-rendered-DOM-component-with-class select, \react-selectize-dropdown
-
-    specify "input must autosize to fit its contents", ->
-        {refs}:select = create-select do 
-            autosize: -> 100
-        input = get-input select
-        set-input-text input, \text
-        assert.equal input.style.width, \100px
+        find-rendered-DOM-component-with-class select, \dropdown-menu
 
     specify "must open options dropdown on search change", ->
         select = create-select!
         set-input-text (get-input select), \text
-        find-rendered-DOM-component-with-class select, \react-selectize-dropdown
+        find-rendered-DOM-component-with-class select, \dropdown-menu
 
     specify "must filter options list on search change", ->
         select = create-select!
@@ -141,7 +134,7 @@ module.exports = (select-class) !->
         select = create-select do 
             disabled: true
         click-to-open-select-control select
-        component-with-class-must-not-exist select, \react-selectize-dropdown
+        component-with-class-must-not-exist select, \dropdown-menu
 
     specify "must be able to render custom option", ->
         select = create-select do 
@@ -199,7 +192,7 @@ module.exports = (select-class) !->
         select = create-select!
         click-to-open-select-control select
         press-escape (get-input select)
-        component-with-class-must-not-exist select, \react-selectize-dropdown
+        component-with-class-must-not-exist select, \dropdown-menu
 
     specify "must render custom dom for 'no results found'", ->
         select = create-select do 
@@ -251,7 +244,7 @@ module.exports = (select-class) !->
     specify "highlight-first-selectable-option must not open the select", ->
         select = create-select!
         select.highlight-first-selectable-option!
-        component-with-class-must-not-exist select, \react-selectize-dropdown
+        component-with-class-must-not-exist select, \dropdown-menu
 
     specify "must highlight the second option, when creating options from search & search results are non empty", ->
         select = create-select do 
@@ -275,7 +268,7 @@ module.exports = (select-class) !->
         select = create-select!
         click-to-open-select-control select
         blur get-input select
-        component-with-class-must-not-exist select, \react-selectize-dropdown
+        component-with-class-must-not-exist select, \dropdown-menu
 
     specify "must deselect on clicking reset button", ->
         select = create-select!
@@ -288,7 +281,7 @@ module.exports = (select-class) !->
         select = TestUtils.render-into-document (create-element select-class, {options: null}, [])
         click-to-open-select-control select
         set-input-text (get-input select), \test
-        find-rendered-DOM-component-with-class select, \react-selectize-dropdown
+        find-rendered-DOM-component-with-class select, \dropdown-menu
         find-rendered-DOM-component-with-class select, \no-results-found
         component-with-class-must-not-exist \simple-option
 
@@ -306,7 +299,7 @@ module.exports = (select-class) !->
                 disabled: true
                 options: []
             container
-        component-with-class-must-not-exist select, \react-selectize-dropdown
+        component-with-class-must-not-exist select, \dropdown-menu
 
     specify "must work when passed null props and undefined children", ->
         TestUtils.render-into-document do 
@@ -330,9 +323,9 @@ module.exports = (select-class) !->
         select = create-select!
         arrow = find-rendered-DOM-component-with-class select, \react-selectize-arrow
         mouse-down arrow
-        find-rendered-DOM-component-with-class select, \react-selectize-dropdown
+        find-rendered-DOM-component-with-class select, \dropdown-menu
         mouse-down arrow
-        component-with-class-must-not-exist select, \react-selectize-dropdown
+        component-with-class-must-not-exist select, \dropdown-menu
 
     specify "must wrap around on hitting the boundary", ->
         select = create-select!
@@ -360,22 +353,22 @@ module.exports = (select-class) !->
         select = create-select!
         click-to-open-select-control select
         select.blur!
-        component-with-class-must-not-exist \react-selectize-dropdown
+        component-with-class-must-not-exist \dropdown-menu
 
     specify "pressing down arrow key on a closed select must open and select the first option", ->
         select = create-select!
         press-down-arrow get-input select
-        find-rendered-DOM-component-with-class select, \react-selectize-dropdown
+        find-rendered-DOM-component-with-class select, \dropdown-menu
         assert \apple == get-item-text (find-rendered-DOM-component-with-class select, \highlight)
 
     specify "pressing up arrow key on a closed select must open and select the first option", ->
         select = create-select!
         press-up-arrow get-input select
-        find-rendered-DOM-component-with-class select, \react-selectize-dropdown
+        find-rendered-DOM-component-with-class select, \dropdown-menu
         assert \apple == get-item-text (find-rendered-DOM-component-with-class select, \highlight)
 
     specify "must not interfere with command + enter or control + enter", ->
         select = create-select!
         click-to-open-select-control select
         key-down (get-input select), which: 13, meta-key: true
-        find-rendered-DOM-component-with-class select, \react-selectize-dropdown
+        find-rendered-DOM-component-with-class select, \dropdown-menu

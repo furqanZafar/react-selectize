@@ -21,7 +21,8 @@ export create-select = (select-class, props, children) -->
 
 # get-input :: Select -> DOMInput
 export get-input = (select) -> 
-    find-DOM-node find-rendered-DOM-component-with-tag select, \input
+    find-DOM-node do 
+        find-rendered-DOM-component-with-class select, \resizable-input
 
 # get-item-text :: Item -> String
 export get-item-text = (item) ->

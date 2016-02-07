@@ -1,6 +1,6 @@
 {
   "name": "react-selectize",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "description": "A Stateless & Flexible Select component for React inspired by Selectize",
   "main": "src/index.js",
   "scripts": {
@@ -20,6 +20,14 @@
     "react-addons-shallow-compare": "^0.14.6",
     "react-dom": "^0.14.0"
   },
+  "browserify-shim": {
+    "prelude-extension": "global:preludeExtension",
+    "react": "global:React",
+    "react-addons-css-transition-group": "global:React.addons.CSSTransitionGroup",
+    "react-addons-shallow-compare": "global:React.addons.shallowCompare",
+    "react-dom": "global:ReactDOM",
+    "tether": "global:Tether"
+  },
   "devDependencies": {
     "async-ls": "0.0.3",
     "brace": "git+https://github.com/furqanZafar/brace.git",
@@ -31,6 +39,7 @@
     "gulp-connect": "^2.2.0",
     "gulp-if": "^1.2.5",
     "gulp-livescript": "^2.4.0",
+    "gulp-rename": "^1.2.2",
     "gulp-streamify": "^1.0.2",
     "gulp-stylus": "^2.0.1",
     "gulp-uglify": "^1.4.1",
@@ -51,6 +60,7 @@
     "react-dom": "^0.14.0",
     "react-router": "^1.0.0-rc1",
     "react-tools": "^0.13.3",
+    "run-sequence": "^1.1.5",
     "should": "^7.1.0",
     "underscore": "^1.8.3",
     "vinyl-source-stream": "^1.0.0",
