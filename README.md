@@ -50,6 +50,9 @@ styles & features inspired by [React Select](http://jedwatson.github.io/react-se
 to include the default styles add the following import statement to your stylus file:
 `@import 'node_modules/react-selectize/themes/index.css'`
 
+* **bower:**
+`bower install https://npmcdn.com/react-selectize@0.7.1/bower.zip`
+
 * **1998 script tag:**
 ```html
 <html>
@@ -62,10 +65,10 @@ to include the default styles add the following import statement to your stylus 
   <!-- optional dependency (only required with using the tether prop) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.1.1/js/tether.min.js" type="text/javascript" ></script>
 
-  <script src="https://npmcdn.com/react-selectize@0.7.0/dist/index.min.js" type="text/javascript" ></script>
+  <script src="https://npmcdn.com/react-selectize@0.7.1/dist/index.min.js" type="text/javascript" ></script>
 
   <!-- built in themes (default, bootstrap3, material) -->
-  <link rel="stylesheet" href="https://npmcdn.com/react-selectize@0.7.0/dist/index.min.css"/>
+  <link rel="stylesheet" href="https://npmcdn.com/react-selectize@0.7.1/dist/index.min.css"/>
  </head>
 </html>
 ```

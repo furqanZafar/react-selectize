@@ -1,5 +1,8 @@
 # React Selectize
 
+## v0.7.1 / 7th February 2016
+* bower support (using npmcdn)
+
 ## v0.7.0 / 7th February 2016
 * umd build 
 *  added `theme` prop, 3 built-in themes (default, bootstrap3 & material)
