@@ -5,7 +5,6 @@
 |    Property                |   Type                              |   Description                  |
 |----------------------------|-------------------------------------|--------------------------------|
 |    autofocus               | Boolean                             | opens the dropdown menu on load if set to true (defaults to false) |
-|    autosize                | InputElement -> Int                 | `($search){return $search.value.length * 10}` custom logic for autosizing the input element|
 |    className               | String                              | class name for the outer element, in addition to "simple-select"|
 |    createFromSearch        | [Item] -> String -> Item?           | implement this function to create new items on the fly, `(options, search){return {label: search, value: search}}`, return null to avoid option creation for the given parameters|
 |    defaultValue            | Item                                | similar to the defaultValue prop of React.DOM.Select |
@@ -35,6 +34,7 @@
 |    search                  | String                              | the text displayed in the search box|
 |    serialize               | Item -> String                      | `(item){ return !!item ? item.value : undefined; }` the value of the hidden input element for form serialization |
 |    style                   | Object                              | the CSS styles for the outer element|
+|    theme                   | String                              | `default` | `material` | `bootstrap3` | custom theme name |
 |    transitionEnter         | Boolean                             | defaults to false, setting this to true animates the opening of the dropdown using the `slide-*` css classes|
 |    transitionEnterTimeout  | Number                              | duration specified in milliseconds, it must match the transition duration specified under the CSS class `.slide-enter-active` |
 |    transitionLeave         | Boolean                             | defaults to false, setting this to true animates the closing of the dropdown using the `slide-*` css classes|
