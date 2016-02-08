@@ -26,12 +26,14 @@
             min-height 30px
         
         .react-selectize-placeholder
-            display flex
-            align-items center
+            display block
+            line-height 30px
             overflow hidden
             text-overflow ellipsis
+            vertical-align middle
             white-space nowrap
             position absolute
+            max-width calc(100% - 56px)
 
         .react-selectize-selected-values
             display flex
