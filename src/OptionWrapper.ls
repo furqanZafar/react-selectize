@@ -22,7 +22,7 @@ module.exports = create-class do
         div do
             class-name: "option-wrapper #{if !!@props.highlight then 'highlight' else ''}"
 
-            # mimic the same behaviour is that of an html select element
+            # mimic the same behaviour as that of an html select element
             # on-mouse-down :: Event -> ()
             on-mouse-down: (e) ~>
                 
