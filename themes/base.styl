@@ -5,9 +5,7 @@
 .react-selectize.control-wrapper
     user-select none
     position relative
-
-    &:not(.tethered)
-        width 300px
+    width 300px
 
     &.disabled
         pointer-events none
@@ -80,32 +78,30 @@
             stroke-linecap square
             stroke-linejoin mitter
 
-    // by default the dropdown-menu is present inside the control-wrapper 
-    .dropdown-menu
-        
-        &.tethered
-            min-width 298px
-
-        &:not(.tethered)
-            width calc(100% - 2px)
-
 // wraps the dropdown-menu div, exists only when props.transition-enter or props.transition-leave or both are true
 // present inside document.body if props.tether is true, otherwise its present inside the control-wrapper div (above)
 .react-selectize.dropdown-menu-wrapper
     position absolute
 
     &.tethered
-        min-width 298px
+        min-width 300px
 
     &:not(.tethered)
-        width calc(100% - 2px)
+        width 100%
 
 // dropdown-menu present in document.body when props.tether is true
 .react-selectize.dropdown-menu
+    box-sizing border-box
     overflow auto
     position absolute
     max-height 200px
     z-index 10
+
+    &.tethered
+        min-width 300px
+
+    &:not(.tethered)
+        width 100%
 
     .groups.as-columns
         display flex
