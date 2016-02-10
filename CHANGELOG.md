@@ -1,5 +1,8 @@
 # React Selectize
 
+## v0.7.3 / 10th February 2016
+* css fixes for IE11
+
 ## v0.7.2 / 8th February 2016
 * css improvements
 

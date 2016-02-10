@@ -1,3 +1,5 @@
+height = 30px
+
 // component skeleton, extended & decorated by themes
 .react-selectize
     color black
@@ -19,13 +21,9 @@
         // this controls the height of the select 
         padding 2px
 
-        // this controls the height of the select 
-        > div
-            min-height 30px
-        
         .react-selectize-placeholder
             display block
-            line-height 30px
+            line-height height
             overflow hidden
             text-overflow ellipsis
             vertical-align middle
@@ -35,6 +33,7 @@
 
         .react-selectize-selected-values
             display flex
+            min-height height
             flex-grow 1
             flex-wrap wrap
 
@@ -59,6 +58,7 @@
             display flex
             align-items center
             justify-content center
+            height height
 
         .react-selectize-arrow-container
             width 32px
