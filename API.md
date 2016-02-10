@@ -57,13 +57,13 @@ In addition to the props above
 |    Property                |   Type                               |   Description|
 |--------------------------- |--------------------------------------|---------------------------------|
 |    anchor                  | Item                                 | positions the cursor ahead of the anchor item, set this property to undefined to lock the cursor at the start|
-|    createFromSearch        | [Item] -> [Item] -> String -> Item?  | (options, values, search){return {label: search, value: search}}|
+|    createFromSearch        | [Item] -> [Item] -> String -> Item?  | `(options, values, search){return {label: search, value: search}}`|
 |    defaultValues           | [Item]                               | similar to the defaultValue prop of React.DOM.Select but instead takes an array of items|
-|    filterOptions           | [Item] -> [Item] -> String -> [Item] | (options, values, search){return options}|
-|    onAnchorChange          | Item -> Void                         | (anchor){} implement this method if you want to override the default behaviour of the cursor|
-|    onBlur                  | [Item] -> String -> Void             | (values, reason){}|
-|    onFocus                 | [Item] -> String -> Void             | (values, reason){}|
-|    onValuesChange          | [Item] -> (a -> Void) -> Void        | (values, callback){callback();}|
+|    filterOptions           | [Item] -> [Item] -> String -> [Item] | `(options, values, search){return options}`|
+|    onAnchorChange          | Item -> Void                         | `(anchor){}` implement this method if you want to override the default behaviour of the cursor|
+|    onBlur                  | object -> Void                       | `({values :: [Item], open :: Boolean, originalEvent :: DOMEvent}){}`|
+|    onFocus                 | object -> Void                       | `({values :: [Item], open :: Boolean, originalEvent :: DOMEvent}){}`|
+|    onValuesChange          | [Item] -> Void                       | `(values){}`|
 |    maxValues               | Int                                  | the maximum values that can be selected, after which the control is disabled|
 |    closeOnSelect           | Boolean                              | as the name implies, closes the options list on selecting an option|
 |    valuesFromPaste         | [Item] -> [Item] -> String ->[Item]  | `(options, values, pastedText){}` invoked when the user pastes text in the input field, here you can convert the pasted text into a list of items that will then show up as selected |
