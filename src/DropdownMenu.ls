@@ -6,7 +6,7 @@
 {find-DOM-node} = require \react-dom
 ReactCSSTransitionGroup = create-factory require \react-addons-css-transition-group
 ReactTether = create-factory require \./ReactTether
-Div = create-factory require \./Div
+DivWrapper = create-factory require \./DivWrapper
 OptionWrapper = create-factory require \./OptionWrapper
 {cancel-event, class-name-from-object} = require \./utils
 
@@ -137,7 +137,7 @@ module.exports = create-class do
         if @props.open
             
             # DROPDOWN
-            Div do 
+            DivWrapper do 
                 class-name: "dropdown-menu #{dynamic-class-name}"
                 ref: \dropdownMenu
 

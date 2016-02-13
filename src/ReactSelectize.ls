@@ -7,7 +7,6 @@ partition, reject, reverse, Str, sort-by, sum, values} = require \prelude-ls
 {find-DOM-node} = require \react-dom
 ReactCSSTransitionGroup = create-factory require \react-addons-css-transition-group
 ArrowIcon = create-factory require \./ArrowIcon
-Div = create-factory require \./Div
 DropdownMenu = create-factory require \./DropdownMenu
 OptionWrapper = create-factory require \./OptionWrapper
 ValueWrapper = create-factory require \./ValueWrapper
