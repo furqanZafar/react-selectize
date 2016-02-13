@@ -34,8 +34,10 @@ module.exports = React.create-class do
         # on-value-change :: Item -> () 
         # options :: [Item]
         # placeholder :: String
+        # render-arrow :: ({class-name :: String, open :: Boolean, flipped :: Boolean}) -> ReactElement
         # render-no-results-found :: [Item] -> String -> ReactElement
         # render-option :: Int -> Item -> ReactElement
+        # render-reset :: ({class-name :: String}) -> ReactElement
         # render-value :: Int -> Item -> ReactElement
         # restore-on-backspace :: Item -> String
         # search :: String
@@ -57,8 +59,8 @@ module.exports = React.create-class do
         # props
         {
             autofocus, autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, 
-            name, on-keyboard-selection-failed, render-group-title, serialize, tether, theme, transition-enter, 
-            transition-leave, transition-enter-timeout, transition-leave-timeout, uid
+            name, on-keyboard-selection-failed, render-arrow, render-group-title, render-reset, serialize, tether, 
+            theme, transition-enter, transition-leave, transition-enter-timeout, transition-leave-timeout, uid
         }? = @props
 
         ReactSelectize {
@@ -74,7 +76,9 @@ module.exports = React.create-class do
             groups-as-columns
             name
             on-keyboard-selection-failed
+            render-arrow
             render-group-title
+            render-reset
             scroll-lock: @state.scroll-lock
             on-scroll-lock-change: (scroll-lock) ~> @set-state {scroll-lock}
             tether

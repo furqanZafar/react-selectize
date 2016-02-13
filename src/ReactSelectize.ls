@@ -6,10 +6,12 @@ partition, reject, reverse, Str, sort-by, sum, values} = require \prelude-ls
 {DOM:{div, input, path, span, svg}, create-class, create-factory}:React = require \react
 {find-DOM-node} = require \react-dom
 ReactCSSTransitionGroup = create-factory require \react-addons-css-transition-group
+ArrowIcon = create-factory require \./ArrowIcon
 Div = create-factory require \./Div
 DropdownMenu = create-factory require \./DropdownMenu
 OptionWrapper = create-factory require \./OptionWrapper
 ValueWrapper = create-factory require \./ValueWrapper
+ResetIcon = create-factory require \./ResetIcon
 ResizableInput = create-factory require \./ResizableInput
 {cancel-event, class-name-from-object} = require \./utils
 
@@ -50,13 +52,19 @@ module.exports = create-class do
         # render-no-results-found :: () -> ReactElement
         # render-group-title :: Int -> Group -> ReactElement
         # render-option :: Int -> Item -> ReactElement
-        hideResetButton: false
+        hide-reset-button: false
 
         # render-value :: Int -> Item -> ReactElement
         render-value: ({label}) ->
             div do 
                 class-name: \simple-value
                 span null, label
+
+        # render-arrow :: ({open :: Boolean, flipped :: Boolean}) -> ReactElement
+        render-arrow: ArrowIcon
+
+        # render-reset :: () -> ReactElement
+        render-reset: ResetIcon
 
         # restore-on-backspace: ((value) -> ) # Item -> String
         
@@ -186,7 +194,7 @@ module.exports = create-class do
                     # LIST OF SELECTED VALUES (AFTER THE ANCHOR)
                     render-selected-values [anchor-index + 1 til @props.values.length]
                      
-                if @props.values.length > 0 && !@props.hideResetButton
+                if @props.values.length > 0 and !@props.hide-reset-button
 
                     div do 
                         class-name: \react-selectize-reset-container
@@ -198,12 +206,7 @@ module.exports = create-class do
                             cancel-event e
 
                         # RESET BUTTON
-                        svg do 
-                            class-name: \react-selectize-reset
-                            style: 
-                                width: 8
-                                height: 8
-                            path d: "M0 0 L8 8 M8 0 L 0 8"
+                        @props.render-reset!
 
                 div do 
                     class-name: \react-selectize-arrow-container
@@ -216,14 +219,10 @@ module.exports = create-class do
                         cancel-event e
 
                     # ARROW ICON 
-                    svg do 
-                        class-name: \react-selectize-arrow
-                        style: 
-                            width: 10
-                            height: 8
-                        path d: 
-                            | (@props.open and !flipped) or (!@props.open and flipped) => "M0 6 L5 1 L10 6 Z" 
-                            | _ => "M0 1 L5 6 L10 1 Z"
+                    @props.render-arrow do 
+                        open: @props.open
+                        flipped: flipped
+                    
         
             # (TETHERED / ANIMATED / SIMPLE) DROPDOWN
             DropdownMenu {} <<< @props <<< 
