@@ -50,6 +50,7 @@ module.exports = create-class do
         # render-no-results-found :: () -> ReactElement
         # render-group-title :: Int -> Group -> ReactElement
         # render-option :: Int -> Item -> ReactElement
+        hideResetButton: false
 
         # render-value :: Int -> Item -> ReactElement
         render-value: ({label}) ->
@@ -185,7 +186,7 @@ module.exports = create-class do
                     # LIST OF SELECTED VALUES (AFTER THE ANCHOR)
                     render-selected-values [anchor-index + 1 til @props.values.length]
                      
-                if @props.values.length > 0
+                if @props.values.length > 0 && !@props.hideResetButton
 
                     div do 
                         class-name: \react-selectize-reset-container
