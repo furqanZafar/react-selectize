@@ -10,6 +10,7 @@
 |    defaultValue            | Item                                | similar to the defaultValue prop of React.DOM.Select |
 |    delimiters              | [KeyCode]                           | a collection of character keycodes that when pressed confirm selection of the highlighted item |
 |    disabled                | Boolean                             | disables interaction with the Select control|
+|    hideResetButton         | Boolean                             | hides the reset button, even if the select element is not empty |
 |    dropdownDirection       | Int                                 | defaults to 1, setting it to -1 opens the dropdown upward|
 |    editable                | Boolean                             | defaults to false, setting it to true makes the selected option editable|
 |    filterOptions           | [Item]-> String -> [Item]           | implement this function for custom synchronous filtering logic, `(options, search) {return options}`|
