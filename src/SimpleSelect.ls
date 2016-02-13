@@ -45,6 +45,7 @@ module.exports = React.create-class do
         # theme :: String
         uid: id # uid :: (Equatable e) => Item -> e
         # value :: Item
+        # disabledTextInput :: Boolean
 
     # render :: () -> ReactElement
     render: -> 
@@ -58,7 +59,7 @@ module.exports = React.create-class do
         {
             autofocus, autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, 
             name, render-group-title, serialize, tether, theme, transition-enter, transition-leave, 
-            transition-enter-timeout, transition-leave-timeout, uid
+            transition-enter-timeout, transition-leave-timeout, uid, disabledTextInput
         }? = @props
             
         # if the user hits the return key on an empty dropdown, then hide the dropdown and clear the search text
@@ -84,6 +85,7 @@ module.exports = React.create-class do
             transition-enter-timeout
             transition-leave
             transition-leave-timeout
+            disabledTextInput
 
             ref: \select
 

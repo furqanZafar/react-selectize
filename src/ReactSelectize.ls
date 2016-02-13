@@ -50,6 +50,7 @@ module.exports = create-class do
         # render-no-results-found :: () -> ReactElement
         # render-group-title :: Int -> Group -> ReactElement
         # render-option :: Int -> Item -> ReactElement
+        disabledTextInput: false
 
         # render-value :: Int -> Item -> ReactElement
         render-value: ({label}) ->
@@ -139,7 +140,7 @@ module.exports = create-class do
                     
                     # SEARCH INPUT BOX
                     ResizableInput do
-                        disabled: @props.disabled
+                        disabled: @props.disabled || @props.disabledTextInput
                         ref: \search
                         type: \text
                         value: @props.search
