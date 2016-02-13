@@ -30,10 +30,10 @@ module.exports = React.create-class do
         # options :: [Item]
         # on-open-change :: Boolean -> ()
         placeholder: ""
-        # render-arrow :: ({class-name :: String, open :: Boolean, flipped :: Boolean}) -> ReactElement
         # render-no-results-found :: Item -> String -> ReactElement
         # render-option :: Int -> Item -> ReactElement
-        # render-reset :: ({class-name :: String}) -> ReactElement
+        # render-reset-button :: () -> ReactElement
+        # render-toggle-button :: ({open :: Boolean, flipped :: Boolean}) -> ReactElement
         # render-value :: Int -> Item -> ReactElement
         render-value: ({label}) -> 
             div do 
@@ -61,8 +61,8 @@ module.exports = React.create-class do
         # props
         {
             autofocus, autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, 
-            hide-reset-button, name, render-arrow, render-group-title, render-reset, serialize, tether, theme, 
-            transition-enter, transition-leave, transition-enter-timeout, transition-leave-timeout, uid
+            hide-reset-button, name, render-toggle-button, render-group-title, render-reset-button, serialize, tether, 
+            theme, transition-enter, transition-leave, transition-enter-timeout, transition-leave-timeout, uid
         }? = @props
             
         ReactSelectize {
@@ -78,9 +78,9 @@ module.exports = React.create-class do
             groups-as-columns
             hide-reset-button
             name
-            render-arrow
             render-group-title
-            render-reset
+            render-reset-button
+            render-toggle-button
             scroll-lock: @state.scroll-lock
             on-scroll-lock-change: (scroll-lock) ~> @set-state {scroll-lock}
             tether

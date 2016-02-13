@@ -6,11 +6,11 @@ partition, reject, reverse, Str, sort-by, sum, values} = require \prelude-ls
 {DOM:{div, input, path, span, svg}, create-class, create-factory}:React = require \react
 {find-DOM-node} = require \react-dom
 ReactCSSTransitionGroup = create-factory require \react-addons-css-transition-group
-ArrowIcon = create-factory require \./ArrowIcon
+ToggleButton = create-factory require \./ToggleButton
 DropdownMenu = create-factory require \./DropdownMenu
 OptionWrapper = create-factory require \./OptionWrapper
 ValueWrapper = create-factory require \./ValueWrapper
-ResetIcon = create-factory require \./ResetIcon
+ResetButton = create-factory require \./ResetButton
 ResizableInput = create-factory require \./ResizableInput
 {cancel-event, class-name-from-object} = require \./utils
 
@@ -59,11 +59,11 @@ module.exports = create-class do
                 class-name: \simple-value
                 span null, label
 
-        # render-arrow :: ({open :: Boolean, flipped :: Boolean}) -> ReactElement
-        render-arrow: ArrowIcon
+        # render-toggle-button :: ({open :: Boolean, flipped :: Boolean}) -> ReactElement
+        render-toggle-button: ToggleButton
 
-        # render-reset :: () -> ReactElement
-        render-reset: ResetIcon
+        # render-reset-button :: () -> ReactElement
+        render-reset-button: ResetButton
 
         # restore-on-backspace: ((value) -> ) # Item -> String
         
@@ -195,6 +195,7 @@ module.exports = create-class do
                      
                 if @props.values.length > 0 and !@props.hide-reset-button
 
+                    # RESET BUTTON
                     div do 
                         class-name: \react-selectize-reset-container
                         on-click: (e) ~>
@@ -203,12 +204,11 @@ module.exports = create-class do
                                 <~ @props.on-search-change ""
                                 @highlight-and-focus!
                             cancel-event e
+                        @props.render-reset-button!
 
-                        # RESET BUTTON
-                        @props.render-reset!
-
+                # TOGGLE BUTTON
                 div do 
-                    class-name: \react-selectize-arrow-container
+                    class-name: \react-selectize-toggle-container
                     on-mouse-down: (e) ~>
                         if @props.open
                             @on-open-change false, ~>
@@ -216,9 +216,7 @@ module.exports = create-class do
                             <~ @props.on-anchor-change last @props.values
                             <~ @on-open-change true
                         cancel-event e
-
-                    # ARROW ICON 
-                    @props.render-arrow do 
+                    @props.render-toggle-button do 
                         open: @props.open
                         flipped: flipped
                     

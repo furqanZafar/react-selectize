@@ -319,12 +319,12 @@ module.exports = (select-class) !->
         mouse-out find-highlighted-option select
         component-with-class-must-not-exist select, \highlight
 
-    specify "clicking arrow button must toggle the dropdown", ->
+    specify "clicking toggle button must toggle the dropdown", ->
         select = create-select!
-        arrow = find-rendered-DOM-component-with-class select, \react-selectize-arrow
-        mouse-down arrow
+        toggle-button = find-rendered-DOM-component-with-class select, \react-selectize-toggle
+        mouse-down toggle-button
         find-rendered-DOM-component-with-class select, \dropdown-menu
-        mouse-down arrow
+        mouse-down toggle-button
         component-with-class-must-not-exist select, \dropdown-menu
 
     specify "must wrap around on hitting the boundary", ->

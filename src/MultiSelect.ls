@@ -24,6 +24,7 @@ module.exports = React.create-class do
             options
                 |> reject ~> it.label.trim! in (map (.label.trim!), values ? [])
                 |> filter ~> (it.label.to-lower-case!.trim!.index-of search.to-lower-case!.trim!) > -1
+        # hide-reset-button :: Boolean
         # max-values :: Int
         # on-anchor-change :: Item -> ()
         on-blur: ((e) !->) # :: # Event -> ()
@@ -34,10 +35,10 @@ module.exports = React.create-class do
         # on-value-change :: Item -> () 
         # options :: [Item]
         # placeholder :: String
-        # render-arrow :: ({class-name :: String, open :: Boolean, flipped :: Boolean}) -> ReactElement
+        # render-toggle-button :: ({open :: Boolean, flipped :: Boolean}) -> ReactElement
         # render-no-results-found :: [Item] -> String -> ReactElement
         # render-option :: Int -> Item -> ReactElement
-        # render-reset :: ({class-name :: String}) -> ReactElement
+        # render-reset-button :: () -> ReactElement
         # render-value :: Int -> Item -> ReactElement
         # restore-on-backspace :: Item -> String
         # search :: String
@@ -58,8 +59,8 @@ module.exports = React.create-class do
 
         # props
         {
-            autofocus, autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, 
-            name, on-keyboard-selection-failed, render-arrow, render-group-title, render-reset, serialize, tether, 
+            autofocus, autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, hide-reset-button, 
+            name, on-keyboard-selection-failed, render-toggle-button, render-group-title, render-reset-button, serialize, tether, 
             theme, transition-enter, transition-leave, transition-enter-timeout, transition-leave-timeout, uid
         }? = @props
 
@@ -74,11 +75,12 @@ module.exports = React.create-class do
             group-id
             groups
             groups-as-columns
+            hide-reset-button
             name
             on-keyboard-selection-failed
-            render-arrow
             render-group-title
-            render-reset
+            render-reset-button
+            render-toggle-button
             scroll-lock: @state.scroll-lock
             on-scroll-lock-change: (scroll-lock) ~> @set-state {scroll-lock}
             tether

@@ -51,7 +51,7 @@ height = 30px
                 display flex
                 align-items center
 
-        .react-selectize-arrow-container, .react-selectize-reset-container
+        .react-selectize-reset-container, .react-selectize-toggle-container
             flex-grow 0
             flex-shrink 0
             cursor pointer
@@ -60,23 +60,23 @@ height = 30px
             justify-content center
             height height
 
-        .react-selectize-arrow-container
-            width 32px
-
         .react-selectize-reset-container
             width 16px
+        
+        .react-selectize-toggle-container
+            width 32px
 
         .react-selectize-reset-container:hover .react-selectize-reset path
             stroke #c0392b
-
-        .react-selectize-arrow path
-            fill #999
-            
+        
         .react-selectize-reset path
             transition stroke 0.5s 0s ease
             stroke #999
             stroke-linecap square
             stroke-linejoin mitter
+
+        .react-selectize-toggle path
+            fill #999
 
 // wraps the dropdown-menu div, exists only when props.transition-enter or props.transition-leave or both are true
 // present inside document.body if props.tether is true, otherwise its present inside the control-wrapper div (above)
