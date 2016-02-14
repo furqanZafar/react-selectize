@@ -372,3 +372,26 @@ module.exports = (select-class) !->
         click-to-open-select-control select
         key-down (get-input select), which: 13, meta-key: true
         find-rendered-DOM-component-with-class select, \dropdown-menu
+
+    specify "hide reset button when nothing is selected", ->
+        select = create-select!
+        component-with-class-must-not-exist select, \react-selectize-reset-button-container
+
+    specify "show reset button when something is selected", ->
+        select = create-select!
+        click-to-open-select-control select
+        click-option find-highlighted-option select
+        find-rendered-DOM-component-with-class select, \react-selectize-reset-button-container
+
+    specify "props.hideResetButton must hide reset button", ->
+        select = create-select do 
+            hide-reset-button: true
+        click-to-open-select-control select
+        click-option find-highlighted-option select
+        component-with-class-must-not-exist select, \react-selectize-reset-button-container
+
+    specify "must pass props.inputProps to search field", ->
+        select = create-select do 
+            input-props: disabled: true
+        input = get-input select
+        assert input.disabled == true
