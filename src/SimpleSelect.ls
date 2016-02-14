@@ -21,6 +21,7 @@ module.exports = React.create-class do
                 |> filter ~> (it.label.to-lower-case!.trim!.index-of search.to-lower-case!.trim!) > -1
         # hide-reset-button :: Boolean
         # name :: String
+        # input-props :: object
         on-blur: ((e) !->) # :: # Event -> ()
         on-focus: ((e) !->) # :: Event -> ()
         on-keyboard-selection-failed: ((which) !-> ) # :: Int -> ()
@@ -61,8 +62,9 @@ module.exports = React.create-class do
         # props
         {
             autofocus, autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, 
-            hide-reset-button, name, render-toggle-button, render-group-title, render-reset-button, serialize, tether, 
-            theme, transition-enter, transition-leave, transition-enter-timeout, transition-leave-timeout, uid
+            hide-reset-button, name, input-props, render-toggle-button, render-group-title, render-reset-button, 
+            serialize, tether, theme, transition-enter, transition-leave, transition-enter-timeout, 
+            transition-leave-timeout, uid
         }? = @props
             
         ReactSelectize {
@@ -77,6 +79,7 @@ module.exports = React.create-class do
             groups
             groups-as-columns
             hide-reset-button
+            input-props
             name
             render-group-title
             render-reset-button

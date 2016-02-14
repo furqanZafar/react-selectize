@@ -34,6 +34,7 @@ module.exports = create-class do
         # groups :: [Group]
         groups-as-columns: false
         highlighted-uid: undefined
+        input-props: {}
         # name :: String, used for creating hidden input element
         on-anchor-change: ((anchor) ->) # Item -> (() -> ()) -> ()
         on-blur: ((e) !->) # Event -> ()
@@ -148,48 +149,49 @@ module.exports = create-class do
                     
                     # SEARCH INPUT BOX
                     ResizableInput do
-                        disabled: @props.disabled
-                        ref: \search
-                        type: \text
-                        value: @props.search
+                        {disabled: @props.disabled} <<< @props.input-props <<< {
+                            ref: \search
+                            type: \text
+                            value: @props.search
 
-                        # update the search text & highlight the first option
-                        on-change: ({current-target:{value}}) ~> 
-                            @props.on-search-change value, ~> 
-                                @highlight-and-scroll-to-selectable-option do
-                                    @props.first-option-index-to-highlight @props.options
-                                    1
+                            # update the search text & highlight the first option
+                            on-change: ({current-target:{value}}) ~>
+                                @props.on-search-change value, ~>
+                                    @highlight-and-scroll-to-selectable-option do
+                                        @props.first-option-index-to-highlight @props.options
+                                        1
 
-                        # show the list of options (noop if caused by invocation of @focus-on-input function)
-                        on-focus: (e) !~>
-                            # @focus-lock propery is set to true by invoking the @focus-on-input! method
-                            # if @focus-lock is false, it implies this focus event was fired as a result of an external action
-                            <~ do ~> (callback) ~> 
-                                if !!@focus-lock 
-                                    callback @focus-lock = false 
-                                
-                                else 
-                                    <~ @on-open-change true
-                                    callback true
+                            # show the list of options (noop if caused by invocation of @focus-on-input function)
+                            on-focus: (e) !~>
+                                # @focus-lock propery is set to true by invoking the @focus-on-input! method
+                                # if @focus-lock is false, it implies this focus event was fired as a result of an external action
+                                <~ do ~> (callback) ~> 
+                                    if !!@focus-lock 
+                                        callback @focus-lock = false 
+                                    
+                                    else 
+                                        <~ @on-open-change true
+                                        callback true
 
-                            # invokes on-focus listener with the reason depending on the value of @focus-lock
-                            @props.on-focus e
+                                # invokes on-focus listener with the reason depending on the value of @focus-lock
+                                @props.on-focus e
 
-                        on-blur: (e) ~> 
+                            on-blur: (e) ~>
 
-                            # to prevent closing the dropdown when the user tries to click & drag the scrollbar in IE
-                            return if @refs.dropdown-menu and document.active-element == (find-DOM-node @refs.dropdown-menu)
+                                # to prevent closing the dropdown when the user tries to click & drag the scrollbar in IE
+                                return if @refs.dropdown-menu and document.active-element == (find-DOM-node @refs.dropdown-menu)
 
-                            <~ @close-dropdown
+                                <~ @close-dropdown
 
-                            # fire on-blur event listener
-                            @props.on-blur e
+                                # fire on-blur event listener
+                                @props.on-blur e
 
-                        # on-paste :: Event -> Boolean
-                        on-paste: @props.on-paste
+                            # on-paste :: Event -> Boolean
+                            on-paste: @props.on-paste
 
-                        # on-key-down :: Event -> Boolean
-                        on-key-down: (e) ~> @handle-keydown {anchor-index}, e
+                            # on-key-down :: Event -> Boolean
+                            on-key-down: (e) ~> @handle-keydown {anchor-index}, e
+                        }
 
                     # LIST OF SELECTED VALUES (AFTER THE ANCHOR)
                     render-selected-values [anchor-index + 1 til @props.values.length]
