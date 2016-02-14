@@ -3,7 +3,7 @@
 .react-selectize.default
     font-family Helvetica Neue, Helvetica, Arial, sans-serif
 
-.react-selectize.default.control-wrapper
+.react-selectize.default.root-node
     
     .react-selectize-control
         background-color white
@@ -38,7 +38,7 @@
                 border-top-right-radius 4px
 
 // wraps the dropdown-menu div, exists only when props.transition-enter or props.transition-leave or both are true
-// present inside document.body if props.tether is true, otherwise its present inside the control-wrapper div (above)
+// present inside document.body if props.tether is true, otherwise its present inside the root-node div (above)
 .react-selectize.dropdown-menu-wrapper.default
     overflow hidden
 
@@ -120,14 +120,14 @@
 
 
 // MULTI SELECT
-.multi-select.react-selectize.default.control-wrapper .simple-value
+.multi-select.react-selectize.default.root-node .simple-value
     background #f2f9fc
     border 1px solid #c9e6f2
     border-radius 2px
     color #0088cc
 
 // SIMPLE SELECT
-.simple-select.react-selectize.default.control-wrapper
+.simple-select.react-selectize.default.root-node
     
     &.open .react-selectize-control
         background-color white

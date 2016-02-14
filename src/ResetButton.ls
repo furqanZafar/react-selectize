@@ -6,7 +6,7 @@ module.exports = create-class do
     # render :: a -> ReactElement
     render: ->
         SvgWrapper do 
-            class-name: \react-selectize-reset
+            class-name: "react-selectize-reset-button react-selectize-reset"
             style: 
                 width: 8
                 height: 8

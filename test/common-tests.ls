@@ -321,7 +321,7 @@ module.exports = (select-class) !->
 
     specify "clicking toggle button must toggle the dropdown", ->
         select = create-select!
-        toggle-button = find-rendered-DOM-component-with-class select, \react-selectize-toggle
+        toggle-button = find-rendered-DOM-component-with-class select, \react-selectize-toggle-button
         mouse-down toggle-button
         find-rendered-DOM-component-with-class select, \dropdown-menu
         mouse-down toggle-button

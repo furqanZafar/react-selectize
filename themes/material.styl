@@ -3,7 +3,7 @@
 .react-selectize.material
     font-family Roboto, sans-serif
 
-.react-selectize.material.control-wrapper
+.react-selectize.material.root-node
     
     &.open .react-selectize-control:after
         transform scaleX(1)
@@ -27,7 +27,7 @@
             text-indent 4px
 
 // wraps the dropdown-menu div, exists only when props.transition-enter or props.transition-leave or both are true
-// present inside document.body if props.tether is true, otherwise its present inside the control-wrapper div (above)
+// present inside document.body if props.tether is true, otherwise its present inside the root-node div (above)
 .react-selectize.material.dropdown-menu-wrapper
     &.flipped
         margin-bottom 8px
@@ -118,13 +118,13 @@
                 text-shadow 0px 1px 0px white
 
 // MULTI SELECT
-.multi-select.react-selectize.material.control-wrapper .simple-value
+.multi-select.react-selectize.material.root-node .simple-value
     span
         padding 0px
         &:after
             content ","
 
 // SIMPLE SELECT
-.simple-select.react-selectize.material.control-wrapper .simple-value
+.simple-select.react-selectize.material.root-node .simple-value
     margin 4px 3px 3px 2px
 

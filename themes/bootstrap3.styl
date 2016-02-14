@@ -3,7 +3,7 @@
 .react-selectize.bootstrap3
     font-family Helvetica Neue, Helvetica, Arial, sans-serif
 
-.react-selectize.bootstrap3.control-wrapper
+.react-selectize.bootstrap3.root-node
 
     &.open .react-selectize-control
         background-color white
@@ -24,7 +24,7 @@
             padding-left 5px
 
 // wraps the dropdown-menu div, exists only when props.transition-enter or props.transition-leave or both are true
-// present inside document.body if props.tether is true, otherwise its present inside the control-wrapper div (above)
+// present inside document.body if props.tether is true, otherwise its present inside the root-node div (above)
 .react-selectize.bootstrap3.dropdown-menu-wrapper
 
     &.flipped
@@ -100,7 +100,7 @@
 
 
 // MULTI SELECT
-.multi-select.react-selectize.bootstrap3.control-wrapper .simple-value
+.multi-select.react-selectize.bootstrap3.root-node .simple-value
     background #efefef
     border-radius 4px
     color #333
