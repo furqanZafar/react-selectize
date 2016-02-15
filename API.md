@@ -16,6 +16,7 @@
 |    groupId                 | Item -> b                           | `(item){return item.groupId}` this function is used to identify which group an option belongs to, it must return a value that matches the groupId property of an object in the groups collection|
 |    groups                  | [Group]                             | collection of objects where each object must atleast have a groupId property|
 |    groupsAsColumns         | Boolean                             | display option groups in columns|
+|    hideResetButton         | Boolean                             | hides the reset button, even if the select element is not empty |
 |    name                    | String                              | defaults to undefined, provide a name property to create an hidden input element for html form serialization |
 |    open                    | Boolean                             | controls the visibility of the dropdown menu |
 |    onBlur                  | Event -> Void                       | `({originalEvent :: e, value :: Item, open :: Boolean}){}` |
@@ -26,9 +27,11 @@
 |    onValueChange           | Item -> Void                        | `(selectedValue){}` invoked when the user selects an option (by click on enter)|
 |    options                 | [Item]                              | list of items by default each option object MUST have label & value property, otherwise you must implement the render* & filterOptions methods|
 |    placeholder             | String                              | displayed when there is no value|
-|    renderNoResultsFound    | Item -> String -> ReactElement      | `(item, search){return React.DOM.div(null);}` returns a custom way for rendering the "No results found" error|
 |    renderGroupTitle        | Int -> Group -> ReactElement        | `(index, group){return React.DOM.div(null)}` returns a custom way for rendering the group title|
+|    renderNoResultsFound    | Item -> String -> ReactElement      | `(item, search){return React.DOM.div(null);}` returns a custom way for rendering the "No results found" error|
 |    renderOption            | Item -> ReactElement                | `(item){return React.DOM.div(null);}` returns a custom way for rendering each option|
+|    renderResetButton       | () -> ReactElement                  | returns a custom way for rendering the reset button
+|    renderToggleButton      | ({open, flipped}) -> ReactElement   | returns a custom way for rendering the toggle button
 |    renderValue             | Item -> ReactElement                | `(item){return React.DOM.div(null);}` returns a custom way for rendering the selected value|
 |    restoreOnBackspace      | Item -> String                      | `(item){return item.label;}` implement this method if you want to go back to editing the item when the user hits the [backspace] key instead of getting removed|
 |    search                  | String                              | the text displayed in the search box|

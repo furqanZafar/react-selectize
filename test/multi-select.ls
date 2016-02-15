@@ -147,11 +147,11 @@ describe "MultiSelect", ->
                 * label: \mango 
                   value: \mango
                 ...
-        # click-to-open-select-control select
-        # assert.equal select.values!.length, 2
-        # set-input-text (get-input select), \grapes
-        # click-option find-highlighted-option select
-        # assert.equal select.values!.length, 3
+        click-to-open-select-control select
+        assert.equal select.values!.length, 2
+        set-input-text (get-input select), \grapes
+        click-option find-highlighted-option select
+        assert.equal select.values!.length, 3
 
     specify "case senstivity", ->
         select = create-multi-select do 

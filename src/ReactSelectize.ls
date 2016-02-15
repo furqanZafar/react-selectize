@@ -6,10 +6,11 @@ partition, reject, reverse, Str, sort-by, sum, values} = require \prelude-ls
 {DOM:{div, input, path, span, svg}, create-class, create-factory}:React = require \react
 {find-DOM-node} = require \react-dom
 ReactCSSTransitionGroup = create-factory require \react-addons-css-transition-group
-Div = create-factory require \./Div
+ToggleButton = create-factory require \./ToggleButton
 DropdownMenu = create-factory require \./DropdownMenu
 OptionWrapper = create-factory require \./OptionWrapper
 ValueWrapper = create-factory require \./ValueWrapper
+ResetButton = create-factory require \./ResetButton
 ResizableInput = create-factory require \./ResizableInput
 {cancel-event, class-name-from-object} = require \./utils
 
@@ -33,6 +34,7 @@ module.exports = create-class do
         # groups :: [Group]
         groups-as-columns: false
         highlighted-uid: undefined
+        input-props: {}
         # name :: String, used for creating hidden input element
         on-anchor-change: ((anchor) ->) # Item -> (() -> ()) -> ()
         on-blur: ((e) !->) # Event -> ()
@@ -50,12 +52,19 @@ module.exports = create-class do
         # render-no-results-found :: () -> ReactElement
         # render-group-title :: Int -> Group -> ReactElement
         # render-option :: Int -> Item -> ReactElement
+        hide-reset-button: false
 
         # render-value :: Int -> Item -> ReactElement
         render-value: ({label}) ->
             div do 
                 class-name: \simple-value
                 span null, label
+
+        # render-toggle-button :: ({open :: Boolean, flipped :: Boolean}) -> ReactElement
+        render-toggle-button: ToggleButton
+
+        # render-reset-button :: () -> ReactElement
+        render-reset-button: ResetButton
 
         # restore-on-backspace: ((value) -> ) # Item -> String
         
@@ -99,6 +108,7 @@ module.exports = create-class do
                 \react-selectize : 1
                 "#{@props.theme}" : 1
                 \control-wrapper : 1
+                \root-node : 1
                 "#{@props.class-name}" : 1
                 disabled: @props.disabled
                 open: @props.open
@@ -132,80 +142,76 @@ module.exports = create-class do
                     # PLACEHOLDER
                     div class-name: \react-selectize-placeholder, @props.placeholder
 
-                div class-name: \react-selectize-selected-values,
+                div class-name: \react-selectize-search-field-and-selected-values,
 
                     # LIST OF SELECTED VALUES (BEFORE & INCLUDING THE ANCHOR)
                     render-selected-values [0 to anchor-index]
                     
                     # SEARCH INPUT BOX
                     ResizableInput do
-                        disabled: @props.disabled
-                        ref: \search
-                        type: \text
-                        value: @props.search
+                        {disabled: @props.disabled} <<< @props.input-props <<< {
+                            ref: \search
+                            type: \text
+                            value: @props.search
 
-                        # update the search text & highlight the first option
-                        on-change: ({current-target:{value}}) ~> 
-                            @props.on-search-change value, ~> 
-                                @highlight-and-scroll-to-selectable-option do
-                                    @props.first-option-index-to-highlight @props.options
-                                    1
+                            # update the search text & highlight the first option
+                            on-change: ({current-target:{value}}) ~>
+                                @props.on-search-change value, ~>
+                                    @highlight-and-scroll-to-selectable-option do
+                                        @props.first-option-index-to-highlight @props.options
+                                        1
 
-                        # show the list of options (noop if caused by invocation of @focus-on-input function)
-                        on-focus: (e) !~>
-                            # @focus-lock propery is set to true by invoking the @focus-on-input! method
-                            # if @focus-lock is false, it implies this focus event was fired as a result of an external action
-                            <~ do ~> (callback) ~> 
-                                if !!@focus-lock 
-                                    callback @focus-lock = false 
-                                
-                                else 
-                                    <~ @on-open-change true
-                                    callback true
+                            # show the list of options (noop if caused by invocation of @focus-on-input function)
+                            on-focus: (e) !~>
+                                # @focus-lock propery is set to true by invoking the @focus-on-input! method
+                                # if @focus-lock is false, it implies this focus event was fired as a result of an external action
+                                <~ do ~> (callback) ~> 
+                                    if !!@focus-lock 
+                                        callback @focus-lock = false 
+                                    
+                                    else 
+                                        <~ @on-open-change true
+                                        callback true
 
-                            # invokes on-focus listener with the reason depending on the value of @focus-lock
-                            @props.on-focus e
+                                # invokes on-focus listener with the reason depending on the value of @focus-lock
+                                @props.on-focus e
 
-                        on-blur: (e) ~> 
+                            on-blur: (e) ~>
 
-                            # to prevent closing the dropdown when the user tries to click & drag the scrollbar in IE
-                            return if @refs.dropdown-menu and document.active-element == (find-DOM-node @refs.dropdown-menu)
+                                # to prevent closing the dropdown when the user tries to click & drag the scrollbar in IE
+                                return if @refs.dropdown-menu and document.active-element == (find-DOM-node @refs.dropdown-menu)
 
-                            <~ @close-dropdown
+                                <~ @close-dropdown
 
-                            # fire on-blur event listener
-                            @props.on-blur e
+                                # fire on-blur event listener
+                                @props.on-blur e
 
-                        # on-paste :: Event -> Boolean
-                        on-paste: @props.on-paste
+                            # on-paste :: Event -> Boolean
+                            on-paste: @props.on-paste
 
-                        # on-key-down :: Event -> Boolean
-                        on-key-down: (e) ~> @handle-keydown {anchor-index}, e
+                            # on-key-down :: Event -> Boolean
+                            on-key-down: (e) ~> @handle-keydown {anchor-index}, e
+                        }
 
                     # LIST OF SELECTED VALUES (AFTER THE ANCHOR)
                     render-selected-values [anchor-index + 1 til @props.values.length]
                      
-                if @props.values.length > 0
+                if @props.values.length > 0 and !@props.hide-reset-button
 
+                    # RESET BUTTON
                     div do 
-                        class-name: \react-selectize-reset-container
+                        class-name: \react-selectize-reset-button-container
                         on-click: (e) ~>
                             do ~>
                                 <~ @props.on-values-change []
                                 <~ @props.on-search-change ""
                                 @highlight-and-focus!
                             cancel-event e
+                        @props.render-reset-button!
 
-                        # RESET BUTTON
-                        svg do 
-                            class-name: \react-selectize-reset
-                            style: 
-                                width: 8
-                                height: 8
-                            path d: "M0 0 L8 8 M8 0 L 0 8"
-
+                # TOGGLE BUTTON
                 div do 
-                    class-name: \react-selectize-arrow-container
+                    class-name: \react-selectize-toggle-button-container
                     on-mouse-down: (e) ~>
                         if @props.open
                             @on-open-change false, ~>
@@ -213,16 +219,10 @@ module.exports = create-class do
                             <~ @props.on-anchor-change last @props.values
                             <~ @on-open-change true
                         cancel-event e
-
-                    # ARROW ICON 
-                    svg do 
-                        class-name: \react-selectize-arrow
-                        style: 
-                            width: 10
-                            height: 8
-                        path d: 
-                            | (@props.open and !flipped) or (!@props.open and flipped) => "M0 6 L5 1 L10 6 Z" 
-                            | _ => "M0 1 L5 6 L10 1 Z"
+                    @props.render-toggle-button do 
+                        open: @props.open
+                        flipped: flipped
+                    
         
             # (TETHERED / ANIMATED / SIMPLE) DROPDOWN
             DropdownMenu {} <<< @props <<< 

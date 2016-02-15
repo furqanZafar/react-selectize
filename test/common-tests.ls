@@ -274,7 +274,7 @@ module.exports = (select-class) !->
         select = create-select!
         click-to-open-select-control select
         click-option find-highlighted-option select
-        click (find-rendered-DOM-component-with-class select, \react-selectize-reset)
+        click (find-rendered-DOM-component-with-class select, \react-selectize-reset-button)
         component-with-class-must-not-exist \simple-value
 
     specify "must default to an empty list of options", ->
@@ -319,12 +319,12 @@ module.exports = (select-class) !->
         mouse-out find-highlighted-option select
         component-with-class-must-not-exist select, \highlight
 
-    specify "clicking arrow button must toggle the dropdown", ->
+    specify "clicking toggle button must toggle the dropdown", ->
         select = create-select!
-        arrow = find-rendered-DOM-component-with-class select, \react-selectize-arrow
-        mouse-down arrow
+        toggle-button = find-rendered-DOM-component-with-class select, \react-selectize-toggle-button
+        mouse-down toggle-button
         find-rendered-DOM-component-with-class select, \dropdown-menu
-        mouse-down arrow
+        mouse-down toggle-button
         component-with-class-must-not-exist select, \dropdown-menu
 
     specify "must wrap around on hitting the boundary", ->
@@ -372,3 +372,26 @@ module.exports = (select-class) !->
         click-to-open-select-control select
         key-down (get-input select), which: 13, meta-key: true
         find-rendered-DOM-component-with-class select, \dropdown-menu
+
+    specify "hide reset button when nothing is selected", ->
+        select = create-select!
+        component-with-class-must-not-exist select, \react-selectize-reset-button-container
+
+    specify "show reset button when something is selected", ->
+        select = create-select!
+        click-to-open-select-control select
+        click-option find-highlighted-option select
+        find-rendered-DOM-component-with-class select, \react-selectize-reset-button-container
+
+    specify "props.hideResetButton must hide reset button", ->
+        select = create-select do 
+            hide-reset-button: true
+        click-to-open-select-control select
+        click-option find-highlighted-option select
+        component-with-class-must-not-exist select, \react-selectize-reset-button-container
+
+    specify "must pass props.inputProps to search field", ->
+        select = create-select do 
+            input-props: disabled: true
+        input = get-input select
+        assert input.disabled == true

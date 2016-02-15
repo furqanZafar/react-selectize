@@ -4,7 +4,7 @@ height = 30px
 .react-selectize
     color black
 
-.react-selectize.control-wrapper
+.react-selectize.root-node
     user-select none
     position relative
     width 300px
@@ -31,7 +31,7 @@ height = 30px
             position absolute
             max-width calc(100% - 56px)
 
-        .react-selectize-selected-values
+        .react-selectize-search-field-and-selected-values
             display flex
             min-height height
             flex-grow 1
@@ -51,7 +51,7 @@ height = 30px
                 display flex
                 align-items center
 
-        .react-selectize-arrow-container, .react-selectize-reset-container
+        .react-selectize-reset-button-container, .react-selectize-toggle-button-container
             flex-grow 0
             flex-shrink 0
             cursor pointer
@@ -60,23 +60,23 @@ height = 30px
             justify-content center
             height height
 
-        .react-selectize-arrow-container
+        .react-selectize-reset-button-container
+            width 16px
+        
+        .react-selectize-toggle-button-container
             width 32px
 
-        .react-selectize-reset-container
-            width 16px
-
-        .react-selectize-reset-container:hover .react-selectize-reset path
+        .react-selectize-reset-button-container:hover .react-selectize-reset-button path
             stroke #c0392b
-
-        .react-selectize-arrow path
-            fill #999
-            
-        .react-selectize-reset path
+        
+        .react-selectize-reset-button path
             transition stroke 0.5s 0s ease
             stroke #999
             stroke-linecap square
             stroke-linejoin mitter
+
+        .react-selectize-toggle-button path
+            fill #999
 
 // wraps the dropdown-menu div, exists only when props.transition-enter or props.transition-leave or both are true
 // present inside document.body if props.tether is true, otherwise its present inside the control-wrapper div (above)

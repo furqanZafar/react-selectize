@@ -19,7 +19,9 @@ module.exports = React.create-class do
         filter-options: (options, search) -->  
             options
                 |> filter ~> (it.label.to-lower-case!.trim!.index-of search.to-lower-case!.trim!) > -1
+        # hide-reset-button :: Boolean
         # name :: String
+        # input-props :: object
         on-blur: ((e) !->) # :: # Event -> ()
         on-focus: ((e) !->) # :: Event -> ()
         on-keyboard-selection-failed: ((which) !-> ) # :: Int -> ()
@@ -31,6 +33,8 @@ module.exports = React.create-class do
         placeholder: ""
         # render-no-results-found :: Item -> String -> ReactElement
         # render-option :: Int -> Item -> ReactElement
+        # render-reset-button :: () -> ReactElement
+        # render-toggle-button :: ({open :: Boolean, flipped :: Boolean}) -> ReactElement
         # render-value :: Int -> Item -> ReactElement
         render-value: ({label}) -> 
             div do 
@@ -45,6 +49,7 @@ module.exports = React.create-class do
         # theme :: String
         uid: id # uid :: (Equatable e) => Item -> e
         # value :: Item
+        
 
     # render :: () -> ReactElement
     render: -> 
@@ -57,12 +62,11 @@ module.exports = React.create-class do
         # props
         {
             autofocus, autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, 
-            name, render-group-title, serialize, tether, theme, transition-enter, transition-leave, 
-            transition-enter-timeout, transition-leave-timeout, uid
+            hide-reset-button, name, input-props, render-toggle-button, render-group-title, render-reset-button, 
+            serialize, tether, theme, transition-enter, transition-leave, transition-enter-timeout, 
+            transition-leave-timeout, uid
         }? = @props
             
-        # if the user hits the return key on an empty dropdown, then hide the dropdown and clear the search text
-        
         ReactSelectize {
             
             autofocus
@@ -74,8 +78,12 @@ module.exports = React.create-class do
             group-id
             groups
             groups-as-columns
+            hide-reset-button
+            input-props
             name
             render-group-title
+            render-reset-button
+            render-toggle-button
             scroll-lock: @state.scroll-lock
             on-scroll-lock-change: (scroll-lock) ~> @set-state {scroll-lock}
             tether
@@ -129,6 +137,7 @@ module.exports = React.create-class do
 
                     # close dropdown but keep the input field in foucs
                     <~ on-open-change false
+
             render-value: (item) ~>
 
                 # hide the selected value only when:
@@ -141,6 +150,7 @@ module.exports = React.create-class do
                 # always show the selected value when the dropdown is closed 
                 else
                     @props.render-value item
+
             on-keyboard-selection-failed: (which) ~>
                 <~ on-search-change ""
                 <~ on-open-change false
@@ -171,6 +181,7 @@ module.exports = React.create-class do
 
                 # fire on-blur event
                 @props.on-blur {value, open, original-event: e}
+
             on-focus: (e) !~> @props.on-focus {value, open, original-event: e}
 
             # STYLE
