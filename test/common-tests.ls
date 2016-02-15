@@ -274,7 +274,7 @@ module.exports = (select-class) !->
         select = create-select!
         click-to-open-select-control select
         click-option find-highlighted-option select
-        click (find-rendered-DOM-component-with-class select, \react-selectize-reset)
+        click (find-rendered-DOM-component-with-class select, \react-selectize-reset-button)
         component-with-class-must-not-exist \simple-value
 
     specify "must default to an empty list of options", ->

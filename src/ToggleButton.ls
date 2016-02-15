@@ -11,7 +11,7 @@ module.exports = create-class do
     # render :: a -> ReactElement
     render: ->
         SvgWrapper do 
-            class-name: "react-selectize-toggle-button react-selectize-toggle"
+            class-name: \react-selectize-toggle-button
             style: 
                 width: 10
                 height: 8

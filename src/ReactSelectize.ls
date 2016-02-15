@@ -142,7 +142,7 @@ module.exports = create-class do
                     # PLACEHOLDER
                     div class-name: \react-selectize-placeholder, @props.placeholder
 
-                div class-name: "react-selectize-search-field-and-selected-values react-selectize-selected-values",
+                div class-name: \react-selectize-search-field-and-selected-values,
 
                     # LIST OF SELECTED VALUES (BEFORE & INCLUDING THE ANCHOR)
                     render-selected-values [0 to anchor-index]
@@ -200,7 +200,7 @@ module.exports = create-class do
 
                     # RESET BUTTON
                     div do 
-                        class-name: "react-selectize-reset-button-container react-selectize-reset-container"
+                        class-name: \react-selectize-reset-button-container
                         on-click: (e) ~>
                             do ~>
                                 <~ @props.on-values-change []
@@ -211,7 +211,7 @@ module.exports = create-class do
 
                 # TOGGLE BUTTON
                 div do 
-                    class-name: "react-selectize-toggle-button-container react-selectize-toggle-container"
+                    class-name: \react-selectize-toggle-button-container
                     on-mouse-down: (e) ~>
                         if @props.open
                             @on-open-change false, ~>

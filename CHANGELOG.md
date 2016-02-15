@@ -1,5 +1,21 @@
 # React Selectize
 
+## v0.8.0 / 15th February 2016
+* added hideResetButton prop thanks [@marchbnr](https://github.com/marchbnr)
+* added renderToggleButton prop
+* added renderResetButton prop
+* bug fixes for IE 11 (#37)
+* renamed css classes (**Breaking Changes**)
+
+| Before | Now |
+|--------|-----|
+| .control-wrapper | .root-node |
+| .react-selectize-selected-values | .react-selectize-search-field-and-selected-values |
+| .react-selectize-arrow-container | .react-selectize-toggle-button-container |
+| .react-selectize-arrow | .react-selectize-toggle-button |
+| .react-selectize-reset-container | .react-selectize-reset-button-container |
+| .react-selectize-reset | .react-selectize-reset-button |
+
 ## v0.7.4 / 10th February 2016
 ## v0.7.3 / 10th February 2016
 * css fixes for IE11
@@ -59,7 +75,7 @@ before the `.dropdown` div was always being wrapped in `.dropdown-transition` ev
 | .reset | .react-selectize-reset |
 
 ## v0.4.1 / 22nd January 2016
-* merged pull request (fixes an issue when unmounting with dropdown open) (#23), thanks @yuters
+* merged pull request (fixes an issue when unmounting with dropdown open) (#23), thanks [@yuters](https://github.com/yuters)
 
 ## v0.4.0 / 21st January 2016
 * Added two new props `delimiters` & `valuesFromPaste` (#21)
@@ -77,10 +93,10 @@ before the `.dropdown` div was always being wrapped in `.dropdown-transition` ev
 * fixed a bug where passing `restore-on-backspace` prop wouldn't work in conjunction with `render-no-results-found` prop (#14)
 
 ## v0.3.7 / 2nd November 2015
-* call `on-blur` only if the dropdown is open, thanks @alurim 
+* call `on-blur` only if the dropdown is open, thanks [@alurim](https://github.com/alurim)
 
 ## v0.3.6 / 30th October 2015
-* updated package.json to include (React 0.14.0 and above) thanks @HankMcCoy
+* updated package.json to include (React 0.14.0 and above) thanks [@HankMcCoy](https://github.com/HackMcCoy)
 
 ## v0.3.5 / 16th October 2015
 * improved the default auto-size implementation
@@ -106,7 +122,7 @@ before the `.dropdown` div was always being wrapped in `.dropdown-transition` ev
 * close multi-select when there are no more options left to select
 
 ## v0.2.6 / 8th October 2015
-* fixed a bug where selecting an option did not update the highlighted-uid (multi select). Thanks @edgarzakaryan
+* fixed a bug where selecting an option did not update the highlighted-uid (multi select). Thanks [@edgarzakaryan](https://github.com/edgarzakaryan)
 
 ## v0.2.5 / 28th September 2015
 * create index.css to fix style duplication when importing both SimpleSelect.css & MultiSelect.css
