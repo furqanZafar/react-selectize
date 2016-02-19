@@ -10,6 +10,7 @@ module.exports = React.create-class do
     # get-default-props :: () -> Props
     get-default-props: ->
         # autofocus :: Boolean
+        # cancel-keyboard-event-on-selection :: Boolean
         # class-name :: String
         # create-from-search :: [Item] -> String -> Item?
         # disabled :: Boolean
@@ -61,9 +62,9 @@ module.exports = React.create-class do
 
         # props
         {
-            autofocus, autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, 
-            hide-reset-button, name, input-props, render-toggle-button, render-group-title, render-reset-button, 
-            serialize, tether, theme, transition-enter, transition-leave, transition-enter-timeout, 
+            autofocus, autosize, cancel-keyboard-event-on-selection, delimiters, disabled, dropdown-direction, group-id, 
+            groups, groups-as-columns, hide-reset-button, name, input-props, render-toggle-button, render-group-title, 
+            render-reset-button, serialize, tether, theme, transition-enter, transition-leave, transition-enter-timeout, 
             transition-leave-timeout, uid
         }? = @props
             
@@ -71,6 +72,7 @@ module.exports = React.create-class do
             
             autofocus
             autosize
+            cancel-keyboard-event-on-selection
             class-name: "simple-select" + if !!@props.class-name then " #{@props.class-name}" else ""
             delimiters
             disabled

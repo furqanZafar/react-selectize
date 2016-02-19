@@ -25,6 +25,7 @@ module.exports = create-class do
     get-default-props: ->
         anchor: null # :: Item
         autofocus: false
+        cancel-keyboard-event-on-selection: true
         # class-name :: String
         delimiters: []
         disabled: false
@@ -327,7 +328,8 @@ module.exports = create-class do
                 if typeof selected-value == \undefined
                     @props.on-keyboard-selection-failed e.which
 
-            return cancel-event e
+            if @props.cancel-keyboard-event-on-selection
+                return cancel-event e
 
         # move anchor position left / right using arrow keys (only when search field is empty)
         if @props.search.length == 0
