@@ -1,5 +1,8 @@
 # React Selectize
 
+## v0.8.1 / 19th February 2016
+* added `cancelKeyboardEventOnSelection` prop 
+
 ## v0.8.0 / 15th February 2016
 * added hideResetButton prop thanks [@marchbnr](https://github.com/marchbnr)
 * added renderToggleButton prop

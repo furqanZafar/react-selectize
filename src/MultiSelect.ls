@@ -12,6 +12,7 @@ module.exports = React.create-class do
     get-default-props: ->
         # autofocus :: Boolean
         # anchor :: Item
+        # cancel-keyboard-event-on-selection :: Boolean
         class-name: ""
         close-on-select: false
         # values-from-paste :: String -> [Item]
@@ -60,15 +61,17 @@ module.exports = React.create-class do
 
         # props
         {
-            autofocus, autosize, delimiters, disabled, dropdown-direction, group-id, groups, groups-as-columns, hide-reset-button, 
-            input-props, name, on-keyboard-selection-failed, render-toggle-button, render-group-title, render-reset-button, 
-            serialize, tether, theme, transition-enter, transition-leave, transition-enter-timeout, transition-leave-timeout, uid
+            autofocus, autosize, cancel-keyboard-event-on-selection, delimiters, disabled, dropdown-direction, group-id, 
+            groups, groups-as-columns, hide-reset-button, input-props, name, on-keyboard-selection-failed, render-toggle-button, 
+            render-group-title, render-reset-button, serialize, tether, theme, transition-enter, transition-leave, 
+            transition-enter-timeout, transition-leave-timeout, uid
         }? = @props
 
         ReactSelectize {
             
             autofocus
             autosize
+            cancel-keyboard-event-on-selection
             class-name: "multi-select #{@props.class-name}"
             delimiters
             disabled
