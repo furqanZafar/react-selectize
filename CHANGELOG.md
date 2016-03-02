@@ -1,5 +1,9 @@
 # React Selectize
 
+## v0.8.2 / 2nd March 2016
+* added a new prop `firstOptionIndexToHighlight` to both Simple & MultiSelect
+* made the text in search field selectable
+
 ## v0.8.1 / 19th February 2016
 * added `cancelKeyboardEventOnSelection` prop 
 

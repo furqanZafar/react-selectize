@@ -130,14 +130,12 @@ module.exports = create-class do
             div do 
                 class-name: \react-selectize-control
                 ref: \control
-                on-mouse-down: (e) ~>
+                on-click: (e) ~>
                     do ~>
                         <~ @props.on-anchor-change last @props.values
                         <~ @on-open-change true
                         @highlight-and-focus!
 
-                    cancel-event e
-                
                 if @props.search.length == 0 and @props.values.length == 0
 
                     # PLACEHOLDER
@@ -245,6 +243,11 @@ module.exports = create-class do
                 # used when @props.tether is true
                 # tether-target :: () -> ReactElement
                 tether-target: ~> find-DOM-node @refs.control
+
+                # uid of the highlighted option, this changes whenever the user hovers over an option
+                # or uses arrow keys to navigate the list of options
+                highlighted-uid: @props.highlighted-uid
+                on-highlighted-uid-change: @props.on-highlighted-uid-change
 
                 # on-option-click :: (Eq e) => e -> ()
                 on-option-click: (highlighted-uid) !~>
@@ -451,7 +454,6 @@ module.exports = create-class do
 
         # open dropdown menu
         <~ do ~> if !@props.open then (~> @on-open-change true, it) else (-> it!)
-
         @refs.dropdown-menu.highlight-and-scroll-to-selectable-option index, direction, callback
 
     # is-equal-to-object :: Item -> Item -> Boolean

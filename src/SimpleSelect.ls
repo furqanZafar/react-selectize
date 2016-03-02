@@ -20,6 +20,7 @@ module.exports = React.create-class do
         filter-options: (options, search) -->  
             options
                 |> filter ~> (it.label.to-lower-case!.trim!.index-of search.to-lower-case!.trim!) > -1
+        first-option-index-to-highlight: id
         # hide-reset-button :: Boolean
         # name :: String
         # input-props :: object
@@ -57,7 +58,8 @@ module.exports = React.create-class do
         
         # computed state
         {
-            filtered-options, on-open-change, on-search-change, on-value-change, open, options, search, value, values
+            filtered-options, highlighted-uid, on-highlighted-uid-change, on-open-change, on-search-change, on-value-change, 
+            open, options, search, value, values
         } = @get-computed-state!
 
         # props
@@ -81,6 +83,8 @@ module.exports = React.create-class do
             groups
             groups-as-columns
             hide-reset-button
+            highlighted-uid
+            on-highlighted-uid-change
             input-props
             name
             render-group-title
@@ -104,10 +108,6 @@ module.exports = React.create-class do
             # OPEN
             open: open
             on-open-change: on-open-change
-
-            # HIGHLIGHTED OPTION
-            highlighted-uid: @state.highlighted-uid
-            on-highlighted-uid-change: (highlighted-uid, callback) ~> @set-state {highlighted-uid}, callback
 
             # OPTIONS            
             first-option-index-to-highlight: ~> @first-option-index-to-highlight options, value
@@ -205,13 +205,19 @@ module.exports = React.create-class do
     get-computed-state: ->
 
         # decide whether to use state or props
+        highlighted-uid = if @props.has-own-property \highlightedUid then @props.highlighted-uid else @state.highlighted-uid
         open = @is-open!
         search = if @props.has-own-property \search then @props.search else @state.search
         value = @value!
         values = if !!value then [value] else []
         
         # on-*-change :: a -> (() -> ()) -> ()
-        [on-open-change, on-search-change, on-value-change] = <[open search value]> |> map (p) ~>
+        [
+            on-highlighted-uid-change
+            on-open-change
+            on-search-change
+            on-value-change
+        ] = <[highlightedUid open search value]> |> map (p) ~>
             result = switch
 
                 # both p & its change callback are coming from props
@@ -263,10 +269,12 @@ module.exports = React.create-class do
         options = (if !!new-option then [{} <<< new-option <<< new-option: true] else []) ++ filtered-options
 
         {
+            highlighted-uid
             open
             search
             value
             values
+            on-highlighted-uid-change
 
             # on-open-change :: Boolean -> (() -> ()) -> ()
             on-open-change: (open, callback) !~>
@@ -298,7 +306,7 @@ module.exports = React.create-class do
         # find the index of the currently selection option (if any)
         index = if !!value then (find-index (~> it `is-equal-to-object` value), options) else undefined
 
-        switch
+        option-index-to-highlight = switch
             # highlight the currently select option (if any)
             | typeof index != \undefined => index
 
@@ -323,6 +331,9 @@ module.exports = React.create-class do
                 #  the second option is selectable
                 else
                     1
+
+        search = if @props.has-own-property \search then @props.search else @state.search
+        @props.first-option-index-to-highlight option-index-to-highlight, options, value, search
 
     # fires the on-focus event after moving the cursor to the search input (with the reason = function-call)
     # fires the callback after the dropdown becomes visible
