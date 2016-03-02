@@ -1,5 +1,8 @@
 # React Selectize
 
+## v0.8.3 / 2nd March 2016
+* "double click bug" fix
+
 ## v0.8.2 / 2nd March 2016
 * added a new prop `firstOptionIndexToHighlight` to both Simple & MultiSelect
 * made the text in search field selectable
