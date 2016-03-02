@@ -108,7 +108,6 @@ module.exports = create-class do
             class-name: class-name-from-object do
                 \react-selectize : 1
                 "#{@props.theme}" : 1
-                \control-wrapper : 1
                 \root-node : 1
                 "#{@props.class-name}" : 1
                 disabled: @props.disabled
@@ -130,12 +129,19 @@ module.exports = create-class do
             div do 
                 class-name: \react-selectize-control
                 ref: \control
+
+                # using click would cause a flicker because:
+                # 1: on mouse down, the focus will blur from the search field causing the dropdown menu to close
+                # 2: on mouse up, the click event will be fired and open the dropdown menu again
+                # on mouse down, we have to cancel the event otherwise the search field would cause the same problem above
                 on-mouse-down: (e) ~>
                     do ~>
                         <~ @props.on-anchor-change last @props.values
                         <~ @on-open-change true
                         @highlight-and-focus!
 
+                    # avoid cancelling the event when the dropdown is already open 
+                    # as this would block selection of text in the search field
                     if !@props.open
                         cancel-event e
 
