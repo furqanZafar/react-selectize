@@ -1,4 +1,5 @@
-{all, any, camelize, difference, drop, filter, find, find-index, last, map, reject} = require \prelude-ls
+{all, any, camelize, difference, drop, filter, find, find-index, id, 
+last, map, reject} = require \prelude-ls
 {is-equal-to-object} = require \prelude-extension
 {create-factory, DOM:{div, img, span}}:React = require \react
 ReactSelectize = create-factory require \./ReactSelectize 
@@ -25,6 +26,7 @@ module.exports = React.create-class do
             options
                 |> reject ~> it.label.trim! in (map (.label.trim!), values ? [])
                 |> filter ~> (it.label.to-lower-case!.trim!.index-of search.to-lower-case!.trim!) > -1
+        first-option-index-to-highlight: id
         # hide-reset-button :: Boolean
         # input-props :: object
         # max-values :: Int
@@ -268,7 +270,7 @@ module.exports = React.create-class do
 
     # first-option-index-to-highlight :: [Item] -> Int
     first-option-index-to-highlight: (options) ->
-        switch
+        option-index-to-highlight = switch
 
             # highlight the first option if there is only one option
             | options.length == 1 => 0
@@ -291,6 +293,9 @@ module.exports = React.create-class do
                 #  the second option is selectable
                 else
                     1
+
+        search = if @props.has-own-property \search then @props.search else @state.search
+        @props.first-option-index-to-highlight option-index-to-highlight, options, @values!, search
 
     # focus :: () -> ()
     focus: !-> @refs.select.focus!

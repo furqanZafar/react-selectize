@@ -454,7 +454,6 @@ module.exports = create-class do
 
         # open dropdown menu
         <~ do ~> if !@props.open then (~> @on-open-change true, it) else (-> it!)
-
         @refs.dropdown-menu.highlight-and-scroll-to-selectable-option index, direction, callback
 
     # is-equal-to-object :: Item -> Item -> Boolean
