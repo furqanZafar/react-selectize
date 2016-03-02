@@ -36,7 +36,7 @@ export click-option = (option-element, callback) ->
 
 # click-to-open-select-control :: Select -> Void
 export click-to-open-select-control = (select) !->
-    click find-rendered-DOM-component-with-class select, \react-selectize-control
+    mouse-down find-rendered-DOM-component-with-class select, \react-selectize-control
 
 # click-on-the-document :: a -> Void
 export click-on-the-document = ->

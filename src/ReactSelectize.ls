@@ -130,18 +130,22 @@ module.exports = create-class do
             div do 
                 class-name: \react-selectize-control
                 ref: \control
-                on-click: (e) ~>
+                on-mouse-down: (e) ~>
                     do ~>
                         <~ @props.on-anchor-change last @props.values
                         <~ @on-open-change true
                         @highlight-and-focus!
+
+                    if !@props.open
+                        cancel-event e
 
                 if @props.search.length == 0 and @props.values.length == 0
 
                     # PLACEHOLDER
                     div class-name: \react-selectize-placeholder, @props.placeholder
 
-                div class-name: \react-selectize-search-field-and-selected-values,
+                div do 
+                    class-name: \react-selectize-search-field-and-selected-values
 
                     # LIST OF SELECTED VALUES (BEFORE & INCLUDING THE ANCHOR)
                     render-selected-values [0 to anchor-index]
@@ -176,7 +180,6 @@ module.exports = create-class do
                                 @props.on-focus e
 
                             on-blur: (e) ~>
-
                                 # to prevent closing the dropdown when the user tries to click & drag the scrollbar in IE
                                 return if @refs.dropdown-menu and document.active-element == (find-DOM-node @refs.dropdown-menu)
 
