@@ -39,6 +39,8 @@
 |    search                  | String                              | the text displayed in the search box|
 |    serialize               | Item -> String                      | `(item){ return !!item ? item.value : undefined; }` the value of the hidden input element for form serialization |
 |    style                   | Object                              | the CSS styles for the outer element|
+|    tether                  | Boolean                             | defaults to false, set this prop to true to enable the tether library for the dropdown menu|
+|    tether-props            | Object                              | extra props passed to ReactTether for example: `{ parentElement: () => document.body }`|
 |    theme                   | String                              | `default` | `material` | `bootstrap3` | custom theme name |
 |    transitionEnter         | Boolean                             | defaults to false, setting this to true animates the opening of the dropdown using the `slide-*` css classes|
 |    transitionEnterTimeout  | Number                              | duration specified in milliseconds, it must match the transition duration specified under the CSS class `.slide-enter-active` |
