@@ -78,7 +78,7 @@ height = 30px
             fill #999
 
 // wraps the dropdown-menu div, exists only when props.transition-enter or props.transition-leave or both are true
-// present inside document.body if props.tether is true, otherwise its present inside the control-wrapper div (above)
+// present inside document.body if props.tether is true, otherwise its present inside the root-node div (above)
 .react-selectize.dropdown-menu-wrapper
     position absolute
 
@@ -112,7 +112,7 @@ height = 30px
         outline none
 
 // MULTI SELECT
-.multi-select.react-selectize.control-wrapper
+.multi-select.react-selectize.root-node
     
     .simple-value
         display inline-block
@@ -125,7 +125,7 @@ height = 30px
             vertical-align center
 
 // SIMPLE SELECT
-.simple-select.react-selectize.control-wrapper
+.simple-select.react-selectize.root-node
     
     .simple-value
         margin 2px
