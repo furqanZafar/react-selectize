@@ -57,8 +57,8 @@ module.exports = React.create-class do
         
         # computed state
         {
-            anchor, filtered-options, on-anchor-change, on-open-change, on-search-change, on-values-change, search, open
-            options, values
+            anchor, filtered-options, highlighted-uid, on-anchor-change, on-open-change, on-highlighted-uid-change,
+            on-search-change, on-values-change, search, open, options, values
         } = @get-computed-state!
 
         # props
@@ -82,6 +82,8 @@ module.exports = React.create-class do
             groups
             groups-as-columns
             hide-reset-button
+            highlighted-uid
+            on-highlighted-uid-change
             input-props
             name
             on-keyboard-selection-failed
@@ -106,11 +108,6 @@ module.exports = React.create-class do
             # OPEN
             open
             on-open-change
-
-            # HIGHLIGHTED OPTION
-            highlighted-uid: @state.highlighted-uid
-            on-highlighted-uid-change: (highlighted-uid, callback) ~> 
-                @set-state {highlighted-uid}, callback
 
             # OPTIONS            
             options: options
@@ -185,10 +182,17 @@ module.exports = React.create-class do
 
         # decide whether to use state or props
         anchor = if @props.has-own-property \anchor then @props.anchor else @state.anchor
+        highlighted-uid = if @props.has-own-property \highlightedUid then @props.highlighted-uid else @state.highlighted-uid
         open = @is-open!
         search = if @props.has-own-property \search then @props.search else @state.search
         values = @values!
-        [on-anchor-change, on-open-change, on-search-change, on-values-change] = <[anchor open search values]> |> map (p) ~>
+        [
+            on-anchor-change
+            on-highlighted-uid-change
+            on-open-change
+            on-search-change
+            on-values-change
+        ] = <[anchor highlightedUid open search values]> |> map (p) ~>
 
             # both p & its change callback are coming from props (simply returns the change callback from props)
             | @props.has-own-property p and @props.has-own-property camelize "on-#{p}-change" => 
@@ -240,9 +244,11 @@ module.exports = React.create-class do
 
         {
             anchor
+            highlighted-uid
             search
             values
             on-anchor-change
+            on-highlighted-uid-change
             open
             
             # on-open-change :: Boolean -> (() -> ()) -> ()
