@@ -76,6 +76,7 @@ module.exports = create-class do
         search: ""
         style: {}
         # tether :: Boolean
+        # tether-props :: {parent-element :: () -> DOMElement}
         # transition-enter :: Boolean
         # transition-leave :: Boolean
         # transition-enter-timeout :: Int
@@ -249,9 +250,11 @@ module.exports = create-class do
                 # bottom-anchor :: () -> ReactElement
                 bottom-anchor: ~> find-DOM-node @refs.control
 
-                # used when @props.tether is true
-                # tether-target :: () -> ReactElement
-                tether-target: ~> find-DOM-node @refs.control
+                tether-props: {} <<< @props.tether-props <<< 
+                
+                    # used when @props.tether is true
+                    # target :: () -> ReactElement
+                    target: ~> find-DOM-node @refs.control
 
                 # uid of the highlighted option, this changes whenever the user hovers over an option
                 # or uses arrow keys to navigate the list of options

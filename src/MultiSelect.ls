@@ -49,6 +49,7 @@ module.exports = React.create-class do
         serialize: map (?.value) # [Item] -> String
         # style :: CSS
         tether: false
+        # tether-props :: {parent-element :: () -> DOMElement}
         # theme :: String
         # values :: [Item]
 
@@ -65,7 +66,7 @@ module.exports = React.create-class do
         {
             autofocus, autosize, cancel-keyboard-event-on-selection, delimiters, disabled, dropdown-direction, group-id, 
             groups, groups-as-columns, hide-reset-button, input-props, name, on-keyboard-selection-failed, render-toggle-button, 
-            render-group-title, render-reset-button, serialize, tether, theme, transition-enter, transition-leave, 
+            render-group-title, render-reset-button, serialize, tether, tether-props, theme, transition-enter, transition-leave, 
             transition-enter-timeout, transition-leave-timeout, uid
         }? = @props
 
@@ -93,6 +94,7 @@ module.exports = React.create-class do
             scroll-lock: @state.scroll-lock
             on-scroll-lock-change: (scroll-lock) ~> @set-state {scroll-lock}
             tether
+            tether-props
             theme
             transition-enter
             transition-enter-timeout
