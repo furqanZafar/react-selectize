@@ -12,8 +12,9 @@
 |    delimiters              | [KeyCode]                           | a collection of character keycodes that when pressed confirm selection of the highlighted item |
 |    disabled                | Boolean                             | disables interaction with the Select control|
 |    dropdownDirection       | Int                                 | defaults to 1, setting it to -1 opens the dropdown upward|
-|    editable                | Boolean                             | defaults to false, setting it to true makes the selected option editable|
+|    editable                | Item -> String                      | `(item){return item.label}`|
 |    filterOptions           | [Item]-> String -> [Item]           | implement this function for custom synchronous filtering logic, `(options, search) {return options}`|
+|    firstOptionIndexToHighlight | Int -> [Item] -> Item -> String | `(index, options, value, search){return index}` the default implementation simply returns the computed `index` passed in as the first argument, but you can use options, value & search to override this value or return -1 to select nothing by default|
 |    groupId                 | Item -> b                           | `(item){return item.groupId}` this function is used to identify which group an option belongs to, it must return a value that matches the groupId property of an object in the groups collection|
 |    groups                  | [Group]                             | collection of objects where each object must atleast have a groupId property|
 |    groupsAsColumns         | Boolean                             | display option groups in columns|
@@ -38,6 +39,8 @@
 |    search                  | String                              | the text displayed in the search box|
 |    serialize               | Item -> String                      | `(item){ return !!item ? item.value : undefined; }` the value of the hidden input element for form serialization |
 |    style                   | Object                              | the CSS styles for the outer element|
+|    tether                  | Boolean                             | defaults to false, set this prop to true to enable the tether library for the dropdown menu|
+|    tether-props            | Object                              | extra props passed to ReactTether for example: `{ parentElement: () => document.body }`|
 |    theme                   | String                              | `default` | `material` | `bootstrap3` | custom theme name |
 |    transitionEnter         | Boolean                             | defaults to false, setting this to true animates the opening of the dropdown using the `slide-*` css classes|
 |    transitionEnterTimeout  | Number                              | duration specified in milliseconds, it must match the transition duration specified under the CSS class `.slide-enter-active` |

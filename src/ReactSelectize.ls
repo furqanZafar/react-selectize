@@ -76,6 +76,7 @@ module.exports = create-class do
         search: ""
         style: {}
         # tether :: Boolean
+        # tether-props :: {parent-element :: () -> DOMElement}
         # transition-enter :: Boolean
         # transition-leave :: Boolean
         # transition-enter-timeout :: Int
@@ -108,7 +109,6 @@ module.exports = create-class do
             class-name: class-name-from-object do
                 \react-selectize : 1
                 "#{@props.theme}" : 1
-                \control-wrapper : 1
                 \root-node : 1
                 "#{@props.class-name}" : 1
                 disabled: @props.disabled
@@ -130,12 +130,19 @@ module.exports = create-class do
             div do 
                 class-name: \react-selectize-control
                 ref: \control
+
+                # using click would cause a flicker because:
+                # 1: on mouse down, the focus will blur from the search field causing the dropdown menu to close
+                # 2: on mouse up, the click event will be fired and open the dropdown menu again
+                # on mouse down, we have to cancel the event otherwise the search field would cause the same problem above
                 on-mouse-down: (e) ~>
                     do ~>
                         <~ @props.on-anchor-change last @props.values
                         <~ @on-open-change true
                         @highlight-and-focus!
 
+                    # avoid cancelling the event when the dropdown is already open 
+                    # as this would block selection of text in the search field
                     if !@props.open
                         cancel-event e
 
@@ -243,9 +250,11 @@ module.exports = create-class do
                 # bottom-anchor :: () -> ReactElement
                 bottom-anchor: ~> find-DOM-node @refs.control
 
-                # used when @props.tether is true
-                # tether-target :: () -> ReactElement
-                tether-target: ~> find-DOM-node @refs.control
+                tether-props: {} <<< @props.tether-props <<< 
+
+                    # used when @props.tether is true
+                    # target :: () -> ReactElement
+                    target: ~> find-DOM-node @refs.control
 
                 # uid of the highlighted option, this changes whenever the user hovers over an option
                 # or uses arrow keys to navigate the list of options
@@ -327,14 +336,14 @@ module.exports = create-class do
         if @props.open and 
            e.which in [13] ++ @props.delimiters and
            # do not interfere with hotkeys like control + enter or command + enter
-           !(e?.meta-key or e?.ctrl-key)
+           !(e?.meta-key or e?.ctrl-key or e?.shift-key)
             
             # select the highlighted option (if any)
-            @select-highlighted-uid anchor-index, (selected-value) ~>
+            result = @select-highlighted-uid anchor-index, (selected-value) ~>
                 if typeof selected-value == \undefined
                     @props.on-keyboard-selection-failed e.which
 
-            if @props.cancel-keyboard-event-on-selection
+            if result and @props.cancel-keyboard-event-on-selection
                 return cancel-event e
 
         # move anchor position left / right using arrow keys (only when search field is empty)
@@ -468,44 +477,58 @@ module.exports = create-class do
             if @props.disabled then false else open
             callback
 
-    # select-highlighted-uid :: Int -> ()
-    select-highlighted-uid: (anchor-index, callback) !->
+    # select-highlighted-uid :: Int -> Boolean
+    select-highlighted-uid: (anchor-index, callback) ->
         # return if there isn't any highlighted / focused option
-        return callback! if @props.highlighted-uid == undefined
+        if @props.highlighted-uid == undefined
+            callback!
+            return false
         
         # sanity check
         index = @option-index-from-uid @props.highlighted-uid
-        return callback! if typeof index != \number
+        if typeof index != \number
+            callback!
+            return false
 
         option = @props.options[index]
 
-        # values = (values behind & including the anchor) + highlighted option + (values ahead of the anchor)
-        <~ @props.on-values-change do
-            (map (~> @props.values[it]), [0 to anchor-index]) ++ 
-            [option] ++ 
-            (map (~> @props.values[it]), [anchor-index + 1 til @props.values.length])
+        do ~>
 
-        value = find (~> it `@is-equal-to-object` option), @props.values
-        return callback! if !value
-        
-        # if the user did what we asked, then clear the search and move the anchor ahead of the selected value
-        <~ @props.on-search-change ""
-        <~ @props.on-anchor-change value
-        return callback value if !@props.open
-        
-        # highlight the next selectable option
-        result <~ @highlight-and-scroll-to-selectable-option index, 1
-        return callback value if !!result
-        
-        # if there are no highlightable/selectable options (then close the dropdown)
-        result <~ @highlight-and-scroll-to-selectable-option do 
-            @props.first-option-index-to-highlight @props.options
-            1
-        if !result 
-            <~ @on-open-change false
-            callback value
-        else
-            callback value
+            # values = (values behind & including the anchor) + highlighted option + (values ahead of the anchor)
+            <~ @props.on-values-change do
+                (map (~> @props.values[it]), [0 to anchor-index]) ++ 
+                [option] ++ 
+                (map (~> @props.values[it]), [anchor-index + 1 til @props.values.length])
+
+            value = find (~> it `@is-equal-to-object` option), @props.values
+            if !value
+                callback!
+                return
+            
+            # if the user did what we asked, then clear the search and move the anchor ahead of the selected value
+            <~ @props.on-search-change ""
+            <~ @props.on-anchor-change value
+            if !@props.open
+                callback value
+                return
+            
+            # highlight the next selectable option
+            result <~ @highlight-and-scroll-to-selectable-option index, 1
+            if !!result
+                callback value
+                return
+            
+            # if there are no highlightable/selectable options (then close the dropdown)
+            result <~ @highlight-and-scroll-to-selectable-option do 
+                @props.first-option-index-to-highlight @props.options
+                1
+            if !result 
+                <~ @on-open-change false
+                callback value
+            else
+                callback value
+
+        true
     
     # uid-to-string :: () -> String, only used for the key prop (required by react render), & for refs
     uid-to-string: (uid) -> (if typeof uid == \object then JSON.stringify else id) uid

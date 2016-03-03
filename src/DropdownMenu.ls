@@ -50,7 +50,8 @@ module.exports = create-class do
         scroll-lock: false
         style: {}
         tether: false
-        # tether-target :: () -> ReactElement
+        # tether-props :: {parent-element :: () -> DOMElement}
+        tether-props: {}
         theme: \default
         transition-enter: false
         transition-leave: false
@@ -69,13 +70,13 @@ module.exports = create-class do
         # (TETHERED / ANIMATED / SIMPLE) DROPDOWN
         if @props.tether 
             ReactTether do
-                target: @props.tether-target
-                options:
-                    attachment: "top left"
-                    target-attachment: "bottom left"
-                    constraints:
-                        * to: \scrollParent
-                        ...
+                {} <<< @props.tether-props <<<
+                    options:
+                        attachment: "top left"
+                        target-attachment: "bottom left"
+                        constraints:
+                            * to: \scrollParent
+                            ...
                 @render-animated-dropdown {dynamic-class-name}
 
         else

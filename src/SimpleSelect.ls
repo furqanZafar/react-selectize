@@ -48,6 +48,7 @@ module.exports = React.create-class do
         serialize: (?.value)
         style: {}
         tether: false
+        # tether-props :: {parent-element :: () -> DOMElement}
         # theme :: String
         uid: id # uid :: (Equatable e) => Item -> e
         # value :: Item
@@ -66,8 +67,8 @@ module.exports = React.create-class do
         {
             autofocus, autosize, cancel-keyboard-event-on-selection, delimiters, disabled, dropdown-direction, group-id, 
             groups, groups-as-columns, hide-reset-button, name, input-props, render-toggle-button, render-group-title, 
-            render-reset-button, serialize, tether, theme, transition-enter, transition-leave, transition-enter-timeout, 
-            transition-leave-timeout, uid
+            render-reset-button, serialize, tether, tether-props, theme, transition-enter, transition-leave, 
+            transition-enter-timeout, transition-leave-timeout, uid
         }? = @props
             
         ReactSelectize {
@@ -93,6 +94,7 @@ module.exports = React.create-class do
             scroll-lock: @state.scroll-lock
             on-scroll-lock-change: (scroll-lock) ~> @set-state {scroll-lock}
             tether
+            tether-props
             theme
             transition-enter
             transition-enter-timeout

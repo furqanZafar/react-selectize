@@ -9,7 +9,8 @@ module.exports = create-class do
     get-default-props: ->
         # target :: () -> DOMElement (invoked on component-did-mount)
         # options :: object (passed to Tether instance)
-        {}
+        # parent-element :: () -> DOMElement
+        parent-element: -> document.body
 
     # render :: () -> ReactElement
     render: -> null
@@ -17,7 +18,7 @@ module.exports = create-class do
     # init-tether :: Props -> Void
     init-tether: (props) !->
         @node = document.create-element \div
-        document.body.append-child @node
+        @props.parent-element!.append-child @node
         @tether = new Tether {
             element: @node
             target: props.target!

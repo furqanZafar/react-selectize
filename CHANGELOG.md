@@ -1,5 +1,10 @@
 # React Selectize
 
+## v0.8.4 / 4th March 2016
+* added `tether-props` prop to customize the parent element (defaults to body)
+* expose `highlighted-ui` & `on-highlighted-uid-change` props for `MultiSelect`
+* fixed `cancel-keyboard-event-on-selection` prop
+
 ## v0.8.3 / 2nd March 2016
 * "double click bug" fix
 
