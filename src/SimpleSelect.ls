@@ -2,6 +2,7 @@
 {is-equal-to-object} = require \prelude-extension
 {create-factory, DOM:{div, img, span}}:React = require \react
 ReactSelectize = create-factory require \./ReactSelectize
+{cancel-event} = require \./utils
 
 module.exports = React.create-class do
 
@@ -27,6 +28,7 @@ module.exports = React.create-class do
         on-blur: ((e) !->) # :: # Event -> ()
         on-focus: ((e) !->) # :: Event -> ()
         on-keyboard-selection-failed: ((which) !-> ) # :: Int -> ()
+        on-paste: ((e) !-> true) # Event -> Boolean
         # on-search-change :: String -> ()
         # on-value-change :: Item -> () 
         # open :: Boolean
@@ -187,6 +189,18 @@ module.exports = React.create-class do
                 @props.on-blur {value, open, original-event: e}
 
             on-focus: (e) !~> @props.on-focus {value, open, original-event: e}
+
+            # on-paste :: Event -> Boolean
+            on-paste: 
+                | typeof @props?.value-from-paste == \undefined => @props.on-paste
+                | _ => ({clipboard-data}:e) ~>
+                    value-from-paste = @props.value-from-paste options, value, clipboard-data.get-data \text
+                    if value-from-paste
+                        do ~>
+                            <~ on-value-change value-from-paste
+                            <~ on-search-change ""
+                            on-open-change false
+                        cancel-event e
 
             # STYLE
             placeholder: @props.placeholder
