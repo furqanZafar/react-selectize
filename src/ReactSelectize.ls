@@ -411,7 +411,7 @@ module.exports = create-class do
 
         # if the list of options was closed then reset highlighted-uid 
         if !@props.open and prev-props.open
-            @props.on-highlighted-uid-change undefined
+            <~ @props.on-highlighted-uid-change undefined
 
     # component-will-receive-props :: Props -> ()
     component-will-receive-props: (props) !->
