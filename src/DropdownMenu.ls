@@ -121,7 +121,7 @@ module.exports = create-class do
                     
                     on-mouse-out: !~>  
                         if !@props.scroll-lock
-                            @props.on-highlighted-uid-change undefined
+                            <~ @props.on-highlighted-uid-change undefined
 
                     render-item: @props.render-option
                 } <<<
@@ -131,7 +131,7 @@ module.exports = create-class do
                         on-click: !~> @props.on-option-click @props.highlighted-uid
                         on-mouse-over: ({current-target}) !~>  
                             if !@props.scroll-lock
-                                @props.on-highlighted-uid-change uid
+                                <~ @props.on-highlighted-uid-change uid
 
     # render-dropdown :: ComputedState -> ReactElement
     render-dropdown: ({dynamic-class-name}) ->
@@ -186,7 +186,9 @@ module.exports = create-class do
     component-did-update: !->
         dropdown-menu = find-DOM-node @refs.dropdown-menu-wrapper ? @refs.dropdown-menu
             ..?style.bottom = switch 
-                | @props.dropdown-direction == -1 => @props.bottom-anchor!.offset-height + dropdown-menu.style.margin-bottom
+                | @props.dropdown-direction == -1 => 
+                    "#{@props.bottom-anchor!.offset-height + dropdown-menu.style.margin-bottom}px"
+                    
                 | _ => ""
 
     # highlight-and-scroll-to-option :: Int, (() -> ())? -> ()

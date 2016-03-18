@@ -215,7 +215,6 @@ module.exports = React.create-class do
                 (o, callback) ~> 
                     <~ @set-state "#{p}" : o
                     callback!
-                    
                     @props[camelize "on-#{p}-change"] o, (->)
 
             # both p and its change callback are coming from state

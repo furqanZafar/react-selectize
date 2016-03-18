@@ -19,12 +19,15 @@
 |    groups                  | [Group]                             | collection of objects where each object must atleast have a groupId property|
 |    groupsAsColumns         | Boolean                             | display option groups in columns|
 |    hideResetButton         | Boolean                             | hides the reset button, even if the select element is not empty |
+|    highlightedUid          | object                              | the uid (unique id) of the currently highlighted option, uid of an option is obtained from the `uid` prop defined below |
 |    name                    | String                              | defaults to undefined, provide a name property to create an hidden input element for html form serialization |
 |    open                    | Boolean                             | controls the visibility of the dropdown menu |
 |    onBlur                  | Event -> Void                       | `({originalEvent :: e, value :: Item, open :: Boolean}){}` |
 |    onFocus                 | Event -> Void                       | `({originalEvent :: e, value :: Item, open :: Boolean}){}` |
+|    onHighlightedUidChange  | object -> Void                      | `(uid){}` invoked when the highlighted option changes |
 |    onKeyboardSelectionFailed | Int -> Void                       | `(keyCode){}` fired when the user hits the return key on an empty list of options |
 |    onOpenChange            | Boolean -> Void                     | `(open){}` open is true if the dropdown opened and false if it closed|
+|    onPaste                 | Event -> Void                       | invoked when the user pastes text in the input field and `props.valueFromPaste` is not specified|
 |    onSearchChange          | String -> Void                      | `(search){}` invoked when the search text in the input field changes|
 |    onValueChange           | Item -> Void                        | `(selectedValue){}` invoked when the user selects an option (by click on enter)|
 |    options                 | [Item]                              | list of items by default each option object MUST have label & value property, otherwise you must implement the render* & filterOptions methods|
@@ -48,6 +51,7 @@
 |    transitionLeaveTimeout  | Number                              | duration specified in milliseconds, it must match the transition duration specified under the CSS class `.slide-leave-active` |
 |    uid                     | (Eq e) => Item -> e                 | `(item){return item.value}` returns a unique id for a given option, defaults to the value property|
 |    value                   | Item                                | the selected value, i.e. one of the objects in the options array|
+|    valueFromPaste          | [Item] -> Item -> String -> Item    | `(options, value, pastedText){}` invoked when the user pastes text in the input field, here you can convert the pasted text into an item that will then show up as selected |
 
 ### SimpleSelect methods
 
