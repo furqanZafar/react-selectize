@@ -186,7 +186,9 @@ module.exports = create-class do
     component-did-update: !->
         dropdown-menu = find-DOM-node @refs.dropdown-menu-wrapper ? @refs.dropdown-menu
             ..?style.bottom = switch 
-                | @props.dropdown-direction == -1 => @props.bottom-anchor!.offset-height + dropdown-menu.style.margin-bottom
+                | @props.dropdown-direction == -1 => 
+                    "#{@props.bottom-anchor!.offset-height + dropdown-menu.style.margin-bottom}px"
+                    
                 | _ => ""
 
     # highlight-and-scroll-to-option :: Int, (() -> ())? -> ()
