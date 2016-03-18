@@ -1,5 +1,10 @@
 # React Selectize
 
+## v0.9.0 / 18th March 2016
+* added `on-paste` and `value-from-paste` props to `SimpleSelect`
+* added `highlighted-uid` and `on-highlighted-uid-change` props to track the current highlighted option
+* fixed a bug in `dropdown-direction` prop
+
 ## v0.8.4 / 4th March 2016
 * added `tether-props` prop to customize the parent element (defaults to body)
 * expose `highlighted-ui` & `on-highlighted-uid-change` props for `MultiSelect`
