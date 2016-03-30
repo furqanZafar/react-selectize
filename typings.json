@@ -1,0 +1,7 @@
+{
+  "name": "react-selectize",
+  "main": "src/index.d.ts",
+  "ambientDevDependencies": {
+    "react": "registry:dt/react#0.14.0+20160302224448"
+  }
+}
