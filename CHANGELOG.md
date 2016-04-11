@@ -1,5 +1,6 @@
 # React Selectize
 
+## v2.0.1 / 11th April 2016
 ## v2.0.0 / 11th April 2016
 * switched to major version semver
 * added React@15.0 to peer deps
