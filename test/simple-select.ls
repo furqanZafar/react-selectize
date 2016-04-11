@@ -145,7 +145,7 @@ describe "SimpleSelect", ->
             name: \test
         click-to-open-select-control select
         click-option find-highlighted-option select
-        {value} = scry-rendered-DOM-components-with-tag select, \input
+        {value} = (scry-rendered-DOM-components-with-tag select, \input)
             |> find (.type == \hidden)
         assert \apple == value
 
