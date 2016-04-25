@@ -225,8 +225,8 @@ module.exports = React.create-class do
         open = @is-open!
         search = if @props.has-own-property \search then @props.search else @state.search
         value = @value!
-        values = if !!value then [value] else []
-        
+        values = if (!!value || value == 0) then [value] else []
+
         # on-*-change :: a -> (() -> ()) -> ()
         [
             on-highlighted-uid-change
