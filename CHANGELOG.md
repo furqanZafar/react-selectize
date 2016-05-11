@@ -1,5 +1,8 @@
 # React Selectize
 
+## 2.0.2 / 11th May 2016
+* simple select accepts 0 as value (thanks @Nyalab)
+
 ## v2.0.1 / 11th April 2016
 ## v2.0.0 / 11th April 2016
 * switched to major version semver
