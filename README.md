@@ -172,7 +172,7 @@ the `uid` function is used internally for performance optimization.
 ## Peer Deps
 * react
 * react-dom
-* react-addons-css-transition
+* react-addons-css-transition-group
 * react-addons-shallow-compare
 
 ## Development
