@@ -268,6 +268,7 @@ module.exports = create-class do
 
     # handle-keydown :: ComputedState -> Event -> Boolean
     handle-keydown: ({anchor-index}, e) ->
+        e.persist()
 
         # always handle the tab, backspace & escape keys
         switch e.which
