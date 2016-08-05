@@ -26,6 +26,7 @@ module.exports = React.create-class do
         # name :: String
         # input-props :: object
         on-blur: ((e) !->) # :: # Event -> ()
+        on-blur-resets-input: true # :: Boolean
         on-focus: ((e) !->) # :: Event -> ()
         on-keyboard-selection-failed: ((which) !-> ) # :: Int -> ()
         on-paste: ((e) !-> true) # Event -> Boolean
@@ -68,9 +69,9 @@ module.exports = React.create-class do
         # props
         {
             autofocus, autosize, cancel-keyboard-event-on-selection, delimiters, disabled, dropdown-direction, group-id, 
-            groups, groups-as-columns, hide-reset-button, name, input-props, render-toggle-button, render-group-title, 
-            render-reset-button, serialize, tether, tether-props, theme, transition-enter, transition-leave, 
-            transition-enter-timeout, transition-leave-timeout, uid
+            groups, groups-as-columns, hide-reset-button, name, input-props, on-blur-resets-input, render-toggle-button,
+            render-group-title, render-reset-button, serialize, tether, tether-props, theme, transition-enter,
+            transition-leave, transition-enter-timeout, transition-leave-timeout, uid
         }? = @props
             
         ReactSelectize {
@@ -90,6 +91,7 @@ module.exports = React.create-class do
             on-highlighted-uid-change
             input-props
             name
+            on-blur-resets-input
             render-group-title
             render-reset-button
             render-toggle-button
@@ -177,9 +179,10 @@ module.exports = React.create-class do
             # BLUR & FOCUS
             on-blur: (e) !~> 
                 # clear the search text
+                on-blur-resets-input = @props.on-blur-resets-input
                 <~ do ~> 
                     (callback) ~> 
-                        if search.length > 0 
+                        if search.length > 0 && on-blur-resets-input
                             on-search-change "", callback 
 
                         else 
