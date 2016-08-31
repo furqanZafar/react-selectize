@@ -18,7 +18,7 @@ module.exports = React.create-class do
         delimiters: []
         # editable :: Item -> String
         # filter-options :: [Item] -> String -> [Item]
-        filter-options: (options, search) -->  
+        filter-options: (options, search) -->
             options
                 |> filter ~> (it.label.to-lower-case!.trim!.index-of search.to-lower-case!.trim!) > -1
         first-option-index-to-highlight: id
@@ -31,7 +31,7 @@ module.exports = React.create-class do
         on-keyboard-selection-failed: ((which) !-> ) # :: Int -> ()
         on-paste: ((e) !-> true) # Event -> Boolean
         # on-search-change :: String -> ()
-        # on-value-change :: Item -> () 
+        # on-value-change :: Item -> ()
         # open :: Boolean
         # options :: [Item]
         # on-open-change :: Boolean -> ()
@@ -41,8 +41,8 @@ module.exports = React.create-class do
         # render-reset-button :: () -> ReactElement
         # render-toggle-button :: ({open :: Boolean, flipped :: Boolean}) -> ReactElement
         # render-value :: Int -> Item -> ReactElement
-        render-value: ({label}) -> 
-            div do 
+        render-value: ({label}) ->
+            div do
                 class-name: \simple-value
                 span null, label
 
@@ -55,33 +55,34 @@ module.exports = React.create-class do
         # theme :: String
         uid: id # uid :: (Equatable e) => Item -> e
         # value :: Item
-        
+
 
     # render :: () -> ReactElement
-    render: -> 
-        
+    render: ->
+
         # computed state
         {
-            filtered-options, highlighted-uid, on-highlighted-uid-change, on-open-change, on-search-change, on-value-change, 
+            filtered-options, highlighted-uid, on-highlighted-uid-change, on-open-change, on-search-change, on-value-change,
             open, options, search, value, values
         } = @get-computed-state!
 
         # props
         {
-            autofocus, autosize, cancel-keyboard-event-on-selection, delimiters, disabled, dropdown-direction, group-id, 
+            autofocus, autosize, cancel-keyboard-event-on-selection, delimiters, disabled, maxLength, dropdown-direction, group-id,
             groups, groups-as-columns, hide-reset-button, name, input-props, on-blur-resets-input, render-toggle-button,
             render-group-title, render-reset-button, serialize, tether, tether-props, theme, transition-enter,
             transition-leave, transition-enter-timeout, transition-leave-timeout, uid
         }? = @props
-            
+
         ReactSelectize {
-            
+
             autofocus
             autosize
             cancel-keyboard-event-on-selection
             class-name: "simple-select" + if !!@props.class-name then " #{@props.class-name}" else ""
             delimiters
             disabled
+            maxLength
             dropdown-direction
             group-id
             groups
@@ -115,7 +116,7 @@ module.exports = React.create-class do
             open: open
             on-open-change: on-open-change
 
-            # OPTIONS            
+            # OPTIONS
             first-option-index-to-highlight: ~> @first-option-index-to-highlight options, value
             options: options
             render-option: @props.render-option
@@ -130,7 +131,7 @@ module.exports = React.create-class do
             on-values-change: (new-values, callback) ~>
                 if new-values.length == 0
 
-                    # deselect 
+                    # deselect
                     <~ on-value-change undefined
                     callback!
 
@@ -149,13 +150,13 @@ module.exports = React.create-class do
             render-value: (item) ~>
 
                 # hide the selected value only when:
-                #  the dropdown is open and 
-                #   either the search-string length is > 0 or 
+                #  the dropdown is open and
+                #   either the search-string length is > 0 or
                 #   selected value is editable
                 if open and (!!@props.editable or search.length > 0)
                     null
 
-                # always show the selected value when the dropdown is closed 
+                # always show the selected value when the dropdown is closed
                 else
                     @props.render-value item
 
@@ -166,7 +167,7 @@ module.exports = React.create-class do
 
             # TODO: distinguish between uid for selected value & option, this will improve performance
             #  by not having to compare against additional open & search properties added to uid below
-            uid: (item) ~> 
+            uid: (item) ~>
 
                 # add open and search to uid since the render-value above depends on them
                 uid: @props.uid item
@@ -177,15 +178,15 @@ module.exports = React.create-class do
             serialize: (items) ~> serialize items.0
 
             # BLUR & FOCUS
-            on-blur: (e) !~> 
+            on-blur: (e) !~>
                 # clear the search text
                 on-blur-resets-input = @props.on-blur-resets-input
-                <~ do ~> 
-                    (callback) ~> 
+                <~ do ~>
+                    (callback) ~>
                         if search.length > 0 && on-blur-resets-input
-                            on-search-change "", callback 
+                            on-search-change "", callback
 
-                        else 
+                        else
                             callback!
 
                 # fire on-blur event
@@ -194,7 +195,7 @@ module.exports = React.create-class do
             on-focus: (e) !~> @props.on-focus {value, open, original-event: e}
 
             # on-paste :: Event -> Boolean
-            on-paste: 
+            on-paste:
                 | typeof @props?.value-from-paste == \undefined => @props.on-paste
                 | _ => ({clipboard-data}:e) ~>
                     value-from-paste = @props.value-from-paste options, value, clipboard-data.get-data \text
@@ -216,7 +217,7 @@ module.exports = React.create-class do
         | _ => {})
 
         <<< (switch
-        | typeof @props.render-no-results-found == \function => 
+        | typeof @props.render-no-results-found == \function =>
             render-no-results-found: ~> @props.render-no-results-found value, search
         | _ => {})
 
@@ -240,22 +241,22 @@ module.exports = React.create-class do
             result = switch
 
                 # both p & its change callback are coming from props
-                | @props.has-own-property p and @props.has-own-property camelize "on-#{p}-change" => 
-                    (o, callback) ~> 
+                | @props.has-own-property p and @props.has-own-property camelize "on-#{p}-change" =>
+                    (o, callback) ~>
                         @props[camelize "on-#{p}-change"] o, (->)
 
                         # trick react into running batch update, this indirectly updates the props
                         @set-state {}, callback
 
-                # p is coming from prop but the change callback is coming from state 
+                # p is coming from prop but the change callback is coming from state
                 # (do nothing, just invoke the callback - p remains unchanged -)
-                | @props.has-own-property p and !(@props.has-own-property camelize "on-#{p}-change") => 
+                | @props.has-own-property p and !(@props.has-own-property camelize "on-#{p}-change") =>
                     (, callback) ~> callback!
 
                 # p is coming from state but the change callback is coming from props
                 # update the value of p in state and invoke the change callback (present in props)
-                | !(@props.has-own-property p) and @props.has-own-property camelize "on-#{p}-change" => 
-                    (o, callback) ~> 
+                | !(@props.has-own-property p) and @props.has-own-property camelize "on-#{p}-change" =>
+                    (o, callback) ~>
                         <~ @set-state {"#{p}" : o}
                         callback!
 
@@ -263,13 +264,13 @@ module.exports = React.create-class do
 
                 # both p and its change callback are coming from state
                 # update the state & on success invoke the change callback
-                | !(@props.has-own-property p) and !(@props.has-own-property camelize "on-#{p}-change") => 
+                | !(@props.has-own-property p) and !(@props.has-own-property camelize "on-#{p}-change") =>
                     (o, callback) ~> @set-state {"#{p}" : o}, callback
 
         # get options from props.children
         options-from-children = switch
-            | !!@props?.children => 
-                (if typeof! @props.children == \Array then @props.children else [@props.children]) |> map -> 
+            | !!@props?.children =>
+                (if typeof! @props.children == \Array then @props.children else [@props.children]) |> map ->
                     {value, children}? = it?.props
                     label: children, value: value
             | _ => []
@@ -279,11 +280,11 @@ module.exports = React.create-class do
 
         # filter options and create new one from search text
         filtered-options = @props.filter-options unfiltered-options, search
-        new-option = 
+        new-option =
             | typeof @props.create-from-search == \function => @props.create-from-search filtered-options, search
             | _ => null
 
-        # the final list of options is the concatination of any new-option, created from search, or [] with 
+        # the final list of options is the concatination of any new-option, created from search, or [] with
         # the list of filtered options
         options = (if !!new-option then [{} <<< new-option <<< new-option: true] else []) ++ filtered-options
 
@@ -299,7 +300,7 @@ module.exports = React.create-class do
             on-open-change: (open, callback) !~>
                 <~ on-open-change open
                 callback!
-                
+
                 # if props.editable is defined, then populate the search field with the result of `props.editable selected-value`
                 if !!@props.editable and (@is-open! and !!value)
                     <~ on-search-change "#{@props.editable value}#{if search.length == 1 then search else ''}"
@@ -329,21 +330,21 @@ module.exports = React.create-class do
             # highlight the currently select option (if any)
             | typeof index != \undefined => index
 
-            # highlight the first option if there is only one option            
+            # highlight the first option if there is only one option
             | options.length == 1 => 0
 
-            # highlight the first option if isn't coming from (create-from-search prop)            
+            # highlight the first option if isn't coming from (create-from-search prop)
             | (typeof options.0?.new-option) == \undefined => 0
 
             | _ =>
 
-                # highlight the first option if the remaining are not selectable                
+                # highlight the first option if the remaining are not selectable
                 if (options
                     |> drop 1
                     |> all -> (typeof it.selectable == \boolean) and !it.selectable)
                     0
 
-                # alas, highlight the second option 
+                # alas, highlight the second option
                 # happens when:
                 #  the first option is coming from `create-from-search` prop AND
                 #  number of options are greater than 1 AND
@@ -367,7 +368,7 @@ module.exports = React.create-class do
     highlight-first-selectable-option: (callback = (->)) !->
         if @state.open
             {options, value} = @get-computed-state!
-            @refs.select.highlight-and-scroll-to-selectable-option do 
+            @refs.select.highlight-and-scroll-to-selectable-option do
                 @first-option-index-to-highlight options, value
                 1
                 callback
