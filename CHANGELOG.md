@@ -53,7 +53,7 @@
 * css improvements
 
 ## v0.7.1 / 7th February 2016
-* bower support (using npmcdn)
+* bower support (using unpkg)
 
 ## v0.7.0 / 7th February 2016
 * umd build 

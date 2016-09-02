@@ -17,7 +17,7 @@
   "description": "A Stateless & Flexible Select component for React inspired by Selectize",
   "dependencies": {
     "bower-prelude-ls": "*",
-    "prelude-extension": "https://npmcdn.com/prelude-extension@0.0.13/bower.zip",
+    "prelude-extension": "https://unpkg.com/prelude-extension@0.0.13/bower.zip",
     "tether": "~1.1.1"
   },
   "moduleType": [
