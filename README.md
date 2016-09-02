@@ -51,14 +51,14 @@ to include the default styles add the following import statement to your stylus 
 `@import 'node_modules/react-selectize/themes/index.css'`
 
 * **bower:**
-`bower install https://npmcdn.com/react-selectize@2.0.3/bower.zip`
+`bower install https://unpkg.com/react-selectize@2.0.3/bower.zip`
 
 * **1998 script tag:**
 ```html
 <html>
  <head>
   <script src="http://www.preludels.com/prelude-browser-min.js" type="text/javascript" ></script>
-  <script src="https://npmcdn.com/prelude-extension@0.0.11/dist/index.min.js" type="text/javascript" ></script>
+  <script src="https://unpkg.com/prelude-extension@0.0.11/dist/index.min.js" type="text/javascript" ></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-with-addons.min.js" type="text/javascript" ></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.min.js" type="text/javascript" ></script>
 
@@ -66,10 +66,10 @@ to include the default styles add the following import statement to your stylus 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.1.1/js/tether.min.js" type="text/javascript" ></script>
 
   <!-- REACT SELECTIZE -->
-  <script src="https://npmcdn.com/react-selectize@2.0.3/dist/index.min.js" type="text/javascript" ></script>
+  <script src="https://unpkg.com/react-selectize@2.0.3/dist/index.min.js" type="text/javascript" ></script>
 
   <!-- THEMES (default, bootstrap3, material) -->
-  <link rel="stylesheet" href="https://npmcdn.com/react-selectize@2.0.3/dist/index.min.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/react-selectize@2.0.3/dist/index.min.css"/>
   
  </head>
 </html>
