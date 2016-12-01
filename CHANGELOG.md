@@ -1,5 +1,8 @@
 # React Selectize
 
+## 2.1.0 / 1st December 2016
+* added `on-blur-resets-input` thanks @dcalhoun
+
 ## 2.0.2 / 11th May 2016
 * simple select accepts 0 as value (thanks @Nyalab)
 
