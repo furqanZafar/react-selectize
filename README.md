@@ -97,7 +97,7 @@ import {ReactSelectize, SimpleSelect, MultiSelect} from 'react-selectize';
     options = ["apple", "mango", "orange", "banana"].map(
       fruit => ({label: fruit, value: fruit})
     );
-    onValuesChange = {alert(value)}
+    onValuesChange = {value => alert(value)}
 />
 ```
 
