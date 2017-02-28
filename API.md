@@ -5,7 +5,7 @@
 |    Property                |   Type                              |   Description                  |
 |----------------------------|-------------------------------------|--------------------------------|
 |    autofocus               | Boolean                             | opens the dropdown menu on load if set to true (defaults to false) |
-|    cancelKeyboardEventOnSelection | Boolean                      | defaults to true, set this to fale when using tab as a delimiter for example |
+|    cancelKeyboardEventOnSelection | Boolean                      | defaults to true, set this to false when using tab as a delimiter for example |
 |    className               | String                              | class name for the outer element, in addition to "simple-select"|
 |    createFromSearch        | [Item] -> String -> Item?           | implement this function to create new items on the fly, `(options, search){return {label: search, value: search}}`, return null to avoid option creation for the given parameters|
 |    defaultValue            | Item                                | similar to the defaultValue prop of React.DOM.Select |
