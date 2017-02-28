@@ -76,24 +76,17 @@ to include the default styles add the following import statement to your stylus 
 ```
 
 ## Usage (jsx)
-```javascript
-React = require("react");
-ReactSelectize = require("react-selectize");
-SimpleSelect = ReactSelectize.SimpleSelect;
-MultiSelect = ReactSelectize.MultiSelect;
+```jsx
+import React, {Component} from 'react';
+import {ReactSelectize, SimpleSelect, MultiSelect} from 'react-selectize';
 .
 .
 .
-<SimpleSelect
-    placeholder = "Select a fruit"
-    onValueChange = {function(value){
-        alert(value);        
-    }}
->
-    <option value = "apple">apple</option>
-    <option value = "mango">mango</option>
-    <option value = "orange">orange</option>
-    <option value = "banana">banana</option>
+<SimpleSelect placeholder="Select a fruit" onValueChange={value => alert(value)}>
+  <option value = "apple">apple</option>
+  <option value = "mango">mango</option>
+  <option value = "orange">orange</option>
+  <option value = "banana">banana</option>
 </SimpleSelect>
 .
 .
@@ -101,12 +94,10 @@ MultiSelect = ReactSelectize.MultiSelect;
 // Note: options can be passed as props as well, for example
 <MultiSelect
     placeholder = "Select fruits"
-    options = ["apple", "mango", "orange", "banana"].map(function(fruit){
-        return {label: fruit, value: fruit};
-    });
-    onValuesChange = {function(values){
-        alert(values);
-    }}
+    options = ["apple", "mango", "orange", "banana"].map(
+      fruit => ({label: fruit, value: fruit})
+    );
+    onValuesChange = {value => alert(value)}
 />
 ```
 
