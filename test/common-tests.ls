@@ -17,9 +17,9 @@ require! \assert
 }:TestUtils = require \react-addons-test-utils
 
 # utils
-{create-select, get-input, set-input-text, get-item-text, click-option, click-to-open-select-control, 
-click-on-the-document, find-highlighted-option, component-with-class-must-not-exist, press-backspace, 
-press-escape, press-tab, press-return, press-up-arrow, press-down-arrow, press-left-arrow, press-right-arrow, 
+{create-select, get-input, set-input-text, get-item-text, click-option, click-to-open-select-control,
+click-on-the-document, find-highlighted-option, component-with-class-must-not-exist, press-backspace,
+press-escape, press-tab, press-return, press-up-arrow, press-down-arrow, press-left-arrow, press-right-arrow,
 press-command-left}:utils = require \./utils
 
 # :: ReactClass -> Void
@@ -43,17 +43,17 @@ module.exports = (select-class) !->
     specify "must default the list of options to an empty list", ->
         select = create-select options: undefined
         click-to-open-select-control select
-        find-rendered-DOM-component-with-class select, \dropdown-menu
+        find-rendered-DOM-component-with-class select, \rs-dropdown-menu
 
     specify "must show the list of options on click", ->
         select = create-select!
         click-to-open-select-control select
-        find-rendered-DOM-component-with-class select, \dropdown-menu
+        find-rendered-DOM-component-with-class select, \rs-dropdown-menu
 
     specify "must open options dropdown on search change", ->
         select = create-select!
         set-input-text (get-input select), \text
-        find-rendered-DOM-component-with-class select, \dropdown-menu
+        find-rendered-DOM-component-with-class select, \rs-dropdown-menu
 
     specify "must filter options list on search change", ->
         select = create-select!
@@ -94,21 +94,21 @@ module.exports = (select-class) !->
         assert.equal (get-item-text find-rendered-DOM-component-with-class select, \simple-value), \apple
 
     specify "must use search from props instead of state when available", ->
-        select = create-select do 
+        select = create-select do
             search: \orange
         input = get-input select
         set-input-text input, \apple
         assert.equal input.value, \orange
 
     specify "must invoke on-search-change when the search (state) is changed", (done) ->
-        select = create-select do 
+        select = create-select do
             on-search-change: (search) ->
                 assert.equal search, \test
                 done!
         set-input-text (get-input select), \test
 
     specify "must invoke on-search-change when the search (prop) is changed", (done) ->
-        select = create-select do 
+        select = create-select do
             search: ""
             on-search-change: (search) ->
                 assert.equal search, \test
@@ -116,7 +116,7 @@ module.exports = (select-class) !->
         set-input-text (get-input select), \test
 
     specify "must restore search on pressing backspace", ->
-        select = create-select do 
+        select = create-select do
             restore-on-backspace: -> it.label.substr 0, it.label.length - 1
         click-to-open-select-control select
         click-option find-highlighted-option select
@@ -125,19 +125,19 @@ module.exports = (select-class) !->
         assert.equal (get-input select).value, \appl
 
     specify "must create new item from search", ->
-        select = create-select do 
-            create-from-search: (..., search) -> label: search, value: search 
+        select = create-select do
+            create-from-search: (..., search) -> label: search, value: search
         set-input-text (get-input select), \test
         assert.equal (get-item-text find-highlighted-option select), "Add test ..."
 
     specify "must not be interactive when disabled", ->
-        select = create-select do 
+        select = create-select do
             disabled: true
         click-to-open-select-control select
-        component-with-class-must-not-exist select, \dropdown-menu
+        component-with-class-must-not-exist select, \rs-dropdown-menu
 
     specify "must be able to render custom option", ->
-        select = create-select do 
+        select = create-select do
             render-option: ({label, value}) ->
                 div class-name: \custom-option,
                     span null, label
@@ -145,7 +145,7 @@ module.exports = (select-class) !->
         assert.equal (scry-rendered-DOM-components-with-class select, \custom-option).length > 0, true
 
     specify "must be able to render custom value", ->
-        select = create-select do 
+        select = create-select do
             render-value: ({label, value}) ->
                 div class-name: \custom-value,
                     span null, label
@@ -154,9 +154,9 @@ module.exports = (select-class) !->
         find-rendered-DOM-component-with-class select, \custom-value
 
     specify "must be able to create option groups", ->
-        select = create-select do 
+        select = create-select do
             groups: [{group-id: \asia, title: \Asia}, {group-id: \europe, title: \Europe}]
-            options: 
+            options:
                 * label: \Korea
                   value: \Korea
                   group-id: \asia
@@ -167,8 +167,8 @@ module.exports = (select-class) !->
         assert.equal (scry-rendered-DOM-components-with-class select, \simple-group-title).length, 2
 
     specify "unselectable options must not be selectable", ->
-        select = create-select do 
-            options: 
+        select = create-select do
+            options:
                 * label: \apple
                   value: \apple
                   selectable: false
@@ -177,7 +177,7 @@ module.exports = (select-class) !->
         component-with-class-must-not-exist select, \highlight
 
     specify "must apply custom class-name", ->
-        select = create-select do 
+        select = create-select do
             class-name: \test
         assert.equal ((find-DOM-node select).class-name.index-of \test) > -1, true
 
@@ -192,10 +192,10 @@ module.exports = (select-class) !->
         select = create-select!
         click-to-open-select-control select
         press-escape (get-input select)
-        component-with-class-must-not-exist select, \dropdown-menu
+        component-with-class-must-not-exist select, \rs-dropdown-menu
 
     specify "must render custom dom for 'no results found'", ->
-        select = create-select do 
+        select = create-select do
             render-no-results-found: -> div class-name: \custom-no-results-found, "no results found"
         click-to-open-select-control select
         set-input-text (get-input select), \test-case
@@ -205,7 +205,7 @@ module.exports = (select-class) !->
         select = create-select!
         click-to-open-select-control select
         input = get-input select
-        set-input-text input, \test 
+        set-input-text input, \test
         blur input
         assert.equal select.state.search, ""
 
@@ -214,7 +214,7 @@ module.exports = (select-class) !->
         focus (get-input models)
 
     specify "must call on-focus on open", (done) ->
-        models = create-select do 
+        models = create-select do
             on-focus: -> done!
         focus (get-input models)
 
@@ -225,7 +225,7 @@ module.exports = (select-class) !->
         assert.equal (scry-rendered-DOM-components-with-class select, \simple-option).length, 1
 
     specify "must use children (array) as options when props.options is undefined", ->
-        children = 
+        children =
             * option {key: \1, value: \1}, \1
             * option {key: \2, value: \2}, \2
             * option {key: \3, value: \3}, \3
@@ -244,23 +244,23 @@ module.exports = (select-class) !->
     specify "highlight-first-selectable-option must not open the select", ->
         select = create-select!
         select.highlight-first-selectable-option!
-        component-with-class-must-not-exist select, \dropdown-menu
+        component-with-class-must-not-exist select, \rs-dropdown-menu
 
     specify "must highlight the second option, when creating options from search & search results are non empty", ->
-        select = create-select do 
+        select = create-select do
             create-from-search: (..., search) -> label: search, value: search
         set-input-text (get-input select), \a
         assert.equal (get-item-text find-highlighted-option select), \apple
 
     specify "must highlight the first option, when creating options from search & the search results are unselectable", ->
-        select = create-select do 
+        select = create-select do
             options: <[apple mango grapes banana kiwi dates pie]> |> map ~> label: it, value: it, selectable: false
             create-from-search: (..., search) -> label: search, value: search
         set-input-text (get-input select), \app
         assert.equal (get-item-text find-highlighted-option select), "Add app ..."
 
     specify "must flip the dropdown direction when @props.dropdown-direction = -1", ->
-        select = create-select do 
+        select = create-select do
             dropdown-direction: -1
         assert.equal (find-DOM-node select .class-name .index-of \flipped) > -1, true
 
@@ -268,7 +268,7 @@ module.exports = (select-class) !->
         select = create-select!
         click-to-open-select-control select
         blur get-input select
-        component-with-class-must-not-exist select, \dropdown-menu
+        component-with-class-must-not-exist select, \rs-dropdown-menu
 
     specify "must deselect on clicking reset button", ->
         select = create-select!
@@ -281,29 +281,29 @@ module.exports = (select-class) !->
         select = TestUtils.render-into-document (create-element select-class, {options: null}, [])
         click-to-open-select-control select
         set-input-text (get-input select), \test
-        find-rendered-DOM-component-with-class select, \dropdown-menu
+        find-rendered-DOM-component-with-class select, \rs-dropdown-menu
         find-rendered-DOM-component-with-class select, \no-results-found
         component-with-class-must-not-exist \simple-option
 
     specify "setting disabled to true must hide the dropdown and block interactivity", ->
         container = document.create-element \div
-        select = render do 
-            create-element do 
+        select = render do
+            create-element do
                 select-class
                 options: []
             container
         click-to-open-select-control select
-        select = render do 
-            create-element do 
+        select = render do
+            create-element do
                 select-class
                 disabled: true
                 options: []
             container
-        component-with-class-must-not-exist select, \dropdown-menu
+        component-with-class-must-not-exist select, \rs-dropdown-menu
 
     specify "must work when passed null props and undefined children", ->
-        TestUtils.render-into-document do 
-            create-element do 
+        TestUtils.render-into-document do
+            create-element do
                 select-class
                 null
 
@@ -323,9 +323,9 @@ module.exports = (select-class) !->
         select = create-select!
         toggle-button = find-rendered-DOM-component-with-class select, \react-selectize-toggle-button
         mouse-down toggle-button
-        find-rendered-DOM-component-with-class select, \dropdown-menu
+        find-rendered-DOM-component-with-class select, \rs-dropdown-menu
         mouse-down toggle-button
-        component-with-class-must-not-exist select, \dropdown-menu
+        component-with-class-must-not-exist select, \rs-dropdown-menu
 
     specify "must wrap around on hitting the boundary", ->
         select = create-select!
@@ -353,25 +353,25 @@ module.exports = (select-class) !->
         select = create-select!
         click-to-open-select-control select
         select.blur!
-        component-with-class-must-not-exist \dropdown-menu
+        component-with-class-must-not-exist \rs-dropdown-menu
 
     specify "pressing down arrow key on a closed select must open and select the first option", ->
         select = create-select!
         press-down-arrow get-input select
-        find-rendered-DOM-component-with-class select, \dropdown-menu
+        find-rendered-DOM-component-with-class select, \rs-dropdown-menu
         assert \apple == get-item-text (find-rendered-DOM-component-with-class select, \highlight)
 
     specify "pressing up arrow key on a closed select must open and select the first option", ->
         select = create-select!
         press-up-arrow get-input select
-        find-rendered-DOM-component-with-class select, \dropdown-menu
+        find-rendered-DOM-component-with-class select, \rs-dropdown-menu
         assert \apple == get-item-text (find-rendered-DOM-component-with-class select, \highlight)
 
     specify "must not interfere with command + enter or control + enter", ->
         select = create-select!
         click-to-open-select-control select
         key-down (get-input select), which: 13, meta-key: true
-        find-rendered-DOM-component-with-class select, \dropdown-menu
+        find-rendered-DOM-component-with-class select, \rs-dropdown-menu
 
     specify "hide reset button when nothing is selected", ->
         select = create-select!
@@ -384,14 +384,14 @@ module.exports = (select-class) !->
         find-rendered-DOM-component-with-class select, \react-selectize-reset-button-container
 
     specify "props.hideResetButton must hide reset button", ->
-        select = create-select do 
+        select = create-select do
             hide-reset-button: true
         click-to-open-select-control select
         click-option find-highlighted-option select
         component-with-class-must-not-exist select, \react-selectize-reset-button-container
 
     specify "must pass props.inputProps to search field", ->
-        select = create-select do 
+        select = create-select do
             input-props: disabled: true
         input = get-input select
         assert input.disabled == true
