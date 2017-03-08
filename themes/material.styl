@@ -4,11 +4,11 @@
     font-family Roboto, sans-serif
 
 .react-selectize.material.root-node
-    
+
     &.open .react-selectize-control:after
         transform scaleX(1)
 
-    .react-selectize-control 
+    .react-selectize-control
         border-bottom 1px solid rgba(0, 0, 0, 0.3)
 
         &:after
@@ -32,16 +32,16 @@
     &.flipped
         margin-bottom 8px
 
-        .dropdown-menu
+        .rs-dropdown-menu
             transform-origin 100% 100%
 
     &:not(.flipped)
         margin-top 8px
 
-        .dropdown-menu
+        .rs-dropdown-menu
             transform-origin 0% 0%
 
-    .dropdown-menu
+    .rs-dropdown-menu
 
         &.custom-enter-active, &.custom-leave-active
             transition transform 250ms cubic-bezier(0.23, 1, 0.32, 1) 0ms, opacity 250ms cubic-bezier(0.23, 1, 0.32, 1) 0ms
@@ -62,7 +62,7 @@
             opacity 0
 
 // dropdown-menu present in document.body when props.tether is true
-.react-selectize.material.dropdown-menu
+.react-selectize.material.rs-dropdown-menu
     background-color white
     border-radius 2px
     box-shadow rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px
@@ -74,7 +74,7 @@
 
     &:not(.flipped)
         margin-top 8px
-    
+
     .no-results-found
         font-style oblique
         font-size 16px
