@@ -1,4 +1,4 @@
-# prelude ls 
+# prelude ls
 {filter, id, map} = require \prelude-ls
 
 {is-equal-to-object} = require \prelude-extension
@@ -28,25 +28,25 @@ module.exports = create-class do
         on-option-click: ((uid) !->) # (Eq e) => e -> ()
         on-scroll-lock-change: ((scroll-lock) !-> ) # Boolean -> ()
         options: [] # [Item]
-        
+
         # render-no-results-found :: () -> ReactElement
-        render-no-results-found: -> 
+        render-no-results-found: ->
             div class-name: \no-results-found, "No results found"
-        
+
         # render-group-title :: Int -> Group -> ReactElement
         render-group-title: (index, {group-id, title}?) ->
             div do
                 class-name: \simple-group-title
                 key: group-id
                 title
-        
+
         # render-option :: Int -> Item -> ReactElement
         render-option: ({label, new-option, selectable}?) ->
             is-selectable = (typeof selectable == \undefined) or selectable
-            div do 
+            div do
                 class-name: "simple-option #{if is-selectable then '' else 'not-selectable'}"
                 span null, if !!new-option then "Add #{label} ..." else label
-        
+
         scroll-lock: false
         style: {}
         tether: false
@@ -68,7 +68,7 @@ module.exports = create-class do
             tethered: @props.tether
 
         # (TETHERED / ANIMATED / SIMPLE) DROPDOWN
-        if @props.tether 
+        if @props.tether
             ReactTether do
                 {} <<< @props.tether-props <<<
                     options:
@@ -85,9 +85,9 @@ module.exports = create-class do
     # render-animated-dropdown :: ComputedState -> ReactElement
     render-animated-dropdown: ({dynamic-class-name}:computed-state) ->
         if !!@props.transition-enter or !!@props.transition-leave
-            ReactCSSTransitionGroup do 
+            ReactCSSTransitionGroup do
                 component: \div
-                transition-name: \custom 
+                transition-name: \custom
                 transition-enter: @props.transition-enter
                 transition-leave: @props.transition-leave
                 transition-enter-timeout: @props.transition-enter-timeout
@@ -105,7 +105,7 @@ module.exports = create-class do
             option = options[index]
             uid = @props.uid option
 
-            # OPTION WRAPPER 
+            # OPTION WRAPPER
             OptionWrapper do
                 {
                     uid
@@ -114,12 +114,12 @@ module.exports = create-class do
                     item: option
                     highlight: @props.highlighted-uid `is-equal-to-object` uid
                     selectable: option?.selectable
-                    
-                    on-mouse-move: ({current-target}) !~> 
+
+                    on-mouse-move: ({current-target}) !~>
                         if @props.scroll-lock
                             @props.on-scroll-lock-change false
-                    
-                    on-mouse-out: !~>  
+
+                    on-mouse-out: !~>
                         if !@props.scroll-lock
                             <~ @props.on-highlighted-uid-change undefined
 
@@ -129,39 +129,39 @@ module.exports = create-class do
                     | (typeof option?.selectable == \boolean) and !option.selectable => on-click: cancel-event
                     | _ =>
                         on-click: !~> @props.on-option-click @props.highlighted-uid
-                        on-mouse-over: ({current-target}) !~>  
+                        on-mouse-over: ({current-target}) !~>
                             if !@props.scroll-lock
                                 <~ @props.on-highlighted-uid-change uid
 
     # render-dropdown :: ComputedState -> ReactElement
     render-dropdown: ({dynamic-class-name}) ->
         if @props.open
-            
+
             # DROPDOWN
-            DivWrapper do 
-                class-name: "dropdown-menu #{dynamic-class-name}"
+            DivWrapper do
+                class-name: "rs-dropdown-menu #{dynamic-class-name}"
                 ref: \dropdownMenu
 
                 # on-height-change :: Number -> ()
-                on-height-change: (height) !~> 
+                on-height-change: (height) !~>
                     if @refs.dropdown-menu-wrapper
                         find-DOM-node @refs.dropdown-menu-wrapper .style.height = "#{height}px"
 
-                # NO RESULT FOUND   
+                # NO RESULT FOUND
                 if @props.options.length == 0
                     @props.render-no-results-found!
-                
+
                 else if @props?.groups?.length > 0
 
                     # convert [Group] to [{index: Int, group: Group, options: [Item]}]
-                    groups = [0 til @props.groups.length] |> map (index) ~>  
+                    groups = [0 til @props.groups.length] |> map (index) ~>
                         {group-id}:group = @props.groups[index]
                         options = @props.options |> filter ~> (@props.group-id it) == group-id
                         {index, group, options}
 
                     # GROUPS
                     div class-name: "groups #{if !!@props.groups-as-columns then 'as-columns' else ''}",
-                        groups 
+                        groups
                         |> filter (.options.length > 0)
                         |> map ({index, {group-id}:group, options}) ~>
 
@@ -170,7 +170,7 @@ module.exports = create-class do
                                 @props.render-group-title index, group, options
 
                                 # OPTIONS
-                                div do 
+                                div do
                                     class-name: \options
                                     @render-options options
 
@@ -185,10 +185,10 @@ module.exports = create-class do
     # component-did-update :: () -> ()
     component-did-update: !->
         dropdown-menu = find-DOM-node @refs.dropdown-menu-wrapper ? @refs.dropdown-menu
-            ..?style.bottom = switch 
-                | @props.dropdown-direction == -1 => 
+            ..?style.bottom = switch
+                | @props.dropdown-direction == -1 =>
                     "#{@props.bottom-anchor!.offset-height + dropdown-menu.style.margin-bottom}px"
-                    
+
                 | _ => ""
 
     # highlight-and-scroll-to-option :: Int, (() -> ())? -> ()
@@ -222,7 +222,7 @@ module.exports = create-class do
 
     # highlight-and-scroll-to-selectable-option :: Int, Int, (Boolean -> ())? -> ()
     highlight-and-scroll-to-selectable-option: (index, direction, callback = (->)) !->
-        
+
         # end recursion if the index violates the bounds
         if index < 0 or index >= @props.options.length
             <~ @props.on-highlighted-uid-change undefined
