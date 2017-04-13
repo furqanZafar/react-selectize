@@ -130,8 +130,9 @@ module.exports = create-class do
                     | _ =>
                         on-click: !~> @props.on-option-click @props.highlighted-uid
                         on-mouse-over: ({current-target}) !~>  
-                            if !@props.scroll-lock
-                                <~ @props.on-highlighted-uid-change uid
+                            if !@window.touchstart
+                                if !@props.scroll-lock
+                                    <~ @props.on-highlighted-uid-change uid
 
     # render-dropdown :: ComputedState -> ReactElement
     render-dropdown: ({dynamic-class-name}) ->
