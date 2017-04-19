@@ -3,8 +3,9 @@
 {find-DOM-node} = require \react-dom
 AceEditor = create-factory require \./AceEditor.ls
 {debounce} = require \underscore
+create-react-class = require \create-react-class
 
-module.exports = React.create-class do
+module.exports = create-react-class do
 
     display-name: \Example
 

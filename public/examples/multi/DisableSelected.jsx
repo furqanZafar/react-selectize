@@ -1,6 +1,6 @@
 // MultiSelect = require("react-selectize").MultiSelect
 
-Form = React.createClass({
+Form = createReactClass({
     
     // render :: a -> ReactElement
     render: function(){

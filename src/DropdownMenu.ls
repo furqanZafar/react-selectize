@@ -2,7 +2,8 @@
 {filter, id, map} = require \prelude-ls
 
 {is-equal-to-object} = require \prelude-extension
-{DOM:{div, input, span}, create-class, create-factory}:React = require \react
+{DOM:{div, input, span}, create-factory}:React = require \react
+create-react-class = require \create-react-class
 {find-DOM-node} = require \react-dom
 ReactCSSTransitionGroup = create-factory require \react-addons-css-transition-group
 ReactTether = create-factory require \./ReactTether
@@ -10,7 +11,7 @@ DivWrapper = create-factory require \./DivWrapper
 OptionWrapper = create-factory require \./OptionWrapper
 {cancel-event, class-name-from-object} = require \./utils
 
-module.exports = create-class do
+module.exports = create-react-class do
 
     display-name: \DropdownMenu
 

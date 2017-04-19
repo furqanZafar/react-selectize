@@ -7,9 +7,9 @@ require \brace/mode/livescript
 require \brace/theme/chrome
 {each} = require \prelude-ls
 {DOM:{div}}:React = require \react
+create-react-class = require \create-react-class
 
-
-module.exports = React.create-class {
+module.exports = create-react-class {
 
     display-name: \AceEditor
 

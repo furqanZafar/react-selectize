@@ -3,7 +3,7 @@
 // HighlightedText = ReactSelectize.HighlightedText
 // SimpleSelect = ReactSelectize.SimpleSelect
 
-Form = React.createClass({
+Form = createReactClass({
     
     // render :: a -> ReactElement
     render: function(){

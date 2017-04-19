@@ -1,4 +1,4 @@
-Form = React.createClass({
+Form = createReactClass({
     
     // render :: a -> ReactElement
     render: function() {

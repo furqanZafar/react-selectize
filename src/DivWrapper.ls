@@ -1,8 +1,9 @@
-{create-class, DOM:{div}} = require \react
+{DOM:{div}} = require \react
+create-react-class = require \create-react-class
 
 # used to detect when the dropdown has been added/removed from dom, 
 # so we can adjust the height of the parent element
-module.exports = create-class do 
+module.exports = create-react-class do
 
     # get-default-props :: () -> Props
     get-default-props: ->

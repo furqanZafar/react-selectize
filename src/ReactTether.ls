@@ -1,9 +1,9 @@
-{create-class} = require \react
+create-react-class = require \create-react-class
 {render, unmount-component-at-node} = require \react-dom
 shallow-compare = require \react-addons-shallow-compare
 Tether = require \tether
 
-module.exports = create-class do 
+module.exports = create-react-class do
 
     # get-default-props :: () -> Props
     get-default-props: ->

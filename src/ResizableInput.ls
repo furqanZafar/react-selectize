@@ -1,8 +1,9 @@
 {each, obj-to-pairs} = require \prelude-ls
-{DOM:{input}, create-class, create-factory}:React = require \react
+{DOM:{input}, create-factory}:React = require \react
+create-react-class = require \create-react-class
 {find-DOM-node} = require \react-dom
 
-module.exports = create-class do
+module.exports = create-react-class do
 
     display-name: \ResizableInput
 

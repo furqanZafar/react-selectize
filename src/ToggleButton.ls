@@ -1,7 +1,8 @@
-{create-class, create-factory, DOM:{path}} = require \react
+{create-factory, DOM:{path}} = require \react
+create-react-class = require \create-react-class
 SvgWrapper = create-factory require \./SvgWrapper
 
-module.exports = create-class do 
+module.exports = create-react-class do
 
     # get-default-props :: () -> Props
     get-default-props: ->
