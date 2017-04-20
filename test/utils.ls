@@ -6,7 +6,7 @@
     find-rendered-DOM-component-with-class
     find-rendered-DOM-component-with-tag
     Simulate:{change, click, key-down, mouse-down}
-}:TestUtils = require \react-addons-test-utils
+}:TestUtils = require \react-dom/test-utils
 
 # create-select :: Select -> Props -> Select
 export create-select = (select-class, props, children) -->

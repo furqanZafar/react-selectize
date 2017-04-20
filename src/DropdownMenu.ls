@@ -5,7 +5,7 @@
 {DOM:{div, input, span}, create-factory}:React = require \react
 create-react-class = require \create-react-class
 {find-DOM-node} = require \react-dom
-ReactCSSTransitionGroup = create-factory require \react-addons-css-transition-group
+ReactCSSTransitionGroup = create-factory require \react-transition-group/CSSTransitionGroup
 ReactTether = create-factory require \./ReactTether
 DivWrapper = create-factory require \./DivWrapper
 OptionWrapper = create-factory require \./OptionWrapper
@@ -94,7 +94,7 @@ module.exports = create-react-class do
                 transition-enter-timeout: @props.transition-enter-timeout
                 transition-leave-timeout: @props.transition-leave-timeout
                 class-name: "dropdown-menu-wrapper #{dynamic-class-name}"
-                ref: \dropdownMenuWrapper
+                ref: (element) -> @dropdown-menu-wrapper = element
                 @render-dropdown computed-state
 
         else
@@ -141,12 +141,12 @@ module.exports = create-react-class do
             # DROPDOWN
             DivWrapper do 
                 class-name: "dropdown-menu #{dynamic-class-name}"
-                ref: \dropdownMenu
+                ref: (element) -> !!element && @dropdown-menu = element
 
                 # on-height-change :: Number -> ()
                 on-height-change: (height) !~> 
-                    if @refs.dropdown-menu-wrapper
-                        find-DOM-node @refs.dropdown-menu-wrapper .style.height = "#{height}px"
+                    if @dropdown-menu-wrapper
+                        find-DOM-node @dropdown-menu-wrapper .style.height = "#{height}px"
 
                 # NO RESULT FOUND   
                 if @props.options.length == 0
@@ -185,7 +185,7 @@ module.exports = create-react-class do
 
     # component-did-update :: () -> ()
     component-did-update: !->
-        dropdown-menu = find-DOM-node @refs.dropdown-menu-wrapper ? @refs.dropdown-menu
+        dropdown-menu = find-DOM-node @dropdown-menu-wrapper ? @dropdown-menu
             ..?style.bottom = switch 
                 | @props.dropdown-direction == -1 => 
                     "#{@props.bottom-anchor!.offset-height + dropdown-menu.style.margin-bottom}px"
@@ -202,7 +202,7 @@ module.exports = create-react-class do
         option-element? = find-DOM-node @refs?["option-#{@uid-to-string uid}"]
 
         if !!option-element
-            parent-element = find-DOM-node @refs.dropdown-menu
+            parent-element = option-element.parent-element
             option-height = option-element.offset-height - 1
 
             # in other words, if the option element is below the visible region

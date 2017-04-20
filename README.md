@@ -161,10 +161,10 @@ the `uid` function is used internally for performance optimization.
 * [tether](https://github.com/HubSpot/tether)
 
 ## Peer Deps
+* create-react-class
 * react
 * react-dom
-* react-addons-css-transition-group
-* react-addons-shallow-compare
+* react-transition-group
 
 ## Development
 * `npm install`

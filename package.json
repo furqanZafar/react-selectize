@@ -17,16 +17,14 @@
   "peerDependencies": {
     "create-react-class": "^15.0.0",
     "react": "^0.14.0 || ^15.0.0",
-    "react-addons-css-transition-group": "^0.14.0 || ^15.0.0",
-    "react-addons-shallow-compare": "^0.14.0 || ^15.0.0",
+    "react-transition-group": "^1.1.2",
     "react-dom": "^0.14.0 || ^15.0.0"
   },
   "browserify-shim": {
     "create-react-class": "global:createReactClass",
     "prelude-extension": "global:preludeExtension",
     "react": "global:React",
-    "react-addons-css-transition-group": "global:React.addons.CSSTransitionGroup",
-    "react-addons-shallow-compare": "global:React.addons.shallowCompare",
+    "react-transition-group": "global:ReactTransitionGroup",
     "react-dom": "global:ReactDOM",
     "tether": "global:Tether"
   },
@@ -56,9 +54,7 @@
     "mocha-lcov-reporter": "^1.0.0",
     "nib": "^1.1.0",
     "react": "^0.14.0 || ^15.0.0",
-    "react-addons-css-transition-group": "^0.14.0 || ^15.0.0",
-    "react-addons-shallow-compare": "^0.14.0 || ^15.0.0",
-    "react-addons-test-utils": "^0.14.0 || ^15.0.0",
+    "react-transition-group": "^1.1.2",
     "react-dom": "^0.14.0 || ^15.0.0",
     "react-router": "3.0.5",
     "react-tools": "^0.13.3",

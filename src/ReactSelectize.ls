@@ -6,7 +6,6 @@ partition, reject, reverse, Str, sort-by, sum, values} = require \prelude-ls
 {DOM:{div, input, path, span, svg}, create-factory}:React = require \react
 create-react-class = require \create-react-class
 {find-DOM-node} = require \react-dom
-ReactCSSTransitionGroup = create-factory require \react-addons-css-transition-group
 ToggleButton = create-factory require \./ToggleButton
 DropdownMenu = create-factory require \./DropdownMenu
 OptionWrapper = create-factory require \./OptionWrapper

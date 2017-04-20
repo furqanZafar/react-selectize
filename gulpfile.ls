@@ -104,8 +104,7 @@ create-standalone-build = (minify, {file, directory}) ->
         .exclude \prelude-extension
         .exclude \react
         .exclude \react-dom
-        .exclude \react-addons-css-transition-group
-        .exclude \react-addons-shallow-compare
+        .exclude \react-transition-group
         .exclude \tether
         .transform browserify-shim
         .bundle!

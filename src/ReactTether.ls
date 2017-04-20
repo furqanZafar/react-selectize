@@ -1,12 +1,12 @@
-create-react-class = require \create-react-class
+React = require \react
 {render, unmount-component-at-node} = require \react-dom
-shallow-compare = require \react-addons-shallow-compare
 Tether = require \tether
 
-module.exports = create-react-class do
+class ReactTether extends React.PureComponent
+    ->
 
     # get-default-props :: () -> Props
-    get-default-props: ->
+    @default-props =
         # target :: () -> DOMElement (invoked on component-did-mount)
         # options :: object (passed to Tether instance)
         # parent-element :: () -> DOMElement
@@ -60,8 +60,7 @@ module.exports = create-react-class do
             } <<< new-props.options
             render new-props.children, @node, ~> @tether.position!
 
-    # should-component-update :: Props -> UIState -> Boolean
-    should-component-update: (next-props, next-state) -> shallow-compare @, next-props, next-state
-
     # component-will-unmount :: () -> Void
     component-will-unmount: !-> @destroy-tether!
+
+module.exports = ReactTether
