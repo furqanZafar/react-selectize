@@ -16,6 +16,7 @@
   ],
   "description": "A Stateless & Flexible Select component for React inspired by Selectize",
   "dependencies": {
+    "create-react-class": "^15.5.2",
     "bower-prelude-ls": "*",
     "prelude-extension": "https://npmcdn.com/prelude-extension@0.0.13/bower.zip",
     "tether": "~1.1.1"

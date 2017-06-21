@@ -4,7 +4,8 @@ require! \./common-tests
 ReactSelectize = require \../src/index.ls
 
 # React
-{create-class, create-element, DOM:{div, option, span}} = require \react
+{create-element, DOM:{div, option, span}} = require \react
+create-react-class = require \create-react-class
 {find-DOM-node} = require \react-dom
 
 # TestUtils
@@ -14,7 +15,7 @@ ReactSelectize = require \../src/index.ls
     scry-rendered-DOM-components-with-class
     scry-rendered-DOM-components-with-tag
     Simulate:{change, click, focus}
-}:TestUtils = require \react-addons-test-utils
+}:TestUtils = require \react-dom/test-utils
 
 # utils
 {create-select, get-input, set-input-text, get-item-text, click-option, click-to-open-select-control, find-highlighted-option, 
@@ -102,7 +103,7 @@ describe "SimpleSelect", ->
         assert.equal select.value!.label, \mango
 
     specify "must be able to block default backspace action", ->
-        {refs:{select}} = TestUtils.render-into-document create-element create-class do
+        {refs:{select}} = TestUtils.render-into-document create-element create-react-class do
             render: ->
                 create-element do 
                     ReactSelectize.SimpleSelect

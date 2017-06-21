@@ -3,9 +3,9 @@
 partition, reject, reverse, Str, sort-by, sum, values} = require \prelude-ls
 
 {clamp, is-equal-to-object} = require \prelude-extension
-{DOM:{div, input, path, span, svg}, create-class, create-factory}:React = require \react
+{DOM:{div, input, path, span, svg}, create-factory}:React = require \react
+create-react-class = require \create-react-class
 {find-DOM-node} = require \react-dom
-ReactCSSTransitionGroup = create-factory require \react-addons-css-transition-group
 ToggleButton = create-factory require \./ToggleButton
 DropdownMenu = create-factory require \./DropdownMenu
 OptionWrapper = create-factory require \./OptionWrapper
@@ -14,7 +14,7 @@ ResetButton = create-factory require \./ResetButton
 ResizableInput = create-factory require \./ResizableInput
 {cancel-event, class-name-from-object} = require \./utils
 
-module.exports = create-class do
+module.exports = create-react-class do
 
     display-name: \ReactSelectize
 

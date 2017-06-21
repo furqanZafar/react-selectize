@@ -11,11 +11,12 @@ require! \react-router
 Link = create-factory react-router.Link
 Route = create-factory react-router.Route
 Router = create-factory react-router.Router
-create-history = require \history/lib/createHashHistory
+hash-history = require \react-router/lib/HashHistory
 require! \react-tools
 Example = create-factory require \./Example.ls
 {HighlightedText, SimpleSelect, MultiSelect, ReactSelectize} = require \index.ls
 _ = require \underscore
+create-react-class = require \create-react-class
 
 examples = 
     multi:
@@ -207,7 +208,7 @@ This demo shows how to integrate third-party data from cdn.js
             ls: fs.read-file-sync \public/examples/simple/RemoteOptions.ls, \utf8 
         ...
 
-App = React.create-class do
+App = create-react-class do
 
     display-name: \App
 
@@ -279,6 +280,6 @@ App = React.create-class do
 
 render do 
     Router do 
-        history: create-history query-key: false
+        history: hash-history # query-key: false
         Route path: \/, component: App
     document.get-element-by-id \mount-node

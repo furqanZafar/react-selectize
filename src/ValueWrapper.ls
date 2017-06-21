@@ -1,7 +1,8 @@
-{create-class, DOM:{div}} = require \react
+{DOM:{div}} = require \react
+create-react-class = require \create-react-class
 {is-equal-to-object} = require \prelude-extension
 
-module.exports = create-class do 
+module.exports = create-react-class do
 
     # get-default-porps :: () -> Props
     get-default-props: ->

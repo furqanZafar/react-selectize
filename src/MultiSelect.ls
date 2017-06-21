@@ -2,10 +2,11 @@
 last, map, reject} = require \prelude-ls
 {is-equal-to-object} = require \prelude-extension
 {create-factory, DOM:{div, img, span}}:React = require \react
+create-react-class = require \create-react-class
 ReactSelectize = create-factory require \./ReactSelectize 
 {cancel-event} = require \./utils
 
-module.exports = React.create-class do
+module.exports = create-react-class do
 
     display-name: \MultiSelect
 

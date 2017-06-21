@@ -4,7 +4,7 @@ require! \./common-tests
 ReactSelectize = require \../src/index.ls
 
 # React
-{create-class, create-element, DOM:{div, option, span}} = require \react
+{create-element, DOM:{div, option, span}} = require \react
 {find-DOM-node} = require \react-dom
 
 # TestUtils
@@ -13,7 +13,7 @@ ReactSelectize = require \../src/index.ls
     scry-rendered-DOM-components-with-class, 
     find-rendered-DOM-component-with-tag
     Simulate:{change, click, focus, key-down, paste}
-}:TestUtils = require \react-addons-test-utils
+}:TestUtils = require \react-dom/test-utils
 
 # utils
 {create-select, get-input, set-input-text, get-item-text, click-option, click-to-open-select-control, 

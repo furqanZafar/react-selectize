@@ -1,7 +1,8 @@
 # {partition-string} = require \prelude-extension
 # {HighlightedText, SimpleSelect} = require \ReactSelectize
 
-Form = React.create-class do 
+create-react-class = require \create-react-class
+Form = create-react-class do
     
     # render :: a -> ReactElement
     render: ->

@@ -1,7 +1,8 @@
-{create-class, DOM:{div, span}}:React = require \react
+{DOM:{div, span}}:React = require \react
+create-react-class = require \create-react-class
 {map} = require \prelude-ls
 
-module.exports = create-class do 
+module.exports = create-react-class do
 
     # get-default-props :: a -> Props
     get-default-props: ->

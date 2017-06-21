@@ -3,7 +3,7 @@ require! \assert
 {is-equal-to-object} = require \prelude-extension
 
 # React
-{create-class, create-element, DOM:{div, input, option, span}} = require \react
+{create-element, DOM:{div, input, option, span}} = require \react
 {find-DOM-node, render, unmount-component-at-node} = require \react-dom
 
 # TestUtils
@@ -14,7 +14,7 @@ require! \assert
     scry-rendered-DOM-components-with-tag
     key-down
     Simulate:{blur, change, click, focus, key-down, mouse-down, mouse-over, mouse-out, mouse-move}
-}:TestUtils = require \react-addons-test-utils
+}:TestUtils = require \react-dom/test-utils
 
 # utils
 {create-select, get-input, set-input-text, get-item-text, click-option, click-to-open-select-control, 

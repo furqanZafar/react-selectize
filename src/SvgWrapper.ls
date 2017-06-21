@@ -1,8 +1,9 @@
-{create-class, DOM:{svg}} = require \react
+{DOM:{svg}} = require \react
+create-react-class = require \create-react-class
 {find-DOM-node} = require \react-dom
 
 # set the focusable attribute to false, this prevents having to press the tab key multiple times in IE
-module.exports = create-class do 
+module.exports = create-react-class do
 
     # render :: () -> ReactElement
     render: -> svg @props
