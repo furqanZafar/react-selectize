@@ -94,9 +94,9 @@ import {ReactSelectize, SimpleSelect, MultiSelect} from 'react-selectize';
 // Note: options can be passed as props as well, for example
 <MultiSelect
     placeholder = "Select fruits"
-    options = ["apple", "mango", "orange", "banana"].map(
+    options = {["apple", "mango", "orange", "banana"].map(
       fruit => ({label: fruit, value: fruit})
-    );
+    )}
     onValuesChange = {value => alert(value)}
 />
 ```
