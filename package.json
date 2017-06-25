@@ -19,7 +19,8 @@
     "prop-types": "^15.5.0",
     "react": "^0.14.0 || ^15.0.0",
     "react-transition-group": "^1.1.2",
-    "react-dom": "^0.14.0 || ^15.0.0"
+    "react-dom": "^0.14.0 || ^15.0.0",
+    "react-dom-factories": "^1.0.0"
   },
   "browserify-shim": {
     "create-react-class": "global:createReactClass",
@@ -28,6 +29,7 @@
     "react": "global:React",
     "react-transition-group": "global:ReactTransitionGroup",
     "react-dom": "global:ReactDOM",
+    "react-dom-factories": "global:ReactDOMFactories",
     "tether": "global:Tether"
   },
   "devDependencies": {
@@ -57,10 +59,11 @@
     "nib": "^1.1.0",
     "prop-types": "^15.5.0",
     "react": "^0.14.0 || ^15.0.0",
-    "react-transition-group": "^1.1.2",
     "react-dom": "^0.14.0 || ^15.0.0",
+    "react-dom-factories": "^1.0.0",
     "react-router": "3.0.5",
     "react-tools": "^0.13.3",
+    "react-transition-group": "^1.1.2",
     "run-sequence": "^1.1.5",
     "should": "^7.1.0",
     "underscore": "^1.8.3",

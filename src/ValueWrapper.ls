@@ -1,4 +1,4 @@
-{DOM:{div}} = require \react
+{div} = require \react-dom-factories
 create-react-class = require \create-react-class
 {is-equal-to-object} = require \prelude-extension
 

@@ -1,4 +1,4 @@
-{DOM:{svg}} = require \react
+{svg} = require \react-dom-factories
 create-react-class = require \create-react-class
 {find-DOM-node} = require \react-dom
 

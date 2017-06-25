@@ -1,7 +1,7 @@
-React = require \react
+{create-factory}:React = require \react
 prop-types = require \prop-types
 {each, obj-to-pairs} = require \prelude-ls
-{DOM:{input}, create-factory}:React = require \react
+{input} = require \react-dom-factories
 
 class ResizableInput extends React.Component
     ->

@@ -2,7 +2,8 @@
 {filter, id, map} = require \prelude-ls
 
 {is-equal-to-object} = require \prelude-extension
-{DOM:{div, input, span}, create-factory}:React = require \react
+{create-factory}:React = require \react
+{div, input, span} = require \react-dom-factories
 create-react-class = require \create-react-class
 {find-DOM-node} = require \react-dom
 ReactCSSTransitionGroup = create-factory require \react-transition-group/CSSTransitionGroup

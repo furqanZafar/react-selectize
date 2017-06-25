@@ -3,7 +3,8 @@
 partition, reject, reverse, Str, sort-by, sum, values} = require \prelude-ls
 
 {clamp, is-equal-to-object} = require \prelude-extension
-{DOM:{div, input, path, span, svg}, create-factory}:React = require \react
+{create-factory}:React = require \react
+{div, input, path, span, svg} = require \react-dom-factories
 create-react-class = require \create-react-class
 {find-DOM-node} = require \react-dom
 ToggleButton = create-factory require \./ToggleButton

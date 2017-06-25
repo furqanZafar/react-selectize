@@ -1,4 +1,4 @@
-{DOM:{div, span}}:React = require \react
+{div, span} = require \react-dom-factories
 create-react-class = require \create-react-class
 {map} = require \prelude-ls
 

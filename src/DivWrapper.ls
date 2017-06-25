@@ -1,4 +1,4 @@
-{DOM:{div}} = require \react
+{div} = require \react-dom-factories
 create-react-class = require \create-react-class
 
 # used to detect when the dropdown has been added/removed from dom, 

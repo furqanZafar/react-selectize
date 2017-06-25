@@ -6,7 +6,8 @@ require \brace/mode/jsx
 require \brace/mode/livescript
 require \brace/theme/chrome
 {each} = require \prelude-ls
-{DOM:{div}}:React = require \react
+React = require \react
+{div} = require \react-dom-factories
 create-react-class = require \create-react-class
 
 module.exports = create-react-class {

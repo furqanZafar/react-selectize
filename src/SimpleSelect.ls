@@ -1,6 +1,7 @@
 {all, any, drop, camelize, difference, filter, find, find-index, id, last, map, reject} = require \prelude-ls
 {is-equal-to-object} = require \prelude-extension
-{create-factory, DOM:{div, img, span}}:React = require \react
+{create-factory}:React = require \react
+{div, img, span} = require \react-dom-factories
 create-react-class = require \create-react-class
 ReactSelectize = create-factory require \./ReactSelectize
 {cancel-event} = require \./utils
