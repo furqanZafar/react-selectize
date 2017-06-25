@@ -35,7 +35,7 @@ module.exports = (select-class) !->
 
     specify "non empty select must not have placeholder", ->
         {refs}:select = create-select!
-        input = find-DOM-node refs.select.refs.search
+        input = find-DOM-node refs.select.search-element
             ..value = \test
         change input
         component-with-class-must-not-exist select, \react-selectize-placeholder
