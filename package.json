@@ -16,6 +16,7 @@
   },
   "peerDependencies": {
     "create-react-class": "^15.0.0",
+    "prop-types": "^15.5.0",
     "react": "^0.14.0 || ^15.0.0",
     "react-transition-group": "^1.1.2",
     "react-dom": "^0.14.0 || ^15.0.0"
@@ -23,6 +24,7 @@
   "browserify-shim": {
     "create-react-class": "global:createReactClass",
     "prelude-extension": "global:preludeExtension",
+    "prop-types": "global:PropTypes",
     "react": "global:React",
     "react-transition-group": "global:ReactTransitionGroup",
     "react-dom": "global:ReactDOM",
@@ -53,6 +55,7 @@
     "mocha": "^2.3.3",
     "mocha-lcov-reporter": "^1.0.0",
     "nib": "^1.1.0",
+    "prop-types": "^15.5.0",
     "react": "^0.14.0 || ^15.0.0",
     "react-transition-group": "^1.1.2",
     "react-dom": "^0.14.0 || ^15.0.0",
