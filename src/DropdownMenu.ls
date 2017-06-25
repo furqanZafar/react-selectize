@@ -85,6 +85,7 @@ module.exports = create-react-class do
 
     # render-animated-dropdown :: ComputedState -> ReactElement
     render-animated-dropdown: ({dynamic-class-name}:computed-state) ->
+        this-ref = @
         if !!@props.transition-enter or !!@props.transition-leave
             ReactCSSTransitionGroup do 
                 component: \div
@@ -94,7 +95,7 @@ module.exports = create-react-class do
                 transition-enter-timeout: @props.transition-enter-timeout
                 transition-leave-timeout: @props.transition-leave-timeout
                 class-name: "dropdown-menu-wrapper #{dynamic-class-name}"
-                ref: (element) -> @dropdown-menu-wrapper = element
+                ref: (element) -> this-ref.dropdown-menu-wrapper = element
                 @render-dropdown computed-state
 
         else
@@ -129,23 +130,20 @@ module.exports = create-react-class do
                     switch
                     | (typeof option?.selectable == \boolean) and !option.selectable => on-click: cancel-event
                     | _ =>
-                        on-click: !~> 
-                            if !@props.scroll-lock
-                                <~ @props.on-highlighted-uid-change uid
-                            @props.on-option-click @props.highlighted-uid
+                        on-click: !~> @props.on-option-click @props.highlighted-uid
                         on-mouse-over: ({current-target}) !~>  
-                            if 'ontouchstart' of window => return false
                             if !@props.scroll-lock
                                 <~ @props.on-highlighted-uid-change uid
 
     # render-dropdown :: ComputedState -> ReactElement
     render-dropdown: ({dynamic-class-name}) ->
+        this-ref = @
         if @props.open
             
             # DROPDOWN
             DivWrapper do 
                 class-name: "dropdown-menu #{dynamic-class-name}"
-                ref: (element) -> !!element && @dropdown-menu = element
+                ref: (element) -> this-ref.dropdown-menu = element
 
                 # on-height-change :: Number -> ()
                 on-height-change: (height) !~> 
@@ -189,12 +187,13 @@ module.exports = create-react-class do
 
     # component-did-update :: () -> ()
     component-did-update: !->
-        dropdown-menu = find-DOM-node @dropdown-menu-wrapper ? @dropdown-menu
-            ..?style.bottom = switch 
-                | @props.dropdown-direction == -1 => 
-                    "#{@props.bottom-anchor!.offset-height + dropdown-menu.style.margin-bottom}px"
-                    
-                | _ => ""
+        dropdown-menu = find-DOM-node (@dropdown-menu-wrapper or @dropdown-menu)
+        return if !@props.open or !dropdown-menu
+        dropdown-menu.style.bottom = switch 
+        | @props.dropdown-direction == -1 => 
+            "#{@props.bottom-anchor!.offset-height + dropdown-menu.style.margin-bottom}px"
+
+        | _ => ""
 
     # highlight-and-scroll-to-option :: Int, (() -> ())? -> ()
     highlight-and-scroll-to-option: (index, callback = (->)) !->
