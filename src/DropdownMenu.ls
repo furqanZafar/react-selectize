@@ -130,8 +130,12 @@ module.exports = create-react-class do
                     switch
                     | (typeof option?.selectable == \boolean) and !option.selectable => on-click: cancel-event
                     | _ =>
-                        on-click: !~> @props.on-option-click @props.highlighted-uid
+                        on-click: !~>
+                            if !@props.scroll-lock
+                                <~ @props.on-highlighted-uid-change uid
+                            @props.on-option-click @props.highlighted-uid
                         on-mouse-over: ({current-target}) !~>  
+                            if 'ontouchstart' of window => return false
                             if !@props.scroll-lock
                                 <~ @props.on-highlighted-uid-change uid
 
