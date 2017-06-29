@@ -161,7 +161,7 @@ module.exports = create-react-class do
                     
                     # SEARCH INPUT BOX
                     ResizableInput do
-                        {disabled: @props.disabled} <<< @props.input-props <<< {
+                        {disabled: @props.disabled, type: \text } <<< @props.input-props <<< {
                             ref: (element) -> 
                                 this-ref.search-element = element
                             value: @props.search
