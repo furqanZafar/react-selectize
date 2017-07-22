@@ -51,7 +51,8 @@
 |    transitionLeaveTimeout  | Number                              | duration specified in milliseconds, it must match the transition duration specified under the CSS class `.slide-leave-active` |
 |    uid                     | (Eq e) => Item -> e                 | `(item){return item.value}` returns a unique id for a given option, defaults to the value property|
 |    value                   | Item                                | the selected value, i.e. one of the objects in the options array|
-|    valueFromPaste          | [Item] -> Item -> String -> Item    | `(options, value, pastedText){}` invoked when the user pastes text in the input field, here you can convert the pasted text into an item that will then show up as selected |
+|    valueFromPaste          | [Item] -> Item -> String -> Item    | `(options, value, pastedText){}` invoked when the user pastes text in the input field, here you can convert the pasted text into an item that will then show up as selected 
+|inputProps|Object|a way to pass props to the resizable input in case you need it|
 
 ### SimpleSelect methods
 
