@@ -16,6 +16,7 @@ styles & features inspired by [React Select](http://jedwatson.github.io/react-se
 - [Changelog](CHANGELOG.md) (last updated on 29th July 2017)
 - [API Reference](API.md)
 
+
 # Motivation
 * existing components do not behave like built-in React.DOM.* components. 
 * existing components [synchronize props with state](http://facebook.github.io/react/tips/props-in-getInitialState-as-anti-pattern.html) an anti pattern, which makes them prone to bugs & difficult for contributers to push new features without breaking something else.
@@ -42,16 +43,41 @@ styles & features inspired by [React Select](http://jedwatson.github.io/react-se
 * [Disable selected values](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=disable-selected)
 * [Absolute positioned overlay, "Tether"ed to the search field](http://furqanzafar.github.io/react-selectize/#/?category=multi&example=tether)
 
+## Deps
+* [tether](https://github.com/HubSpot/tether)
+
+## Peer Deps
+* create-react-class
+* react
+* react-dom
+* react-transition-group
+* react-dom-factories
+
 ## Install
 
 * **npm:**
 `npm install react-selectize`
 
+your package.json must look like this
+```
+{
+    "dependencies": {
+        "react": "^16.0.0-beta.2",
+        "react-addons-css-transition-group": "^15.6.0",
+        "react-addons-shallow-compare": "^15.6.0",
+        "react-dom": "^16.0.0-beta.2",
+        "react-dom-factories": "^1.0.0",
+        "react-selectize": "^3.0.1",
+        "react-transition-group": "^1.1.2"
+    }
+}
+```
+
 to include the default styles add the following import statement to your stylus file:
 `@import 'node_modules/react-selectize/themes/index.css'`
 
 * **bower:**
-`bower install https://unpkg.com/react-selectize@3.0.0/bower.zip`
+`bower install https://unpkg.com/react-selectize@3.0.1/bower.zip`
 
 * **1998 script tag:**
 ```html
@@ -70,10 +96,10 @@ to include the default styles add the following import statement to your stylus 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.1.1/js/tether.min.js" type="text/javascript" ></script>
 
   <!-- REACT SELECTIZE -->
-  <script src="https://unpkg.com/react-selectize@3.0.0/dist/index.min.js" type="text/javascript" ></script>
+  <script src="https://unpkg.com/react-selectize@3.0.1/dist/index.min.js" type="text/javascript" ></script>
 
   <!-- THEMES (default, bootstrap3, material) -->
-  <link rel="stylesheet" href="https://unpkg.com/react-selectize@3.0.0/dist/index.min.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/react-selectize@3.0.1/dist/index.min.css"/>
   
  </head>
  <body>
@@ -174,15 +200,6 @@ uid = {function(item){
 }}
 ```
 the `uid` function is used internally for performance optimization. 
-
-## Deps
-* [tether](https://github.com/HubSpot/tether)
-
-## Peer Deps
-* create-react-class
-* react
-* react-dom
-* react-transition-group
 
 ## Development
 * `npm install`
