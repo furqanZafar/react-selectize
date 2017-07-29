@@ -1,6 +1,11 @@
-create-react-class = require \create-react-class
-Form = create-react-class do
+React = require \react
+Form = class Form extends React.Component
     
+    (props) ->
+        super(props)
+        this.state = 
+            dropdown-direction: -1
+
     # render :: a -> ReactElement
     render: ->
         React.create-element MultiSelect,
@@ -9,10 +14,6 @@ Form = create-react-class do
             dropdown-direction: @state.dropdown-direction
             ref: \select
     
-    # get-initial-state :: a -> UIState
-    get-initial-state: ->    
-        dropdown-direction: 1
-
     # component-did-mount :: a -> Void
     component-did-mount: !->
         @on-scroll-change = ~>

@@ -1,11 +1,11 @@
-{DOM:{div}} = require \react
-create-react-class = require \create-react-class
+React = require \react
+{div} = require \react-dom-factories
 {is-equal-to-object} = require \prelude-extension
 
-module.exports = create-react-class do
+module.exports = class ValueWrapper extends React.Component
 
     # get-default-porps :: () -> Props
-    get-default-props: ->
+    @default-props =
         # item :: Item
         # render-item :: Item -> ReactElement
         # uid :: a

@@ -1,11 +1,11 @@
-{create-factory, DOM:{path}} = require \react
-create-react-class = require \create-react-class
+{create-factory}:React = require \react
+{path} = require \react-dom-factories
 SvgWrapper = create-factory require \./SvgWrapper
 
-module.exports = create-react-class do
+module.exports = class ToggleButton extends React.PureComponent
 
     # get-default-props :: () -> Props
-    get-default-props: ->
+    @default-props =
         open: false
         flipped: false
 

@@ -3,8 +3,8 @@
 partition, reject, reverse, Str, sort-by, sum, values} = require \prelude-ls
 
 {clamp, is-equal-to-object} = require \prelude-extension
-{DOM:{div, input, path, span, svg}, create-factory}:React = require \react
-create-react-class = require \create-react-class
+{create-factory}:React = require \react
+{div, input, path, span, svg} = require \react-dom-factories
 {find-DOM-node} = require \react-dom
 ToggleButton = create-factory require \./ToggleButton
 DropdownMenu = create-factory require \./DropdownMenu
@@ -14,15 +14,13 @@ ResetButton = create-factory require \./ResetButton
 ResizableInput = create-factory require \./ResizableInput
 {cancel-event, class-name-from-object} = require \./utils
 
-module.exports = create-react-class do
-
-    display-name: \ReactSelectize
+module.exports = class ReactSelectize extends React.Component
 
     # used to figure out if the focus event was triggered by external action or by @focus-on-input!
     focus-lock: false
 
     # get-default-props :: () -> Props
-    get-default-props: ->
+    @default-props =
         anchor: null # :: Item
         autofocus: false
         cancel-keyboard-event-on-selection: true
@@ -139,7 +137,6 @@ module.exports = create-react-class do
                     do ~>
                         <~ @props.on-anchor-change last @props.values
                         <~ @on-open-change true
-                        @highlight-and-focus!
 
                     # avoid cancelling the event when the dropdown is already open 
                     # as this would block selection of text in the search field

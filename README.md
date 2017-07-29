@@ -13,7 +13,7 @@ styles & features inspired by [React Select](http://jedwatson.github.io/react-se
 
 [![](http://i.imgsafe.co/rQmogzn.gif)](http://furqanZafar.github.io/react-selectize/)
 
-- [Changelog](CHANGELOG.md) (last updated on 1st December 2016)
+- [Changelog](CHANGELOG.md) (last updated on 29th July 2017)
 - [API Reference](API.md)
 
 # Motivation
@@ -51,27 +51,45 @@ to include the default styles add the following import statement to your stylus 
 `@import 'node_modules/react-selectize/themes/index.css'`
 
 * **bower:**
-`bower install https://npmcdn.com/react-selectize@2.1.0/bower.zip`
+`bower install https://unpkg.com/react-selectize@3.0.0/bower.zip`
 
 * **1998 script tag:**
 ```html
 <html>
  <head>
+  <!-- PRELUDE -->
   <script src="http://www.preludels.com/prelude-browser-min.js" type="text/javascript" ></script>
-  <script src="https://npmcdn.com/prelude-extension@0.0.11/dist/index.min.js" type="text/javascript" ></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-with-addons.min.js" type="text/javascript" ></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.min.js" type="text/javascript" ></script>
+  <script src="https://unpkg.com/prelude-extension@0.0.11/dist/index.min.js" type="text/javascript" ></script>
+
+  <!-- REACT -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react-with-addons.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react-dom.min.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/react-dom-factories@1.0.0"></script>
 
   <!-- optional dependency (only required with using the tether prop) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.1.1/js/tether.min.js" type="text/javascript" ></script>
 
   <!-- REACT SELECTIZE -->
-  <script src="https://npmcdn.com/react-selectize@2.1.0/dist/index.min.js" type="text/javascript" ></script>
+  <script src="https://unpkg.com/react-selectize@3.0.0/dist/index.min.js" type="text/javascript" ></script>
 
   <!-- THEMES (default, bootstrap3, material) -->
-  <link rel="stylesheet" href="https://npmcdn.com/react-selectize@2.1.0/dist/index.min.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/react-selectize@3.0.0/dist/index.min.css"/>
   
  </head>
+ <body>
+  <div id="mount-node"></div>
+  <script type="text/javascript">
+   ReactDOM.render(
+    React.createElement(reactSelectize.SimpleSelect, {
+     style: {width: 300},
+     tether: true,
+     placeholder: "Select fruit", 
+     options: [{label: "apple", value: "apple"}, {label: "banana", value: "banana"}]
+    }), 
+    document.getElementById("mount-node")
+   );
+  </script>
+ </body>
 </html>
 ```
 
@@ -168,7 +186,7 @@ the `uid` function is used internally for performance optimization.
 
 ## Development
 * `npm install`
-* `gulp`
+* `npm start`
 * visit `localhost:8000`
 * `npm test` , `npm run coverage` for unit tests & coverage
 * for production build/test run `MINIFY=true gulp`

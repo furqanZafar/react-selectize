@@ -1,8 +1,8 @@
-{create-factory, DOM:{path}} = require \react
-create-react-class = require \create-react-class
+{create-factory}:React = require \react
+{path} = require \react-dom-factories
 SvgWrapper = create-factory require \./SvgWrapper
 
-module.exports = create-react-class do
+module.exports = class ResetButton extends React.PureComponent
 
     # render :: a -> ReactElement
     render: ->

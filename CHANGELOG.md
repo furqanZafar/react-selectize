@@ -1,5 +1,8 @@
 # React Selectize
 
+## 3.0.0 / 29th July 2017
+* support for React 16 & node 8.2.1 thanks @elisherer
+
 ## 2.1.0 / 1st December 2016
 * added `on-blur-resets-input` thanks @dcalhoun
 

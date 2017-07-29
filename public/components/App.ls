@@ -1,11 +1,11 @@
 require! \fs
 $ = require \jquery-browserify
-require \livescript
-{compile} = require \livescript
+{compile} = require \livescript/lib
 {concat-map, drop, filter, find, fold, group-by, id, keys, last, map, Obj, obj-to-pairs, pairs-to-obj, 
 reject, reverse, Str, sort-by, take, unique,  unique-by, values, zip-with} = require \prelude-ls
 {partition-string} = require \prelude-extension
-{create-factory, DOM:{a, button, div, form, h1, h2, img, input, li, ol, option, span, ul}}:React = require \react
+{create-factory}:React = require \react
+{a, button, div, form, h1, h2, img, input, li, ol, option, span, ul} = require \react-dom-factories
 {find-DOM-node, render} = require \react-dom
 require! \react-router
 Link = create-factory react-router.Link
@@ -253,7 +253,8 @@ App = create-react-class do
                             * id: \livescript
                               name: \Livescript
                               initial-content: ls
-                              on-execute: (content, mount-node) -> eval compile content, {bare: true}
+                              on-execute: (content, mount-node) ->
+                                  eval compile content, {bare: true}
                             * id: \jsx
                               name: \JSX
                               initial-content: jsx

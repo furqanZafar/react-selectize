@@ -1,17 +1,15 @@
 {all, any, camelize, difference, drop, filter, find, find-index, id, 
 last, map, reject} = require \prelude-ls
 {is-equal-to-object} = require \prelude-extension
-{create-factory, DOM:{div, img, span}}:React = require \react
-create-react-class = require \create-react-class
+{create-factory}:React = require \react
+{div, img, span} = require \react-dom-factories
 ReactSelectize = create-factory require \./ReactSelectize 
 {cancel-event} = require \./utils
 
-module.exports = create-react-class do
-
-    display-name: \MultiSelect
+module.exports = class MultiSelect extends React.Component
 
     # get-default-props :: () -> Props
-    get-default-props: ->
+    @default-props =
         # autofocus :: Boolean
         # anchor :: Item
         # cancel-keyboard-event-on-selection :: Boolean
@@ -53,6 +51,16 @@ module.exports = create-react-class do
         # tether-props :: {parent-element :: () -> DOMElement}
         # theme :: String
         # values :: [Item]
+
+    (props) ->
+        super(props)
+        this.state = 
+            anchor: if !!@props.values then last @props.values else undefined
+            highlighted-uid: undefined
+            open: false
+            scroll-lock: false
+            search: ""
+            values: @props.default-values
 
     # render :: () -> ReactElement
     render: -> 
@@ -267,15 +275,6 @@ module.exports = create-react-class do
             options
         }
         
-    # get-initial-state :: () -> UIState
-    get-initial-state: ->
-        anchor: if !!@props.values then last @props.values else undefined
-        highlighted-uid: undefined
-        open: false
-        scroll-lock: false
-        search: ""
-        values: @props.default-values
-
     # first-option-index-to-highlight :: [Item] -> Int
     first-option-index-to-highlight: (options) ->
         option-index-to-highlight = switch

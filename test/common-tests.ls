@@ -3,7 +3,8 @@ require! \assert
 {is-equal-to-object} = require \prelude-extension
 
 # React
-{create-element, DOM:{div, input, option, span}} = require \react
+{create-element} = require \react
+{div, input, option, span} = require \react-dom-factories
 {find-DOM-node, render, unmount-component-at-node} = require \react-dom
 
 # TestUtils

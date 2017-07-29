@@ -4,7 +4,8 @@ require! \./common-tests
 ReactSelectize = require \../src/index.ls
 
 # React
-{create-element, DOM:{div, option, span}} = require \react
+{create-element} = require \react
+{div, option, span} = require \react-dom-factories
 create-react-class = require \create-react-class
 {find-DOM-node} = require \react-dom
 
