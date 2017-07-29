@@ -1,6 +1,6 @@
 {
   "name": "react-selectize",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A Stateless & Flexible Select component for React inspired by Selectize",
   "main": "src/index.js",
   "scripts": {
@@ -17,7 +17,7 @@
   },
   "peerDependencies": {
     "react": "^15.0.0 || ^16.0.0",
-    "react-transition-group": "^2.2.0",
+    "react-transition-group": "^1.1.2",
     "react-dom": "^15.0.0 || ^16.0.0",
     "react-dom-factories": "^1.0.0"
   },

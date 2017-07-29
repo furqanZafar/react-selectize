@@ -1,5 +1,8 @@
 # React Selectize
 
+## 3.0.1 / 29th July 2017
+* fix peer dependencies react-transition-group@1.1.2 instead of the latest version
+
 ## 3.0.0 / 29th July 2017
 * support for React 16 & node 8.2.1 thanks @elisherer
 
