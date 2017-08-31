@@ -1,5 +1,5 @@
 {
-  "name": "react-selectize-custom",
+  "name": "react-selectize",
   "version": "3.0.1",
   "description": "A Stateless & Flexible Select component for React inspired by Selectize",
   "main": "src/index.js",

@@ -54,7 +54,7 @@ module.exports = class MultiSelect extends React.Component
 
     (props) ->
         super(props)
-        this.state =
+        this.state = 
             anchor: if !!@props.values then last @props.values else undefined
             highlighted-uid: undefined
             open: false
@@ -274,7 +274,7 @@ module.exports = class MultiSelect extends React.Component
             filtered-options
             options
         }
-
+        
     # first-option-index-to-highlight :: [Item] -> Int
     first-option-index-to-highlight: (options) ->
         option-index-to-highlight = switch

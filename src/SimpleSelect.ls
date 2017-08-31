@@ -54,7 +54,7 @@ module.exports = class SimpleSelect extends React.Component
         # theme :: String
         uid: id # uid :: (Equatable e) => Item -> e
         # value :: Item
-
+    
     # get-initial-state :: () -> UIState
     (props) ->
         super props

@@ -138,7 +138,6 @@ module.exports = class ReactSelectize extends React.Component
                     do ~>
                         <~ @props.on-anchor-change last @props.values
                         <~ @on-open-change true
-                        @highlight-and-focus!
 
                     # avoid cancelling the event when the dropdown is already open 
                     # as this would block selection of text in the search field

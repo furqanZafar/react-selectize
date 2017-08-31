@@ -127,7 +127,7 @@ module.exports = class DropdownMenu extends React.PureComponent
                     switch
                     | (typeof option?.selectable == \boolean) and !option.selectable => on-click: cancel-event
                     | _ =>
-                        on-click: !~>
+                        on-click: !~> 
                             if !@props.scroll-lock
                                 <~ @props.on-highlighted-uid-change uid
                             @props.on-option-click @props.highlighted-uid
@@ -189,10 +189,10 @@ module.exports = class DropdownMenu extends React.PureComponent
     component-did-update: (prev-props) !->
         if prev-props.dropdown-direction !== @props.dropdown-direction and @props.open
             dropdown-menu = find-DOM-node @refs.dropdown-menu-wrapper ? @dropdown-menu
-                ..?.style.bottom = switch
-                    | @props.dropdown-direction == -1 =>
+                ..?.style.bottom = switch 
+                    | @props.dropdown-direction == -1 => 
                         "#{@props.bottom-anchor!.offset-height + dropdown-menu.style.margin-bottom}px"
-
+                        
                     | _ => ""
 
     # highlight-and-scroll-to-option :: Int, (() -> ())? -> ()

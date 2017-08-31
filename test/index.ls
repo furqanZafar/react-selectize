@@ -1,6 +1,6 @@
 require! \jsdom
 { window } = new jsdom.JSDOM '<!doctype html><html><body></body></html>'
-global <<<
+global <<< 
     document: window.document
     navigator: user-agent: \JSDOM
     window: window

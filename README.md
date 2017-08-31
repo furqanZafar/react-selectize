@@ -109,9 +109,9 @@ to include the default styles add the following import statement to your stylus 
     React.createElement(reactSelectize.SimpleSelect, {
      style: {width: 300},
      tether: true,
-     placeholder: "Select fruit",
+     placeholder: "Select fruit", 
      options: [{label: "apple", value: "apple"}, {label: "banana", value: "banana"}]
-    }),
+    }), 
     document.getElementById("mount-node")
    );
   </script>
