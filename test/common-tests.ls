@@ -3,7 +3,8 @@ require! \assert
 {is-equal-to-object} = require \prelude-extension
 
 # React
-{create-element, DOM:{div, input, option, span}} = require \react
+{create-element} = require \react
+{div, input, option, span} = require \react-dom-factories
 {find-DOM-node, render, unmount-component-at-node} = require \react-dom
 
 # TestUtils
@@ -35,7 +36,7 @@ module.exports = (select-class) !->
 
     specify "non empty select must not have placeholder", ->
         {refs}:select = create-select!
-        input = find-DOM-node refs.select.search-element
+        input = find-DOM-node refs.select.refs.search
             ..value = \test
         change input
         component-with-class-must-not-exist select, \react-selectize-placeholder

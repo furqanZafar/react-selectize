@@ -30,9 +30,7 @@ export get-item-text = (item) ->
 
 export click-option = (option-element, callback) ->
     mouse-down option-element
-    event = document.create-event 'MouseEvents'
-        ..init-mouse-event \mouseup
-    window.dispatch-event event
+    window.dispatch-event new window.MouseEvent \mouseup
 
 # click-to-open-select-control :: Select -> Void
 export click-to-open-select-control = (select) !->
@@ -40,9 +38,7 @@ export click-to-open-select-control = (select) !->
 
 # click-on-the-document :: a -> Void
 export click-on-the-document = ->
-    click-event = document.create-event \MouseEvents
-        ..init-event \click, false, true
-    document.body.dispatch-event click-event
+    document.body.dispatch-event new window.MouseEvent \click
 
 # component-with-class-must-not-exist :: ReactElement -> String -> p String
 export component-with-class-must-not-exist = (tree, class-name) ->

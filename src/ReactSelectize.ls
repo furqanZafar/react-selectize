@@ -5,7 +5,6 @@ partition, reject, reverse, Str, sort-by, sum, values} = require \prelude-ls
 {clamp, is-equal-to-object} = require \prelude-extension
 {create-factory}:React = require \react
 {div, input, path, span, svg} = require \react-dom-factories
-create-react-class = require \create-react-class
 {find-DOM-node} = require \react-dom
 ToggleButton = create-factory require \./ToggleButton
 DropdownMenu = create-factory require \./DropdownMenu
@@ -15,15 +14,13 @@ ResetButton = create-factory require \./ResetButton
 ResizableInput = create-factory require \./ResizableInput
 {cancel-event, class-name-from-object} = require \./utils
 
-module.exports = create-react-class do
-
-    display-name: \ReactSelectize
+module.exports = class ReactSelectize extends React.Component
 
     # used to figure out if the focus event was triggered by external action or by @focus-on-input!
     focus-lock: false
 
     # get-default-props :: () -> Props
-    get-default-props: ->
+    @default-props =
         anchor: null # :: Item
         autofocus: false
         cancel-keyboard-event-on-selection: true
@@ -189,7 +186,7 @@ module.exports = create-react-class do
                                 @props.on-focus e
 
                             on-blur: (e) ~>
-								# to prevent closing the dropdown when the user tries to click & drag the scrollbar in IE
+                                # to prevent closing the dropdown when the user tries to click & drag the scrollbar in IE
                                 return @.focus! if @refs.dropdown-menu and (document.active-element == (find-DOM-node @refs.dropdown-menu) or document.active-element.parent-node == (find-DOM-node @refs.dropdown-menu))
 
                                 <~ @close-dropdown

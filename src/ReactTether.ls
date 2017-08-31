@@ -3,7 +3,6 @@ React = require \react
 Tether = require \tether
 
 class ReactTether extends React.PureComponent
-    ->
 
     # get-default-props :: () -> Props
     @default-props =

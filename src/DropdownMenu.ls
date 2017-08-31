@@ -4,7 +4,6 @@
 {is-equal-to-object} = require \prelude-extension
 {create-factory}:React = require \react
 {div, input, span} = require \react-dom-factories
-create-react-class = require \create-react-class
 {find-DOM-node} = require \react-dom
 ReactCSSTransitionGroup = create-factory require \react-transition-group/CSSTransitionGroup
 ReactTether = create-factory require \./ReactTether
@@ -12,12 +11,10 @@ DivWrapper = create-factory require \./DivWrapper
 OptionWrapper = create-factory require \./OptionWrapper
 {cancel-event, class-name-from-object} = require \./utils
 
-module.exports = create-react-class do
-
-    display-name: \DropdownMenu
+module.exports = class DropdownMenu extends React.PureComponent
 
     # get-default-props :: () -> Props
-    get-default-props: ->
+    @default-props =
         # bottom-anchor :: () -> ReactElement
         class-name: ""
         dropdown-direction: 1
@@ -86,9 +83,9 @@ module.exports = create-react-class do
 
     # render-animated-dropdown :: ComputedState -> ReactElement
     render-animated-dropdown: ({dynamic-class-name}:computed-state) ->
-        this-ref = @
         if !!@props.transition-enter or !!@props.transition-leave
             ReactCSSTransitionGroup do 
+                ref: \dropdownMenuWrapper
                 component: \div
                 transition-name: \custom 
                 transition-enter: @props.transition-enter
@@ -96,7 +93,6 @@ module.exports = create-react-class do
                 transition-enter-timeout: @props.transition-enter-timeout
                 transition-leave-timeout: @props.transition-leave-timeout
                 class-name: "dropdown-menu-wrapper #{dynamic-class-name}"
-                ref: (element) -> this-ref.dropdown-menu-wrapper = element
                 @render-dropdown computed-state
 
         else
@@ -112,7 +108,7 @@ module.exports = create-react-class do
             OptionWrapper do
                 {
                     uid
-                    ref: "option-#{@uid-to-string uid}"
+                    ref: (element) !~> @["option-#{@uid-to-string uid}"] = element
                     key: @uid-to-string uid
                     item: option
                     highlight: @props.highlighted-uid `is-equal-to-object` uid
@@ -142,18 +138,17 @@ module.exports = create-react-class do
 
     # render-dropdown :: ComputedState -> ReactElement
     render-dropdown: ({dynamic-class-name}) ->
-        this-ref = @
         if @props.open
             
             # DROPDOWN
             DivWrapper do 
                 class-name: "dropdown-menu #{dynamic-class-name}"
-                ref: (element) -> this-ref.dropdown-menu = element
+                ref: (element) !~> !!element && @dropdown-menu = element
 
                 # on-height-change :: Number -> ()
                 on-height-change: (height) !~> 
-                    if @dropdown-menu-wrapper
-                        find-DOM-node @dropdown-menu-wrapper .style.height = "#{height}px"
+                    if @refs.dropdown-menu-wrapper
+                        find-DOM-node @refs.dropdown-menu-wrapper .style.height = "#{height}px"
 
                 # NO RESULT FOUND   
                 if @props.options.length == 0
@@ -191,14 +186,14 @@ module.exports = create-react-class do
             null
 
     # component-did-update :: () -> ()
-    component-did-update: !->
-        dropdown-menu = find-DOM-node (@dropdown-menu-wrapper or @dropdown-menu)
-        return if !@props.open or !dropdown-menu
-        dropdown-menu.style.bottom = switch 
-        | @props.dropdown-direction == -1 => 
-            "#{@props.bottom-anchor!.offset-height + dropdown-menu.style.margin-bottom}px"
+    component-did-update: (prev-props) !->
+        if prev-props.dropdown-direction !== @props.dropdown-direction and @props.open
+            dropdown-menu = find-DOM-node @refs.dropdown-menu-wrapper ? @dropdown-menu
+                ..?.style.bottom = switch
+                    | @props.dropdown-direction == -1 =>
+                        "#{@props.bottom-anchor!.offset-height + dropdown-menu.style.margin-bottom}px"
 
-        | _ => ""
+                    | _ => ""
 
     # highlight-and-scroll-to-option :: Int, (() -> ())? -> ()
     highlight-and-scroll-to-option: (index, callback = (->)) !->
@@ -207,7 +202,7 @@ module.exports = create-react-class do
         uid = @props.uid @props.options[index]
         <~ @props.on-highlighted-uid-change uid
 
-        option-element? = find-DOM-node @refs?["option-#{@uid-to-string uid}"]
+        option-element? = find-DOM-node @?["option-#{@uid-to-string uid}"]
 
         if !!option-element
             parent-element = option-element.parent-element

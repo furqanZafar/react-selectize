@@ -1,7 +1,6 @@
 require! \fs
 $ = require \jquery-browserify
-require \livescript
-{compile} = require \livescript
+{compile} = require \livescript/lib
 {concat-map, drop, filter, find, fold, group-by, id, keys, last, map, Obj, obj-to-pairs, pairs-to-obj, 
 reject, reverse, Str, sort-by, take, unique,  unique-by, values, zip-with} = require \prelude-ls
 {partition-string} = require \prelude-extension
@@ -254,7 +253,8 @@ App = create-react-class do
                             * id: \livescript
                               name: \Livescript
                               initial-content: ls
-                              on-execute: (content, mount-node) -> eval compile content, {bare: true}
+                              on-execute: (content, mount-node) ->
+                                  eval compile content, {bare: true}
                             * id: \jsx
                               name: \JSX
                               initial-content: jsx

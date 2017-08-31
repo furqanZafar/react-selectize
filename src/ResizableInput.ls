@@ -1,13 +1,13 @@
-{create-factory}:React = require \react
-prop-types = require \prop-types
 {each, obj-to-pairs} = require \prelude-ls
+{create-factory}:React = require \react
 {input} = require \react-dom-factories
+{find-DOM-node} = require \react-dom
 
-class ResizableInput extends React.Component
-    ->
+module.exports = class ResizableInput extends React.PureComponent
+
     # get-default-props :: () -> Props
     @default-props =
-        type: prop-types.string
+        type: \text
 
     constructor: ->
         @autosize = @autosize.bind @
@@ -26,6 +26,7 @@ class ResizableInput extends React.Component
 
     # autosize :: () -> ()
     autosize: ->
+
         # reset the width
         @input-element.style.width = \0px
 
@@ -64,15 +65,13 @@ class ResizableInput extends React.Component
                 document.body.remove-child dummpy-input
 
     # component-did-mount :: () -> ()
-    component-did-mount: !-> @input-element and  @autosize!
+    component-did-mount: !-> @input-element and @autosize!
 
     # component-did-update :: Props -> UIState -> ()
-    component-did-update: !-> @input-element and  @autosize!
+    component-did-update: !-> @input-element and @autosize!
 
     # blur :: () -> ()
     blur: -> @input-element.blur!
 
     # focus :: () -> ()
     focus: -> @input-element.focus!
-
-module.exports = ResizableInput

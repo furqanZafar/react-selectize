@@ -1,12 +1,12 @@
 {div} = require \react-dom-factories
-create-react-class = require \create-react-class
+React = require \react
 
 # used to detect when the dropdown has been added/removed from dom, 
 # so we can adjust the height of the parent element
-module.exports = create-react-class do
+module.exports = class DivWrapper extends React.Component
 
     # get-default-props :: () -> Props
-    get-default-props: ->
+    @default-props =
         class-name: ""
         on-height-change: (!->) # Number -> Void
 
