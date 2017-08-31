@@ -5,7 +5,7 @@ Form = create-react-class do
     
     # render :: a -> ReactElement
     render: ->
-        React.DOM.form do
+        React.DOM.form do 
             action: \/
 
             SimpleSelectFactory do
