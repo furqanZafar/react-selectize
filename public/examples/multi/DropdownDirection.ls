@@ -3,7 +3,7 @@ Form = class Form extends React.Component
     
     (props) ->
         super(props)
-        this.state =
+        this.state = 
             dropdown-direction: -1
 
     # render :: a -> ReactElement
