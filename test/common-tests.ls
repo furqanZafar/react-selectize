@@ -35,10 +35,7 @@ module.exports = (select-class) !->
         find-rendered-DOM-component-with-class select, \react-selectize-placeholder
 
     specify "non empty select must not have placeholder", ->
-        {refs}:select = create-select!
-        input = find-DOM-node refs.select.refs.search
-            ..value = \test
-        change input
+        {search-element}:select = create-select { search: \test }
         component-with-class-must-not-exist select, \react-selectize-placeholder
 
     specify "must default the list of options to an empty list", ->
