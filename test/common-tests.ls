@@ -388,8 +388,14 @@ module.exports = (select-class) !->
         click-option find-highlighted-option select
         component-with-class-must-not-exist select, \react-selectize-reset-button-container
 
+    specify "must use text as default type of search field", ->
+        select = create-select!
+        input = get-input select
+        assert input.type == \text
+
     specify "must pass props.inputProps to search field", ->
         select = create-select do 
-            input-props: disabled: true
+            input-props: { disabled: true, type: \tel }
         input = get-input select
         assert input.disabled == true
+        assert input.type == \tel

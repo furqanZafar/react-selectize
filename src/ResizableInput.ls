@@ -9,7 +9,9 @@ module.exports = class ResizableInput extends React.PureComponent
     @default-props =
         type: \text
 
-    constructor: ->
+    # constructor
+    (props) ->
+        super props
         @autosize = @autosize.bind @
         @focus = @focus.bind @
         @blur = @blur.bind @

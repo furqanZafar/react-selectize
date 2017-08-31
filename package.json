@@ -6,7 +6,7 @@
   "scripts": {
     "start": "gulp",
     "test": "mocha test/index.ls --compilers ls:livescript",
-    "coverage": "istanbul cover _mocha -- test/index.ls --require should --compilers ls:livescript",
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- test/index.ls --require should --compilers ls:livescript",
     "coveralls": "istanbul cover _mocha -- test/index.ls --require should --compilers ls:livescript  && cat coverage/lcov.info | coveralls"
   },
   "author": "Furqan Zafar",
