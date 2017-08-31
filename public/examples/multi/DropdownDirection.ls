@@ -13,7 +13,7 @@ Form = class Form extends React.Component
             placeholder: "Select fruits"
             dropdown-direction: @state.dropdown-direction
             ref: \select
-
+    
     # component-did-mount :: a -> Void
     component-did-mount: !->
         @on-scroll-change = ~>
