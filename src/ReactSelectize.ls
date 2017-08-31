@@ -85,6 +85,7 @@ module.exports = class ReactSelectize extends React.Component
 
     # render :: () -> ReactElement
     render: ->
+        this-ref = @
         anchor-index = 
             | (typeof @props.anchor == \undefined) or @props.anchor == null => -1
             | _ => (find-index (~> it `@is-equal-to-object` @props.anchor), @props.values) ? @props.values.length - 1
@@ -156,9 +157,9 @@ module.exports = class ReactSelectize extends React.Component
                     
                     # SEARCH INPUT BOX
                     ResizableInput do
-                        {disabled: @props.disabled} <<< @props.input-props <<< {
-                            ref: \search
-                            type: \text
+                        {disabled: @props.disabled, type: \text } <<< @props.input-props <<< {
+                            ref: (element) -> 
+                                this-ref.search-element = element
                             value: @props.search
 
                             # update the search text & highlight the first option
@@ -185,7 +186,7 @@ module.exports = class ReactSelectize extends React.Component
 
                             on-blur: (e) ~>
                                 # to prevent closing the dropdown when the user tries to click & drag the scrollbar in IE
-                                return if @refs.dropdown-menu and document.active-element == (find-DOM-node @refs.dropdown-menu)
+                                return @.focus! if @refs.dropdown-menu and (document.active-element == (find-DOM-node @refs.dropdown-menu) or document.active-element.parent-node == (find-DOM-node @refs.dropdown-menu))
 
                                 <~ @close-dropdown
 
@@ -428,24 +429,23 @@ module.exports = class ReactSelectize extends React.Component
             callback
 
     # blur :: () -> ()
-    blur: !-> @refs.search.blur!
+    blur: !-> @search-element.blur!
 
     # focus :: () -> ()
-    focus: !-> @refs.search.focus!
+    focus: !-> @search-element.focus!
 
     # move the cursor to the input field, without toggling the dropdown
     # focus-on-input :: () -> ()
     focus-on-input: !->
-        input = find-DOM-node @refs.search
-        if input != document.active-element
+        if @search-element != document.active-element
             @focus-lock = true
 
             # this triggers the DOM focus event on the input control, where we use @focus-lock to determine
             # if the event was triggered by external action or by invoking @focus-on-input method.
-            input.focus!
+            @search-element.focus!
 
             # move the cursor to the end of the search field
-            input.value = input.value
+            @search-element.value = @search-element.value
 
     # highlights the first selectable option & moves the cursor to end of the search field
     # highlight-and-focus :: () -> ()

@@ -35,10 +35,7 @@ module.exports = (select-class) !->
         find-rendered-DOM-component-with-class select, \react-selectize-placeholder
 
     specify "non empty select must not have placeholder", ->
-        {refs}:select = create-select!
-        input = find-DOM-node refs.select.refs.search
-            ..value = \test
-        change input
+        {search-element}:select = create-select { search: \test }
         component-with-class-must-not-exist select, \react-selectize-placeholder
 
     specify "must default the list of options to an empty list", ->
@@ -391,8 +388,14 @@ module.exports = (select-class) !->
         click-option find-highlighted-option select
         component-with-class-must-not-exist select, \react-selectize-reset-button-container
 
+    specify "must use text as default type of search field", ->
+        select = create-select!
+        input = get-input select
+        assert input.type == \text
+
     specify "must pass props.inputProps to search field", ->
         select = create-select do 
-            input-props: disabled: true
+            input-props: { disabled: true, type: \tel }
         input = get-input select
         assert input.disabled == true
+        assert input.type == \tel
