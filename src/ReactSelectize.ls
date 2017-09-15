@@ -160,6 +160,7 @@ module.exports = class ReactSelectize extends React.Component
                             ref: \search
                             type: \text
                             value: @props.search
+                            readOnly: @props.readOnly
 
                             # update the search text & highlight the first option
                             on-change: ({current-target:{value}}) ~>
