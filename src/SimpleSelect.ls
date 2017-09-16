@@ -78,7 +78,7 @@ module.exports = class SimpleSelect extends React.Component
         # props
         {
             autofocus, autosize, cancel-keyboard-event-on-selection, delimiters, disabled, dropdown-direction, group-id, 
-            groups, groups-as-columns, hide-reset-button, name, input-props, on-blur-resets-input, render-toggle-button,
+            groups, groups-as-columns, hide-reset-button, name, input-props, on-blur-resets-input, readOnly, render-toggle-button,
             render-group-title, render-reset-button, serialize, tether, tether-props, theme, transition-enter,
             transition-leave, transition-enter-timeout, transition-leave-timeout, uid
         }? = @props
@@ -101,6 +101,7 @@ module.exports = class SimpleSelect extends React.Component
             input-props
             name
             on-blur-resets-input
+            readOnly
             render-group-title
             render-reset-button
             render-toggle-button
