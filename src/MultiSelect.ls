@@ -80,8 +80,8 @@ module.exports = class MultiSelect extends React.Component
         }? = @props
 
         ReactSelectize {
-
-            autofocus
+	    
+	    autofocus
             autosize
             cancel-keyboard-event-on-selection
             class-name: "multi-select #{@props.class-name}"
