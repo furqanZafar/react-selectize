@@ -142,7 +142,7 @@ module.exports = class DropdownMenu extends React.PureComponent
             
             # DROPDOWN
             DivWrapper do 
-                class-name: "rs-dropdown-menu #{dynamic-class-name}"
+                class-name: "#{@props.ddm ? @props.ddm : 'dropdown-menu'} #{dynamic-class-name}"
                 ref: (element) !~> !!element && @dropdown-menu = element
 
                 # on-height-change :: Number -> ()

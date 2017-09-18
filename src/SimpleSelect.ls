@@ -54,6 +54,7 @@ module.exports = class SimpleSelect extends React.Component
         # theme :: String
         uid: id # uid :: (Equatable e) => Item -> e
         # value :: Item
+        ddm: ""
     
     # get-initial-state :: () -> UIState
     (props) ->
@@ -217,6 +218,8 @@ module.exports = class SimpleSelect extends React.Component
             # STYLE
             placeholder: @props.placeholder
             style: @props.style
+
+            ddm: @props.ddm
 
         }
 
