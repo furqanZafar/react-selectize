@@ -82,6 +82,7 @@ module.exports = class ReactSelectize extends React.Component
         theme: \default
         uid: id # (Eq e) => Item -> e
         values: [] # [Item]
+        ddm: ""
 
     # render :: () -> ReactElement
     render: ->
@@ -261,7 +262,6 @@ module.exports = class ReactSelectize extends React.Component
                 # on-option-click :: (Eq e) => e -> ()
                 on-option-click: (highlighted-uid) !~>
                     <~ @select-highlighted-uid anchor-index
-
 
     # handle-keydown :: ComputedState -> Event -> Boolean
     handle-keydown: ({anchor-index}, e) ->
