@@ -19,12 +19,12 @@ create-react-class = require \create-react-class
 }:TestUtils = require \react-dom/test-utils
 
 # utils
-{create-select, get-input, set-input-text, get-item-text, click-option, click-to-open-select-control, find-highlighted-option, 
-component-with-class-must-not-exist, press-backspace, press-escape, press-tab, press-return, press-up-arrow, press-down-arrow, 
+{create-select, get-input, set-input-text, get-item-text, click-option, click-to-open-select-control, find-highlighted-option,
+component-with-class-must-not-exist, press-backspace, press-escape, press-tab, press-return, press-up-arrow, press-down-arrow,
 press-left-arrow, press-right-arrow, press-command-left, press-command-right} = require \./utils
 
 describe "SimpleSelect", ->
-    
+
     common-tests ReactSelectize.SimpleSelect
 
     # create-simple-select :: Props -> [ReactElement] -> SimpleSelect
@@ -40,7 +40,7 @@ describe "SimpleSelect", ->
         assert.equal select.value!.label, \mango
 
     specify "must use value from props instead of state when available", ->
-        select  = create-simple-select do 
+        select  = create-simple-select do
             value: label: \apple, value: \apple
         click-to-open-select-control select
         [0 til 3] |> each -> press-down-arrow (get-input select)
@@ -48,15 +48,15 @@ describe "SimpleSelect", ->
         assert.equal select.value!.label, \apple
 
     specify "must invoke on-value-change when the value (state) is changed", (done) ->
-        select = create-simple-select do 
+        select = create-simple-select do
             on-value-change: (value) ~>
                 assert.equal value.label, \apple
                 done!
         click-to-open-select-control select
         click-option find-highlighted-option select
-        
+
     specify "must invoke on-value-change when the value (prop) is changed", (done) ->
-        select = create-simple-select do 
+        select = create-simple-select do
             value: label: \apple, value: \apple
             on-value-change: (value) ~>
                 assert.equal value.label, \mango
@@ -75,8 +75,8 @@ describe "SimpleSelect", ->
 
     specify "selecting the same value must have no effect", ->
         called = 0
-        select = create-simple-select do 
-            on-value-change: ~> 
+        select = create-simple-select do
+            on-value-change: ~>
                 called := called + 1
         click-to-open-select-control select
         set-input-text (get-input select), \e
@@ -106,16 +106,16 @@ describe "SimpleSelect", ->
     specify "must be able to block default backspace action", ->
         {refs:{select}} = TestUtils.render-into-document create-element create-react-class do
             render: ->
-                create-element do 
+                create-element do
                     ReactSelectize.SimpleSelect
                     ref: \select
-                    value: @state.value 
-                    options: 
+                    value: @state.value
+                    options:
                         * label: \apple, value: \apple
                         * label: \banana, value: \banana
                         * label: \mango, value: \mango
                     on-value-change: (value) ~>
-                        if !!value 
+                        if !!value
                             @set-state {value}
             get-initial-state: -> value: undefined
         click-to-open-select-control select
@@ -125,7 +125,7 @@ describe "SimpleSelect", ->
         find-rendered-DOM-component-with-class select, \simple-value
 
     specify "selected value must be displayed as search text when props.editable is true ", ->
-        select = create-simple-select do 
+        select = create-simple-select do
             editable: (.label)
         click-to-open-select-control select
         click-option find-highlighted-option select
@@ -134,7 +134,7 @@ describe "SimpleSelect", ->
         assert.equal (get-input select).value, \apple
 
     specify "must be able to select another value when props.default-value is defined", ->
-        select = create-simple-select do 
+        select = create-simple-select do
             default-value: label: \mango, value: \mango
         click-to-open-select-control select
         assert.equal select.value!.label. \mango
@@ -143,7 +143,7 @@ describe "SimpleSelect", ->
         assert.equal select.value!.label. \apple
 
     specify "form serialization", ->
-        select = create-simple-select do 
+        select = create-simple-select do
             name: \test
         click-to-open-select-control select
         click-option find-highlighted-option select
@@ -159,6 +159,6 @@ describe "SimpleSelect", ->
         set-input-text input, "some random text"
         press-return input
         <~ set-timeout _, 25
-        component-with-class-must-not-exist \dropdown-menu
+        component-with-class-must-not-exist \rs-dropdown-menu
         assert select.state.search == ""
         done!
