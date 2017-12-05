@@ -87,6 +87,7 @@ export interface MultiSelectProps extends SimpleSelectProps {
   onValuesChange?(item: OptionValue): void;
   maxValues?: number;
   closeOnSelect?: boolean;
+  values?: OptionValue[];
   valuesFromPaste?(options: OptionValue[], values: OptionValue[], pastedText: string): OptionValue[];
 }
 
