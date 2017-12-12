@@ -185,7 +185,12 @@ module.exports = class ReactSelectize extends React.Component
 
                             on-blur: (e) ~>
                                 # to prevent closing the dropdown when the user tries to click & drag the scrollbar in IE
-                                return if @refs.dropdown-menu and document.active-element == (find-DOM-node @refs.dropdown-menu)
+                                dropDownClassName = findDOMNode(this$.refs.dropdownMenu).classList[0]
+
+                                if @refs.dropdownMenu && document.activeElement.isEqualNode(findDOMNode(@refs.dropdownMenu))
+                                    return
+                                else if (!!document.querySelector('.'+dropDownClassName+':hover'))
+                                    return @refs.search.focus()
 
                                 <~ @close-dropdown
 
