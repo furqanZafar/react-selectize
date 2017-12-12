@@ -189,7 +189,7 @@ module.exports = class ReactSelectize extends React.Component
 
                                 if @refs.dropdownMenu && document.activeElement.isEqualNode(findDOMNode(@refs.dropdownMenu))
                                     return
-                                else if (!!document.querySelector('.'+dropDownClassName+':hover'))
+                                else if (!!document.querySelector(`.${dropDownClassName}:hover`))
                                     return @refs.search.focus()
 
                                 <~ @close-dropdown
