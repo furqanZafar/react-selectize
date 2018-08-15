@@ -65,6 +65,7 @@ export interface SimpleSelectProps {
   transitionLeaveTimeout?: number;
   uid?(item: OptionValue): any;
   value?: OptionValue;
+  values?: OptionValue[];
   valueFromPaste?(options: OptionValue[], value: OptionValue, pastedText: string): OptionValue;
 }
 
