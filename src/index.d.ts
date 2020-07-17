@@ -34,6 +34,7 @@ export interface SimpleSelectProps {
   groupsAsColumns?: boolean;
   hideResetButton?: boolean;
   highlightedUid?: any;
+  id?: string;
   name?: string;
   open?: boolean;
   onBlur?(event: SimpleSelectEvent): void;
@@ -43,7 +44,7 @@ export interface SimpleSelectProps {
   onOpenChange?(open: boolean): void;
   onPaste?(event: SimpleSelectEvent): void;
   onSearchChange?(search: string): void;
-  onValueChange?(item: OptionValue): void;    
+  onValueChange?(item: OptionValue): void;
   options?: OptionValue[];
   placeholder?: string;
   renderGroupTitle?(index: number, group: any): React.ReactElement<any>;
@@ -55,7 +56,7 @@ export interface SimpleSelectProps {
   restoreOnBackspace?(item: OptionValue): string;
   search?: string;
   serialize?(item: OptionValue): string;
-  style?: any;
+  style?: React.CSSProperties;
   tether?: boolean;
   'tether-props'?: any;
   theme?: string;
@@ -69,7 +70,7 @@ export interface SimpleSelectProps {
 }
 
 declare class SimpleSelect extends React.Component<SimpleSelectProps, any> {
-  
+
 }
 
 export interface MultiSelectProps extends SimpleSelectProps {
@@ -91,5 +92,14 @@ export interface MultiSelectProps extends SimpleSelectProps {
 }
 
 declare class MultiSelect extends React.Component<MultiSelectProps, any> {
-  
+
 }
+
+export interface HighlightedTextProps {
+  partitions: Array<[number, number, string]>
+  text: string
+  style?: React.CSSProperties
+  highlightStyle?: React.CSSProperties
+}
+export class HighlightedText extends React.Component<HighlightedTextProps, any> {}
+
