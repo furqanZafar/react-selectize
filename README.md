@@ -1,9 +1,10 @@
-[![npm version](https://badge.fury.io/js/react-selectize.svg)](https://badge.fury.io/js/react-selectize)
-[![Build Status](https://travis-ci.org/furqanZafar/react-selectize.svg?branch=develop)](https://travis-ci.org/furqanZafar/react-selectize)
-[![Coverage Status](https://coveralls.io/repos/furqanZafar/react-selectize/badge.svg?branch=develop&service=github)](https://coveralls.io/github/furqanZafar/react-selectize?branch=develop)
+# React Selectize2
 
-# React Selectize
-`ReactSelectize` is a stateless Select component for ReactJS, that provides a platform for the more developer friendly `SimpleSelect` & `MultiSelect` components. 
+This is a fork of the now stale and abandoned https://github.com/furqanZafar/react-selectize.
+
+I copied over the latest published source code from npm and have abandoned livescript.
+
+`ReactSelectize` is a stateless Select component for ReactJS, that provides a platform for the more developer friendly `SimpleSelect` & `MultiSelect` components.
 
 Both `SimpleSelect` & `MultiSelect` have been designed to work as drop in replacement for the built-in `React.DOM.Select` component.
 
@@ -13,12 +14,12 @@ styles & features inspired by [React Select](http://jedwatson.github.io/react-se
 
 [![](http://i.imgsafe.co/rQmogzn.gif)](http://furqanZafar.github.io/react-selectize/)
 
-- [Changelog](CHANGELOG.md) (last updated on 29th July 2017)
+- [Changelog](CHANGELOG.md)
 - [API Reference](API.md)
 
 
 # Motivation
-* existing components do not behave like built-in React.DOM.* components. 
+* existing components do not behave like built-in React.DOM.* components.
 * existing components [synchronize props with state](http://facebook.github.io/react/tips/props-in-getInitialState-as-anti-pattern.html) an anti pattern, which makes them prone to bugs & difficult for contributers to push new features without breaking something else.
 * more features.
 
@@ -100,7 +101,7 @@ to include the default styles add the following import statement to your stylus 
 
   <!-- THEMES (default, bootstrap3, material) -->
   <link rel="stylesheet" href="https://unpkg.com/react-selectize@3.0.1/dist/index.min.css"/>
-  
+
  </head>
  <body>
   <div id="mount-node"></div>
@@ -109,9 +110,9 @@ to include the default styles add the following import statement to your stylus 
     React.createElement(reactSelectize.SimpleSelect, {
      style: {width: 300},
      tether: true,
-     placeholder: "Select fruit", 
+     placeholder: "Select fruit",
      options: [{label: "apple", value: "apple"}, {label: "banana", value: "banana"}]
-    }), 
+    }),
     document.getElementById("mount-node")
    );
   </script>
@@ -154,7 +155,7 @@ MultiSelect = create-factory MultiSelect
 .
 .
 .
-SimpleSelect do     
+SimpleSelect do
     placeholder: 'Select a fruit'
     options: <[apple mango orange banana]> |> map ~> label: it, value: it
     on-value-change: (value) ~>
@@ -186,7 +187,7 @@ onValueChange = {function(value){
     self.setState({selectedValue: value});
 }}
 search = {state.search}
-onSearchChange = {function(value){    
+onSearchChange = {function(value){
     self.setState({search: value});
 }}
 ```
@@ -196,10 +197,10 @@ onSearchChange = {function(value){
 // assuming the type of our option object is:
 // {firstName :: String, lastName :: String, age :: Int}
 uid = {function(item){
-    return item.firstName + item.lastName;    
+    return item.firstName + item.lastName;
 }}
 ```
-the `uid` function is used internally for performance optimization. 
+the `uid` function is used internally for performance optimization.
 
 ## Development
 * `npm install`

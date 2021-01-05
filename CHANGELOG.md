@@ -1,5 +1,8 @@
 # React Selectize
 
+## 3.0.1 / 5th January 2021
+* copied over published code to abandon livescript.
+
 ## 3.0.1 / 29th July 2017
 * fix peer dependencies react-transition-group@1.1.2 instead of the latest version
 
@@ -36,7 +39,7 @@
 * made the text in search field selectable
 
 ## v0.8.1 / 19th February 2016
-* added `cancelKeyboardEventOnSelection` prop 
+* added `cancelKeyboardEventOnSelection` prop
 
 ## v0.8.0 / 15th February 2016
 * added hideResetButton prop thanks [@marchbnr](https://github.com/marchbnr)
@@ -65,7 +68,7 @@
 * bower support (using npmcdn)
 
 ## v0.7.0 / 7th February 2016
-* umd build 
+* umd build
 *  added `theme` prop, 3 built-in themes (default, bootstrap3 & material)
 * **Breaking Change**: moved index.css from `src/` directory to `themes` & `dist` directory
 * fixed issues with `search` & `open` props
@@ -83,7 +86,7 @@
 * added `autofocus` prop, that will automatically toggle the dropdown on load
 * removed the requirement for passing callback as the last argument to on-*-change props
 * fixed many `focus` & `blur` related issues
-* **Breaking Change** replaced `on-enter` prop with `on-keyboard-selection-failed` 
+* **Breaking Change** replaced `on-enter` prop with `on-keyboard-selection-failed`
 
 ## v0.5.3 / 27th January 2016
 * introduced `name` & `serialize` props for form serialization
@@ -100,7 +103,7 @@
 * close dropdown when nothing is selected on pressing the return key
 * namespaced css classes (*Breaking Change*) :
 
-> `.dropdown-transition` div is only used if any one (or both) of `transition-enter`, `transition-leave` props is / are specified, 
+> `.dropdown-transition` div is only used if any one (or both) of `transition-enter`, `transition-leave` props is / are specified,
 before the `.dropdown` div was always being wrapped in `.dropdown-transition` even if animation was not required.
 
 | Before | Now |
