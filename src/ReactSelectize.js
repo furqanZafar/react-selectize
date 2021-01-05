@@ -147,9 +147,23 @@
           return this$.props.onFocus(e);
         });
       }, ref$.onBlur = function(e){
+        /*
         if (this$.refs.dropdownMenu && document.activeElement === findDOMNode(this$.refs.dropdownMenu)) {
           return;
         }
+        */
+
+        dropdownDOMNode = findDOMNode(this$.refs.dropdownMenu);
+
+        if (dropdownDOMNode) {
+          const dropDownClassName = dropdownDOMNode.classList[0];
+          if  (document.activeElement.isEqualNode(dropdownDOMNode)) {
+            return;
+          } else if (!!document.querySelector(`.${dropDownClassName}:hover`)) {
+            return this$.refs.search.focus();
+          }
+        }
+
         return this$.closeDropdown(function(){
           return this$.props.onBlur(e);
         });
